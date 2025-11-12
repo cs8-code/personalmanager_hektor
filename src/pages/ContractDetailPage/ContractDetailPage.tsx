@@ -130,7 +130,7 @@ export default function ContractDetailPage() {
                   </h3>
                   <div className="flex items-center text-gray-900">
                     <Users className="w-5 h-5 mr-3 text-yellow-600" />
-                    <span className="text-lg">{contract.num_workers} Mitarbeiter</span>
+                    <span className="text-lg">1 + {contract.num_workers}</span>
                   </div>
                 </div>
 

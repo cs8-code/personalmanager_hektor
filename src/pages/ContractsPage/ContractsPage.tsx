@@ -39,7 +39,7 @@ export default function ContractsPage() {
     if (!user) return;
 
     try {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('companies')
         .select('id')
         .eq('id', user.id)
@@ -196,7 +196,7 @@ export default function ContractsPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Users className="w-4 h-4" />
-                    <span>{contract.num_workers} Mitarbeiter benötigt</span>
+                    <span>1 + {contract.num_workers}</span>
                   </div>
                 </div>
 
