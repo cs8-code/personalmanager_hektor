@@ -7,9 +7,10 @@ interface ImageUploadProps {
   onImageUpload: (url: string) => void;
   userId: string;
   size?: 'small' | 'medium' | 'large';
+  autoSave?: boolean; // Auto-save to database immediately after upload
 }
 
-export default function ImageUpload({ currentImageUrl, onImageUpload, userId, size = 'medium' }: ImageUploadProps) {
+export default function ImageUpload({ currentImageUrl, onImageUpload, userId, size = 'medium', autoSave = false }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(currentImageUrl);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -62,7 +63,10 @@ export default function ImageUpload({ currentImageUrl, onImageUpload, userId, si
           upsert: true
         });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Storage upload error:', error);
+        throw new Error(`Upload failed: ${error.message || 'Unknown error'}`);
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from('profile-pictures')
@@ -70,9 +74,29 @@ export default function ImageUpload({ currentImageUrl, onImageUpload, userId, si
 
       setPreviewUrl(publicUrl);
       onImageUpload(publicUrl);
+
+      // Auto-save to database if enabled
+      if (autoSave) {
+        console.log('Auto-saving image URL to database...');
+        const { error: dbError } = await supabase
+          .from('workers')
+          .update({
+            image_url: publicUrl,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', userId);
+
+        if (dbError) {
+          console.error('Error auto-saving to database:', dbError);
+          alert('Bild hochgeladen, aber Fehler beim Speichern in der Datenbank. Bitte speichern Sie Ihr Profil manuell.');
+        } else {
+          console.log('Image URL successfully saved to database');
+        }
+      }
     } catch (error: any) {
       console.error('Error uploading image:', error);
-      alert('Fehler beim Hochladen des Bildes. Bitte versuchen Sie es erneut.');
+      const errorMessage = error?.message || 'Unbekannter Fehler';
+      alert(`Fehler beim Hochladen des Bildes: ${errorMessage}\n\nBitte überprüfen Sie:\n- Ihre Internetverbindung\n- Ob der Speicher konfiguriert ist\n- Die Browser-Konsole für Details`);
     } finally {
       setUploading(false);
     }

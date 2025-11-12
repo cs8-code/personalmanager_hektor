@@ -243,6 +243,7 @@ export default function ProfilePage() {
               onImageUpload={setProfileImageUrl}
               userId={user?.id || ''}
               size="large"
+              autoSave={true}
             />
           </div>
 

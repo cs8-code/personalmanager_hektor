@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { Building2, Shield, Leaf, HelpCircle, ArrowRight, CheckCircle } from 'lucide-react';
-import Navbar from '../components/Navbar';
 import Footer from './HomePage/components/Footer';
 import HektorLogo from '../components/HektorLogo';
 
@@ -115,8 +114,6 @@ export default function PersonalmanagerHektorPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
-
       <main className="flex-grow">
         <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
           <div className="max-w-7xl mx-auto">
