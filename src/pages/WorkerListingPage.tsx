@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { ArrowLeft, MapPin, Briefcase, Mail, Phone, Edit2, Trash2, Plus, Send, Eye } from 'lucide-react';
+import { ArrowLeft, MapPin, Clock, Mail, Phone, Edit2, Trash2, Plus, Send, Eye } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
@@ -277,7 +277,7 @@ export default function WorkerListingPage() {
                   )}
                   <div className="absolute top-3 right-3">
                     <div className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-semibold border-2 ${getStatusColor(worker.availability_status)}`}>
-                      {getStatusIcon(worker.availability_status, 'w-4 h-4')}
+                      {getStatusIcon(worker.availability_status)}
                       <span className="ml-1">{worker.availability_status}</span>
                     </div>
                   </div>
@@ -312,11 +312,9 @@ export default function WorkerListingPage() {
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{worker.name}</h3>
 
-                  {worker.birth_date && (
-                    <div className="flex items-center text-gray-600 mb-3">
-                      <span className="text-sm">{calculateAge(worker.birth_date)} Jahre</span>
-                    </div>
-                  )}
+                  <div className="flex items-center text-gray-600 mb-3">
+                    <span className="text-sm">{calculateAge(worker.birth_date)} Jahre</span>
+                  </div>
 
                   {worker.location && (
                     <div className="flex items-center text-gray-600 mb-3">
