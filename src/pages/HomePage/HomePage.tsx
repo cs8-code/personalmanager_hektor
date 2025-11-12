@@ -1,8 +1,7 @@
 import { useAuth } from '../../contexts/AuthContext';
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-
-import Navbar from '../../pages/HomePage/components/Navbar';
+import Navbar from '../../components/Navbar';
 import HeroSection from './components/Hero';
 import Services from './components/Services';
 import CareerGuideCombined from './components/CareerGuideCombined';

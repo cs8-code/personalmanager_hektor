@@ -19,7 +19,7 @@ interface RegistrationData {
   qualifications: string[];
   languages: string[];
   work_days: 'Montag bis Freitag' | 'Nur Wochenende' | '7-Tage (ohne Feiertag)' | 'Täglich (inklusive Feiertag)' | '';
-  shifts: 'Früh' | 'Mittag/Spät' | 'Nacht' | 'Alle';
+  shifts: 'Früh' | 'Mittag/Spät' | 'Nacht' | 'Alle' | '';
   smoking_status: 'Raucher' | 'Nicht-Raucher' | '';
   remarks: string;
   availability_status: 'Sofort verfügbar' | 'demnächst verfügbar' | 'nicht verfügbar' | 'zurzeit beschäftigt' | '';
@@ -47,7 +47,7 @@ export default function RegistrationPage() {
     qualifications: [],
     languages: [],
     work_days: '',
-    shifts: '',
+    shifts: '', 
     smoking_status: '',
     remarks: '',
     availability_status: '',

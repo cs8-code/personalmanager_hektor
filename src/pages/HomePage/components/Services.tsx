@@ -1,4 +1,4 @@
-import { Users, Briefcase, Stethoscope, ShoppingCart, FileText, MessageSquare, Building2, UserPlus } from 'lucide-react';
+import { Users, Briefcase, Stethoscope, ShoppingCart, FileText, MessageSquare, UserPlus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useState } from 'react';

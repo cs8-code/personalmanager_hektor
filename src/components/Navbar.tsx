@@ -1,17 +1,36 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, User, LogOut, Bell } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Menu, X, User, LogOut, Bell, HardHat } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import LoginModal from './LoginModal';
 import { useAuth } from '../contexts/AuthContext';
-import HektorLogo from './HektorLogo';
 import { supabase } from '../lib/supabase';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
   const [pendingRequestsCount, setPendingRequestsCount] = useState(0);
   const { user, signOut } = useAuth();
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const yOffset = -80; // Offset for fixed navbar
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
+  const handleNavClick = (sectionId: string) => {
+    if (location.pathname === '/siportal') {
+      scrollToSection(sectionId);
+    } else {
+      navigate('/siportal');
+      setTimeout(() => scrollToSection(sectionId), 100);
+    }
+  };
 
   useEffect(() => {
     if (user) {
@@ -56,42 +75,41 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="flex items-center">
-            <HektorLogo className="w-8 h-8" textClassName="text-base" showText={false} />
-            <span className="ml-2 text-xl font-bold text-gray-900">HEKTOR</span>
-          </Link>
+          {location.pathname === '/siportal' && (
+           <Link
+              to="/"
+              className="block text-gray-700 hover:text-gray-900 font-medium py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              ← Zurück zu Hektor
+            </Link>
+          )}
+          {location.pathname != '/siportal' && (
+            <Link to="/siportal" className="flex items-center">
+              <HardHat className="w-8 h-8" />
+              <span className="ml-2 text-xl font-bold text-gray-900">Siportal</span>
+            </Link>
+          )}
 
           <div className="hidden md:flex items-center space-x-8">
-            <a
-              href="/#services"
+            <button
+              onClick={() => handleNavClick('services')}
               className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
             >
               Services
-            </a>
-            <Link
-              to="/jobs"
+            </button>
+            <button
+              onClick={() => handleNavClick('karriere')}
               className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
             >
-              Jobs
-            </Link>
-            <Link
-              to="/workers"
-              className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
-            >
-              Personal
-            </Link>
-            <a
-              href="/#about"
-              className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
-            >
-              Über uns
-            </a>
-            <a
-              href="/#contact"
+              Karriere
+            </button>
+            <button
+              onClick={() => handleNavClick('kontakt')}
               className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
             >
               Kontakt
-            </a>
+            </button>
             {user ? (
               <div className="relative">
                 <button
@@ -166,41 +184,33 @@ export default function Navbar() {
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-gray-200 bg-white">
           <div className="px-4 py-4 space-y-3">
-            <a
-              href="/#services"
-              className="block text-gray-700 hover:text-gray-900 font-medium py-2"
-              onClick={() => setMobileMenuOpen(false)}
+            <button
+              onClick={() => {
+                handleNavClick('services');
+                setMobileMenuOpen(false);
+              }}
+              className="block text-gray-700 hover:text-gray-900 font-medium py-2 w-full text-left"
             >
               Services
-            </a>
-            <Link
-              to="/jobs"
-              className="block text-gray-700 hover:text-gray-900 font-medium py-2"
-              onClick={() => setMobileMenuOpen(false)}
+            </button>
+            <button
+              onClick={() => {
+                handleNavClick('karriere');
+                setMobileMenuOpen(false);
+              }}
+              className="block text-gray-700 hover:text-gray-900 font-medium py-2 w-full text-left"
             >
-              Jobs
-            </Link>
-            <Link
-              to="/workers"
-              className="block text-gray-700 hover:text-gray-900 font-medium py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Personal
-            </Link>
-            <a
-              href="/#about"
-              className="block text-gray-700 hover:text-gray-900 font-medium py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Über uns
-            </a>
-            <a
-              href="/#contact"
-              className="block text-gray-700 hover:text-gray-900 font-medium py-2"
-              onClick={() => setMobileMenuOpen(false)}
+              Karriere
+            </button>
+            <button
+              onClick={() => {
+                handleNavClick('kontakt');
+                setMobileMenuOpen(false);
+              }}
+              className="block text-gray-700 hover:text-gray-900 font-medium py-2 w-full text-left"
             >
               Kontakt
-            </a>
+            </button>
             {user ? (
               <div className="border-t border-gray-200 pt-3">
                 <div className="px-2 py-2 text-sm text-gray-500">
