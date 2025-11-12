@@ -73,6 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (workerData) {
         setUserProfile({
           ...workerData,
+          birthdate: workerData.birth_date, // Map birth_date to birthdate
           systemRole: roleData?.role || null,
         });
       } else if (roleData?.role) {
@@ -94,6 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           work_days: null,
           shifts: null,
           smoking_status: null,
+          arbeitsort: null,
           remarks: null,
           availability_status: 'Sofort verfügbar',
           image_url: '',

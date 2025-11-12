@@ -3,7 +3,9 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
-import { ArrowLeft, Mail, Phone, MapPin, Briefcase, Clock, CheckCircle2, Send, Calendar, User as UserIcon } from 'lucide-react';
+import { ArrowLeft, Clock, CheckCircle2, Mail, Phone, MapPin, Send, Calendar, User as UserIcon } from 'lucide-react';
+import { calculateAge } from '../utils/dateUtils';
+import { getStatusColor, getStatusIcon } from '../utils/statusUtils';
 
 interface Worker {
   id: string;
@@ -27,6 +29,7 @@ interface Worker {
   shifts: string;
   smoking_status: string;
   remarks: string;
+  arbeitsort: string;
   created_at: string;
 }
 
@@ -34,28 +37,6 @@ interface ContactRequest {
   id: string;
   status: 'pending' | 'accepted' | 'rejected';
 }
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'sofort verfügbar':
-      return 'bg-green-100 text-green-800 border-green-300';
-    case 'demnächst verfügbar':
-      return 'bg-blue-100 text-blue-800 border-blue-300';
-    case 'Minijob beschäftigt und teilzeit arbeitssuchend':
-      return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-    case 'aktuell beschäftigt':
-      return 'bg-gray-100 text-gray-800 border-gray-300';
-    default:
-      return 'bg-gray-100 text-gray-800 border-gray-300';
-  }
-};
-
-const getStatusIcon = (status: string) => {
-  if (status === 'sofort verfügbar') {
-    return <CheckCircle2 className="w-5 h-5" />;
-  }
-  return <Clock className="w-5 h-5" />;
-};
 
 export default function WorkerDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -203,10 +184,12 @@ export default function WorkerDetailPage() {
               <div className="flex items-start justify-between mb-6">
                 <div>
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">{worker.name}</h1>
-                  <div className="flex items-center text-gray-600 mb-2">
-                    <Briefcase className="w-5 h-5 mr-2" />
-                    <span>{worker.experience_years} Jahre Erfahrung</span>
-                  </div>
+                  {worker.birth_date && (
+                    <div className="flex items-center text-gray-600 mb-2">
+                      <UserIcon className="w-5 h-5 mr-2" />
+                      <span>{calculateAge(worker.birth_date)} Jahre</span>
+                    </div>
+                  )}
                   {worker.location && (
                     <div className="flex items-center text-gray-600">
                       <MapPin className="w-5 h-5 mr-2" />
@@ -286,6 +269,13 @@ export default function WorkerDetailPage() {
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 mb-1">Beschäftigungsart</h3>
                     <p className="text-gray-900 capitalize">{worker.employment_type}</p>
+                  </div>
+                )}
+
+                {worker.arbeitsort && (
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">Arbeitsort</h3>
+                    <p className="text-gray-900">{worker.arbeitsort}</p>
                   </div>
                 )}
 

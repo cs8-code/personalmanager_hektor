@@ -74,7 +74,7 @@ export default function ServiceSection() {
             Services
           </h2>
           <p className="text-lg text-gray-600">
-            Alles, was du für deine Karriere in der Bauüberwachung brauchst
+            Alles, was du für deine Karriere in der Gleisbausicherung brauchst
           </p>
         </div>
 

@@ -112,32 +112,49 @@ export default function ProfilePage() {
 
     setSaving(true);
     try {
-      // Update workers table
-      const { error: workerError } = await supabase
-        .from('workers')
-        .update({
-          name: `${formData.first_name} ${formData.last_name}`,
-          username: formData.username,
-          phone: formData.phone,
-          birth_date: formData.birthdate,
-          gender: formData.gender,
-          city: formData.city,
-          employment_type: formData.employment_type,
-          company_name: formData.company_name || null,
-          company_address: formData.company_address || null,
-          qualifications: formData.qualifications,
-          languages: formData.languages,
-          work_days: formData.work_days || null,
-          shifts: formData.shifts || null,
-          smoking_status: formData.smoking_status || null,
-          arbeitsort: formData.arbeitsort || null,
-          remarks: formData.remarks || null,
-          availability_status: formData.availability_status,
-          location: formData.city,
-          image_url: profileImageUrl || '',
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', userProfile.id);
+      // Prepare update data - only include arbeitsort if column exists
+      const updateData: any = {
+        name: `${formData.first_name} ${formData.last_name}`,
+        username: formData.username,
+        phone: formData.phone,
+        birth_date: formData.birthdate,
+        gender: formData.gender,
+        city: formData.city,
+        employment_type: formData.employment_type,
+        company_name: formData.company_name || null,
+        company_address: formData.company_address || null,
+        qualifications: formData.qualifications,
+        languages: formData.languages,
+        work_days: formData.work_days || null,
+        shifts: formData.shifts || null,
+        smoking_status: formData.smoking_status || null,
+        remarks: formData.remarks || null,
+        availability_status: formData.availability_status,
+        location: formData.city,
+        image_url: profileImageUrl || '',
+        updated_at: new Date().toISOString(),
+      };
+
+      // Try to update including arbeitsort
+      let workerError = null;
+      try {
+        const result = await supabase
+          .from('workers')
+          .update({
+            ...updateData,
+            arbeitsort: formData.arbeitsort || null,
+          })
+          .eq('id', userProfile.id);
+        workerError = result.error;
+      } catch (err) {
+        // If arbeitsort column doesn't exist, try without it
+        console.warn('Arbeitsort column may not exist, trying without it:', err);
+        const result = await supabase
+          .from('workers')
+          .update(updateData)
+          .eq('id', userProfile.id);
+        workerError = result.error;
+      }
 
       if (workerError) throw workerError;
 
@@ -161,9 +178,10 @@ export default function ProfilePage() {
       await refreshUserProfile();
       alert('Profil erfolgreich aktualisiert');
       setIsEditing(false);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error updating profile:', error);
-      alert('Fehler beim Speichern des Profils');
+      const errorMessage = error instanceof Error ? error.message : 'Unbekannter Fehler';
+      alert(`Fehler beim Speichern des Profils: ${errorMessage}`);
     } finally {
       setSaving(false);
     }

@@ -1,20 +1,22 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { ArrowLeft, MapPin, Clock, Briefcase, Mail, Phone, CheckCircle2, Edit2, Trash2, Plus, Send, Eye } from 'lucide-react';
+import { ArrowLeft, MapPin, Briefcase, Mail, Phone, Edit2, Trash2, Plus, Send, Eye } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
+import { calculateAge } from '../utils/dateUtils';
+import { getStatusColor, getStatusIcon } from '../utils/statusUtils';
 
 interface Worker {
   id: string;
   name: string;
   username: string;
-  birthday: string;
+  birth_date: string;
   email: string;
   phone: string;
   image_url: string;
   qualifications: string[];
-  availability_status: string; 
+  availability_status: string;
   location: string;
   experience_years: number;
   bio: string;
@@ -25,28 +27,6 @@ interface ContactRequest {
   id: string;
   status: 'pending' | 'accepted' | 'rejected';
 }
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'sofort verfügbar':
-      return 'bg-green-100 text-green-800 border-green-300';
-    case 'demnächst verfügbar':
-      return 'bg-blue-100 text-blue-800 border-blue-300';
-    case 'Minijob beschäftigt und teilzeit arbeitssuchend':
-      return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-    case 'aktuell beschäftigt':
-      return 'bg-gray-100 text-gray-800 border-gray-300';
-    default:
-      return 'bg-gray-100 text-gray-800 border-gray-300';
-  }
-};
-
-const getStatusIcon = (status: string) => {
-  if (status === 'sofort verfügbar') {
-    return <CheckCircle2 className="w-4 h-4" />;
-  }
-  return <Clock className="w-4 h-4" />;
-};
 
 export default function WorkerListingPage() {
   const { user, loading: authLoading } = useAuth();
@@ -297,7 +277,7 @@ export default function WorkerListingPage() {
                   )}
                   <div className="absolute top-3 right-3">
                     <div className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-semibold border-2 ${getStatusColor(worker.availability_status)}`}>
-                      {getStatusIcon(worker.availability_status)}
+                      {getStatusIcon(worker.availability_status, 'w-4 h-4')}
                       <span className="ml-1">{worker.availability_status}</span>
                     </div>
                   </div>
@@ -332,10 +312,11 @@ export default function WorkerListingPage() {
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{worker.name}</h3>
 
-                  <div className="flex items-center text-gray-600 mb-3">
-                    <Briefcase className="w-4 h-4 mr-2" />
-                    <span className="text-sm">{worker.experience_years} Jahre Erfahrung</span>
-                  </div>
+                  {worker.birth_date && (
+                    <div className="flex items-center text-gray-600 mb-3">
+                      <span className="text-sm">{calculateAge(worker.birth_date)} Jahre</span>
+                    </div>
+                  )}
 
                   {worker.location && (
                     <div className="flex items-center text-gray-600 mb-3">
