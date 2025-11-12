@@ -21,6 +21,7 @@ interface RegistrationData {
   work_days: 'Montag bis Freitag' | 'Nur Wochenende' | '7-Tage (ohne Feiertag)' | 'Täglich (inklusive Feiertag)' | '';
   shifts: 'Früh' | 'Mittag/Spät' | 'Nacht' | 'Alle' | '';
   smoking_status: 'Raucher' | 'Nicht-Raucher' | '';
+  arbeitsort: 'Nahbaustellen' | 'Montage (ohne km-Begrenzung)' | 'Montage (mit km-Begrenzung)' | 'Nahbau & Montage' | '';
   remarks: string;
   availability_status: 'Sofort verfügbar' | 'demnächst verfügbar' | 'nicht verfügbar' | 'zurzeit beschäftigt' | '';
   password: string;
@@ -47,8 +48,9 @@ export default function RegistrationPage() {
     qualifications: [],
     languages: [],
     work_days: '',
-    shifts: '', 
+    shifts: '',
     smoking_status: '',
+    arbeitsort: '',
     remarks: '',
     availability_status: '',
     password: '',
@@ -186,6 +188,7 @@ export default function RegistrationPage() {
             work_days: formData.work_days,
             shifts: formData.shifts,
             smoking_status: formData.smoking_status,
+            arbeitsort: formData.arbeitsort,
             remarks: formData.remarks,
             availability_status: formData.availability_status
           }
@@ -218,6 +221,7 @@ export default function RegistrationPage() {
             languages: formData.languages,
             shifts: formData.shifts || null,
             smoking_status: formData.smoking_status || null,
+            arbeitsort: formData.arbeitsort || null,
             remarks: formData.remarks || null,
             location: formData.city,
             experience_years: 0,
@@ -733,6 +737,28 @@ export default function RegistrationPage() {
                     <option value="">Bitte wählen</option>
                     <option value="Raucher">Raucher</option>
                     <option value="Nicht-Raucher">Nicht-Raucher</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Arbeitsort */}
+              <div>
+                <label htmlFor="arbeitsort" className="block text-sm font-medium text-gray-700">
+                  Arbeitsort
+                </label>
+                <div className="mt-1">
+                  <select
+                    id="arbeitsort"
+                    name="arbeitsort"
+                    value={formData.arbeitsort}
+                    onChange={handleInputChange}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
+                  >
+                    <option value="">Bitte wählen</option>
+                    <option value="Nahbaustellen">Nahbaustellen</option>
+                    <option value="Montage (ohne km-Begrenzung)">Montage (ohne km-Begrenzung)</option>
+                    <option value="Montage (mit km-Begrenzung)">Montage (mit km-Begrenzung)</option>
+                    <option value="Nahbau & Montage">Nahbau & Montage</option>
                   </select>
                 </div>
               </div>

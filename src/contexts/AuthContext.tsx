@@ -19,6 +19,7 @@ interface UserProfile {
   work_days: string | null;
   shifts: string | null;
   smoking_status: string | null;
+  arbeitsort: string | null;
   remarks: string | null;
   availability_status: string | null;
   image_url: string;

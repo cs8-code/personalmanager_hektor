@@ -54,6 +54,7 @@ export default function ProfilePage() {
     work_days: '' as 'Montag bis Freitag' | 'Nur Wochenende' | '7-Tage (ohne Feiertag)' | 'Täglich (inklusive Feiertag)' | '',
     shifts: '' as 'Früh' | 'Mittag/Spät' | 'Nacht' | 'Alle' | '',
     smoking_status: '' as 'Raucher' | 'Nicht-Raucher' | '',
+    arbeitsort: '' as 'Nahbaustellen' | 'Montage (ohne km-Begrenzung)' | 'Montage (mit km-Begrenzung)' | 'Nahbau & Montage' | '',
     remarks: '',
     availability_status: '' as 'Sofort verfügbar' | 'demnächst verfügbar' | 'nicht verfügbar' | 'zurzeit beschäftigt' | '',
   });
@@ -89,6 +90,7 @@ export default function ProfilePage() {
         work_days: (userProfile.work_days as 'Montag bis Freitag' | 'Nur Wochenende' | '7-Tage (ohne Feiertag)' | 'Täglich (inklusive Feiertag)' | '') || '',
         shifts: (userProfile.shifts as 'Früh' | 'Mittag/Spät' | 'Nacht' | 'Alle' | '') || '',
         smoking_status: (userProfile.smoking_status as 'Raucher' | 'Nicht-Raucher' | '') || '',
+        arbeitsort: (userProfile.arbeitsort as 'Nahbaustellen' | 'Montage (ohne km-Begrenzung)' | 'Montage (mit km-Begrenzung)' | 'Nahbau & Montage' | '') || '',
         remarks: userProfile.remarks || '',
         availability_status: (userProfile.availability_status as 'Sofort verfügbar' | 'demnächst verfügbar' | 'nicht verfügbar' | 'zurzeit beschäftigt' | '') || '',
       });
@@ -128,6 +130,7 @@ export default function ProfilePage() {
           work_days: formData.work_days || null,
           shifts: formData.shifts || null,
           smoking_status: formData.smoking_status || null,
+          arbeitsort: formData.arbeitsort || null,
           remarks: formData.remarks || null,
           availability_status: formData.availability_status,
           location: formData.city,
@@ -498,6 +501,28 @@ export default function ProfilePage() {
                 </select>
               ) : (
                 <p className="text-gray-700">{formData.smoking_status || '-'}</p>
+              )}
+            </div>
+
+            {/* Arbeitsort */}
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">
+                Arbeitsort
+              </label>
+              {isEditing ? (
+                <select
+                  value={formData.arbeitsort}
+                  onChange={(e) => setFormData({ ...formData, arbeitsort: e.target.value as 'Nahbaustellen' | 'Montage (ohne km-Begrenzung)' | 'Montage (mit km-Begrenzung)' | 'Nahbau & Montage' | '' })}
+                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-yellow-400 focus:outline-none"
+                >
+                  <option value="">Bitte wählen</option>
+                  <option value="Nahbaustellen">Nahbaustellen</option>
+                  <option value="Montage (ohne km-Begrenzung)">Montage (ohne km-Begrenzung)</option>
+                  <option value="Montage (mit km-Begrenzung)">Montage (mit km-Begrenzung)</option>
+                  <option value="Nahbau & Montage">Nahbau & Montage</option>
+                </select>
+              ) : (
+                <p className="text-gray-700">{formData.arbeitsort || '-'}</p>
               )}
             </div>
 
