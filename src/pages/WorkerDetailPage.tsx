@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../contexts/AuthContext';
-import Navbar from '../../components/Navbar';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
+import Navbar from '../components/Navbar';
 import { ArrowLeft, Mail, Phone, MapPin, Briefcase, Clock, CheckCircle2, Send, Calendar, User as UserIcon } from 'lucide-react';
 
 interface Worker {

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { HardHat, ArrowLeft, CheckCircle, Eye, EyeOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../../lib/supabase';
-import ImageUpload from '../../components/ImageUpload';
+import { supabase } from '../lib/supabase';
+import ImageUpload from '../components/ImageUpload';
 
 interface RegistrationData {
   first_name: string;

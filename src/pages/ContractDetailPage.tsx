@@ -1,8 +1,8 @@
 import { Link, useParams } from 'react-router-dom';
 import { MapPin, Calendar, Users, Mail, Phone, Building2, MapPinned } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
-import Navbar from '../../components/Navbar';
+import { supabase } from '../lib/supabase';
+import Navbar from '../components/Navbar';
 
 interface Contract {
   id: string;

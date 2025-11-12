@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Plus, MessageSquare, Newspaper, HelpCircle, Send, Trash2, Edit2, X, Check } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase';
-import LoginModal from '../../components/LoginModal';
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
+import LoginModal from '../components/LoginModal';
 
 interface Post {
   id: string;

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../lib/supabase';
 import { ArrowLeft, MapPin, Clock, Briefcase, Mail, Phone, CheckCircle2, Edit2, Trash2, Plus, Send, Eye } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import Navbar from '../../components/Navbar';
+import { useAuth } from '../contexts/AuthContext';
+import Navbar from '../components/Navbar';
 
 interface Worker {
   id: string;
@@ -14,7 +14,7 @@ interface Worker {
   phone: string;
   image_url: string;
   qualifications: string[];
-  availability_status: string;
+  availability_status: string; 
   location: string;
   experience_years: number;
   bio: string;
@@ -24,10 +24,6 @@ interface Worker {
 interface ContactRequest {
   id: string;
   status: 'pending' | 'accepted' | 'rejected';
-}
-
-interface UserRole {
-  role: string;
 }
 
 const getStatusColor = (status: string) => {
@@ -60,7 +56,7 @@ export default function WorkerListingPage() {
   const [filter, setFilter] = useState<string>('all');
   const [userRole, setUserRole] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [editingWorker, setEditingWorker] = useState<Worker | null>(null);
+  const [editingWorker, setEditingWorker] = useState<Worker | null>(null); // Keep this line
   const [contactRequests, setContactRequests] = useState<Map<string, ContactRequest>>(new Map());
 
   useEffect(() => {

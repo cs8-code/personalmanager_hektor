@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Plus, Edit2, Trash2, Save, X } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
-import Navbar from '../../components/Navbar';
+import { supabase } from '../lib/supabase';
+import Navbar from '../components/Navbar';
 
 interface Worker {
   id: string;

@@ -1,9 +1,9 @@
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Briefcase, Clock, Euro, Mail, Phone, CheckCircle2, Award } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
-import Navbar from '../../components/Navbar';
-import { useAuth } from '../../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
+import Navbar from '../components/Navbar';
+import { useAuth } from '../contexts/AuthContext';
 
 interface Job {
   id: string;

@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Edit2, Save, X } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
-import ContactRequests from '../../components/ContactRequests';
-import ImageUpload from '../../components/ImageUpload';
+import { supabase } from '../lib/supabase';
+import ContactRequests from '../components/ContactRequests';
+import ImageUpload from '../components/ImageUpload';
 
 const availableQualifications = [
   'SIPO',

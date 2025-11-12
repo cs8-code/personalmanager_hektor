@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { Building2, Shield, Leaf, HelpCircle, ArrowRight, CheckCircle } from 'lucide-react';
-import Navbar from '../../components/Navbar';
-import Footer from '../HomePage/components/Footer';
-import HektorLogo from '../../components/HektorLogo';
+import Navbar from '../components/Navbar';
+import Footer from './HomePage/components/Footer';
+import HektorLogo from '../components/HektorLogo';
 
 interface ServiceCardProps {
   icon: React.ComponentType<{ className?: string }>;

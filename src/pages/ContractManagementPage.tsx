@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, X, Plus, Minus } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../contexts/AuthContext';
-import Navbar from '../../components/Navbar';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
+import Navbar from '../components/Navbar';
 
 interface Company {
   id: string;

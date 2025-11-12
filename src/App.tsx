@@ -1,22 +1,22 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import HomePage from './pages/HomePage/HomePage';
-import WorkerListingPage from './pages/WorkerListingPage/WorkerListingPage';
-import WorkerDetailPage from './pages/WorkerDetailPage/WorkerDetailPage';
-import RegistrationPage from './pages/RegistrationPage/RegistrationPage';
-import ProfilePage from './pages/ProfilePage/ProfilePage';
-import ServiceDetailPage from './pages/ServiceDetailPage/ServiceDetailPage';
+import WorkerListingPage from './pages/WorkerListingPage';
+import WorkerDetailPage from './pages/WorkerDetailPage';
+import RegistrationPage from './pages/RegistrationPage';
+import ProfilePage from './pages/ProfilePage';
+import ServiceDetailPage from './pages/ServiceDetailPage';
 import AdminPanel from './components/AdminPanel';
-import ManagerPage from './pages/ManagerPage/ManagerPage';
-import JobsPage from './pages/JobsPage/JobsPage';
-import JobDetailPage from './pages/JobDetailPage/JobDetailPage';
-import JobsManagementPage from './pages/JobsManagementPage/JobsManagementPage';
-import SubcontractorGuidePage from './pages/SubcontractorGuidePage/SubcontractorGuidePage';
-import SipoNewsPage from './pages/SipoNewsPage/SipoNewsPage';
-import PersonalmanagerHektorPage from './pages/PersonalmanagerHektorPage/PersonalmanagerHektorPage';
-import ContractsPage from './pages/ContractsPage/ContractsPage';
-import ContractDetailPage from './pages/ContractDetailPage/ContractDetailPage';
-import ContractManagementPage from './pages/ContractManagementPage/ContractManagementPage';
+import ManagerPage from './pages/ManagerPage';
+import JobsPage from './pages/JobsPage';
+import JobDetailPage from './pages/JobDetailPage';
+import JobsManagementPage from './pages/JobsManagementPage';
+import SubcontractorGuidePage from './pages/SubcontractorGuidePage';
+import SipoNewsPage from './pages/SipoNewsPage';
+import PersonalmanagerHektorPage from './pages/PersonalmanagerHektorPage';
+import ContractsPage from './pages/ContractsPage';
+import ContractDetailPage from './pages/ContractDetailPage';
+import ContractManagementPage from './pages/ContractManagementPage';
 
 function App() {
   return (
