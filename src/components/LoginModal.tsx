@@ -75,9 +75,9 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       // Reset form
       setFormData({ email: '', password: '' });
       setErrors({});
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Login error:', error);
-      setErrors({ submit: error.message || 'Login fehlgeschlagen. Bitte versuchen Sie es erneut.' });
+      setErrors({ submit: error instanceof Error ? error.message : 'Login fehlgeschlagen. Bitte versuchen Sie es erneut.' });
     } finally {
       setLoading(false);
     }

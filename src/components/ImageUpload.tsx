@@ -93,9 +93,9 @@ export default function ImageUpload({ currentImageUrl, onImageUpload, userId, si
           console.log('Image URL successfully saved to database');
         }
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error uploading image:', error);
-      const errorMessage = error?.message || 'Unbekannter Fehler';
+      const errorMessage = error instanceof Error ? error.message : 'Unbekannter Fehler';
       alert(`Fehler beim Hochladen des Bildes: ${errorMessage}\n\nBitte überprüfen Sie:\n- Ihre Internetverbindung\n- Ob der Speicher konfiguriert ist\n- Die Browser-Konsole für Details`);
     } finally {
       setUploading(false);

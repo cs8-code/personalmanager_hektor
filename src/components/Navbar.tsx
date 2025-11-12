@@ -43,7 +43,7 @@ export default function Navbar() {
             event: '*',
             schema: 'public',
             table: 'contact_requests',
-            filter: `worker_id=eq.${user.id}`
+            filter: `worker_id=eq.${user.id}` // Note: Supabase realtime requires filter string format
           },
           () => {
             fetchPendingRequestsCount();
@@ -55,6 +55,7 @@ export default function Navbar() {
         subscription.unsubscribe();
       };
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const fetchPendingRequestsCount = async () => {

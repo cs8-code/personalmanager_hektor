@@ -134,9 +134,9 @@ export default function WorkerDetailPage() {
 
       alert('Anfrage erfolgreich gesendet!');
       fetchContactRequest();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error sending request:', error);
-      if (error.code === '23505') {
+      if (error && typeof error === 'object' && 'code' in error && error.code === '23505') {
         alert('Sie haben bereits eine ausstehende Anfrage an diese Person gesendet.');
       } else {
         alert('Fehler beim Senden der Anfrage. Bitte versuchen Sie es erneut.');

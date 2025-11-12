@@ -56,7 +56,7 @@ export default function WorkerListingPage() {
   const [filter, setFilter] = useState<string>('all');
   const [userRole, setUserRole] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [editingWorker, setEditingWorker] = useState<Worker | null>(null); // Keep this line
+  const [editingWorker, setEditingWorker] = useState<Worker | null>(null);
   const [contactRequests, setContactRequests] = useState<Map<string, ContactRequest>>(new Map());
 
   useEffect(() => {
@@ -139,9 +139,9 @@ export default function WorkerListingPage() {
 
       alert('Anfrage erfolgreich gesendet!');
       fetchContactRequests();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error sending request:', error);
-      if (error.code === '23505') {
+      if (error && typeof error === 'object' && 'code' in error && error.code === '23505') {
         alert('Sie haben bereits eine ausstehende Anfrage an diese Person gesendet.');
       } else {
         alert('Fehler beim Senden der Anfrage. Bitte versuchen Sie es erneut.');

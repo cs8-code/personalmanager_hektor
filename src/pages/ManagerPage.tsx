@@ -46,6 +46,7 @@ export default function ManagerPage() {
     if (user && isManager) {
       loadWorkers();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, isManager]);
 
   const loadWorkers = async () => {

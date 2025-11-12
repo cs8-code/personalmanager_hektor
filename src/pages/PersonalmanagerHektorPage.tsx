@@ -29,8 +29,8 @@ function ServiceCard({ icon: Icon, title, description, features, available, onNa
       <p className="text-gray-600 mb-6">{description}</p>
 
       <ul className="space-y-3 mb-8">
-        {features.map((feature, index) => (
-          <li key={index} className="flex items-start">
+        {features.map((feature) => (
+          <li key={feature} className="flex items-start">
             <CheckCircle className="w-5 h-5 text-yellow-400 mr-3 mt-0.5 flex-shrink-0" />
             <span className="text-gray-700">{feature}</span>
           </li>
@@ -139,8 +139,8 @@ export default function PersonalmanagerHektorPage() {
             </div>
 
             <div className="grid md:grid-cols-2 gap-8 mb-16">
-              {services.map((service, index) => (
-                <ServiceCard key={index} {...service} />
+              {services.map((service) => (
+                <ServiceCard key={service.title} {...service} />
               ))}
             </div>
 

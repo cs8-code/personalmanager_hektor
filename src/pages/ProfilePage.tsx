@@ -33,7 +33,7 @@ const availableLanguages = [
 ];
 
 export default function ProfilePage() {
-  const { user, userProfile, loading } = useAuth();
+  const { user, userProfile, loading, refreshUserProfile } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState('');
@@ -155,9 +155,9 @@ export default function ProfilePage() {
         if (companyError) throw companyError;
       }
 
+      await refreshUserProfile();
       alert('Profil erfolgreich aktualisiert');
       setIsEditing(false);
-      window.location.reload();
     } catch (error) {
       console.error('Error updating profile:', error);
       alert('Fehler beim Speichern des Profils');
@@ -349,7 +349,7 @@ export default function ProfilePage() {
               {isEditing ? (
                 <select
                   value={formData.gender}
-                  onChange={(e) => setFormData({ ...formData, gender: e.target.value as any })}
+                  onChange={(e) => setFormData({ ...formData, gender: e.target.value as 'männlich' | 'weiblich' | 'divers' | '' })}
                   className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-yellow-400 focus:outline-none"
                 >
                   <option value="">Bitte wählen</option>
@@ -387,7 +387,7 @@ export default function ProfilePage() {
               {isEditing ? (
                 <select
                   value={formData.employment_type}
-                  onChange={(e) => setFormData({ ...formData, employment_type: e.target.value as any })}
+                  onChange={(e) => setFormData({ ...formData, employment_type: e.target.value as 'selbständig' | 'angestellt' | '' })}
                   className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-yellow-400 focus:outline-none"
                 >
                   <option value="">Bitte wählen</option>
@@ -445,7 +445,7 @@ export default function ProfilePage() {
               {isEditing ? (
                 <select
                   value={formData.work_days}
-                  onChange={(e) => setFormData({ ...formData, work_days: e.target.value as any })}
+                  onChange={(e) => setFormData({ ...formData, work_days: e.target.value as 'Montag bis Freitag' | 'Nur Wochenende' | '7-Tage (ohne Feiertag)' | 'Täglich (inklusive Feiertag)' | '' })}
                   className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-yellow-400 focus:outline-none"
                 >
                   <option value="">Bitte wählen</option>
@@ -467,7 +467,7 @@ export default function ProfilePage() {
               {isEditing ? (
                 <select
                   value={formData.shifts}
-                  onChange={(e) => setFormData({ ...formData, shifts: e.target.value as any })}
+                  onChange={(e) => setFormData({ ...formData, shifts: e.target.value as 'Früh' | 'Mittag/Spät' | 'Nacht' | 'Alle' | '' })}
                   className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-yellow-400 focus:outline-none"
                 >
                   <option value="">Bitte wählen</option>
@@ -489,7 +489,7 @@ export default function ProfilePage() {
               {isEditing ? (
                 <select
                   value={formData.smoking_status}
-                  onChange={(e) => setFormData({ ...formData, smoking_status: e.target.value as any })}
+                  onChange={(e) => setFormData({ ...formData, smoking_status: e.target.value as 'Raucher' | 'Nicht-Raucher' | '' })}
                   className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-yellow-400 focus:outline-none"
                 >
                   <option value="">Bitte wählen</option>
@@ -509,7 +509,7 @@ export default function ProfilePage() {
               {isEditing ? (
                 <select
                   value={formData.availability_status}
-                  onChange={(e) => setFormData({ ...formData, availability_status: e.target.value as any })}
+                  onChange={(e) => setFormData({ ...formData, availability_status: e.target.value as 'Sofort verfügbar' | 'demnächst verfügbar' | 'nicht verfügbar' | 'zurzeit beschäftigt' | '' })}
                   className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-yellow-400 focus:outline-none"
                 >
                   <option value="">Bitte wählen</option>

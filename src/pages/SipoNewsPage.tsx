@@ -74,10 +74,21 @@ export default function SipoNewsPage() {
 
       if (error) throw error;
 
-      const postsWithEmails = (data || []).map((post) => ({
-        ...post,
-        user_email: 'SIPO User'
-      }));
+      // Fetch user emails from workers table
+      const postsWithEmails = await Promise.all(
+        (data || []).map(async (post) => {
+          const { data: workerData } = await supabase
+            .from('workers')
+            .select('email')
+            .eq('id', post.user_id)
+            .maybeSingle();
+
+          return {
+            ...post,
+            user_email: workerData?.email || 'SIPO User'
+          };
+        })
+      );
 
       setPosts(postsWithEmails);
     } catch (error) {

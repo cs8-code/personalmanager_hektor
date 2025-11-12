@@ -36,6 +36,7 @@ export default function ContractManagementPage() {
     if (user) {
       loadCompanyData();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, authLoading, navigate]);
 
   const loadCompanyData = async () => {

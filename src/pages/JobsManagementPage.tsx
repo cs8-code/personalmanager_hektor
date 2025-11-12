@@ -50,6 +50,7 @@ export default function JobsManagementPage() {
     if (user && isManager) {
       loadJobs();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, isManager]);
 
   const loadJobs = async () => {

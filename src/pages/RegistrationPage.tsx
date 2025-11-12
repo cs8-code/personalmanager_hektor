@@ -253,9 +253,9 @@ export default function RegistrationPage() {
 
       console.log('Registration successful:', authData);
       setIsSubmitted(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Registration error:', error);
-      setErrors({ submit: error.message || 'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.' });
+      setErrors({ submit: error instanceof Error ? error.message : 'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.' });
     } finally {
       setLoading(false);
     }
