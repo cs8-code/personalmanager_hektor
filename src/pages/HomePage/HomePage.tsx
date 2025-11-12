@@ -2,7 +2,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
-import Navbar from '../../components/Navbar';
+import Navbar from '../../pages/HomePage/components/Navbar';
 import HeroSection from './components/Hero';
 import Services from './components/Services';
 import CareerGuideCombined from './components/CareerGuideCombined';
@@ -21,30 +21,20 @@ export default function HomePage() {
     }
   }, [location]);
 
-  return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
-      <main className='flex-grow'>
-           {user ? (
-          <>
-            <Services />
-            <CareerGuideCombined />
-            <Contact />
-          </>
-      ) : (
-      <>
-      <HeroSection />
-       <Services />
-       <CareerGuideCombined />
+ return (
+  <div className="min-h-screen bg-white">
+    <Navbar />
+    <main className='flex-grow'>
+      {!user && <HeroSection />}
+      <Services />
+      <CareerGuideCombined />
       <Contact />
-      </>
-      )}
-      </main>
-      <Footer />
-      <LoginModal
-        isOpen={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-      />
-    </div>
-  );
+    </main>
+    <Footer />
+    <LoginModal
+      isOpen={showLoginModal}
+      onClose={() => setShowLoginModal(false)}
+    />
+  </div>
+);
 }

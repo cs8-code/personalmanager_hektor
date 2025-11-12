@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Search, MapPin, Calendar, Users, ArrowRight, Plus } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import Navbar from '../components/Navbar';
+import Navbar from '../pages/HomePage/components/Navbar';
 import { useAuth } from '../contexts/AuthContext';
 
 interface Contract {

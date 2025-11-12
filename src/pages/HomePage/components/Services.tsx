@@ -78,10 +78,9 @@ export default function ServiceSection() {
           </p>
         </div>
 
-        {/* H-Layout for Hektor */}
+        {/* Service Cards */}
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-3 gap-6">
-            {/* Row 1: Top Left - Personalsuche, Empty, Top Right - Jobsuche */}
               <Link
               to="/workers"
               className="group bg-white rounded-2xl p-6 shadow-md hover:shadow-2xl border-2 border-gray-100 hover:border-yellow-400 transition-all transform hover:scale-105 cursor-pointer"
@@ -92,7 +91,6 @@ export default function ServiceSection() {
               <h3 className="text-xl font-bold text-gray-900 mb-2">Personalsuche</h3>
               <p className="text-gray-600 text-sm">Finden Sie qualifizierte Fachkräfte für Ihre Bauprojekte</p>
             </Link>
-            <div></div>
             <Link
               to="/jobs"
               className="group bg-white rounded-2xl p-6 shadow-md hover:shadow-2xl border-2 border-gray-100 hover:border-yellow-400 transition-all transform                           hover:scale-105 cursor-pointer"
@@ -102,24 +100,6 @@ export default function ServiceSection() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Jobsuche</h3>
               <p className="text-gray-600 text-sm">Finde Jobs für deine Karriere</p>
-            </Link>
-            {/* Row 2: Left Column, Middle (SiPOS & SUPiS), Right Column */}
-            <ServiceCard
-              id="health-services"
-              icon={Stethoscope}
-              title="Physiologische Untersuchungen"
-              description="FiT & Schulungen - Bahnärztliche Untersuchungen"
-              hashLink="#health-services"
-            />
-            <Link
-              to="/sipo-news"
-              className="group bg-white rounded-2xl p-6 shadow-md hover:shadow-2xl border-2 border-gray-100 hover:border-yellow-400 transition-all transform hover:scale-105 cursor-pointer"
-            >
-              <div className="flex items-center justify-center w-16 h-16 bg-yellow-400 rounded-xl mb-4 group-hover:bg-yellow-500 transition-colors">
-                <MessageSquare className="w-8 h-8 text-gray-900" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">SiPOS & SUPiS</h3>
-              <p className="text-gray-600 text-sm">Community und Austausch für Bauleiter</p>
             </Link>
             <Link
               to="/contracts"
@@ -131,22 +111,29 @@ export default function ServiceSection() {
               <h3 className="text-xl font-bold text-gray-900 mb-2">Aufträge suchen</h3>
               <p className="text-gray-600 text-sm">Finde neue Aufträge für dein Subunternehmen</p>
             </Link>
-
-            {/* Row 3: Left Column, Empty, Right Column */}
+            <Link
+              to="/sipo-news"
+              className="group bg-white rounded-2xl p-6 shadow-md hover:shadow-2xl border-2 border-gray-100 hover:border-yellow-400 transition-all transform hover:scale-105 cursor-pointer"
+            >
+              <div className="flex items-center justify-center w-16 h-16 bg-yellow-400 rounded-xl mb-4 group-hover:bg-yellow-500 transition-colors">
+                <MessageSquare className="w-8 h-8 text-gray-900" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">SiPOS & SUPiS</h3>
+              <p className="text-gray-600 text-sm">Community und Austausch für Bauleiter</p>
+            </Link>
+             <ServiceCard
+              id="health-services"
+              icon={Stethoscope}
+              title="Physiologische Untersuchungen"
+              description="FiT & Schulungen - Bahnärztliche Untersuchungen"
+              hashLink="#health-services"
+            />
             <ServiceCard
               id="equipment-marketplace"
               icon={ShoppingCart}
               title="ATWS-Warnanlagen"
               description="Neu oder gebraucht kaufen, verkaufen, mieten oder vermieten"
               hashLink="#equipment-marketplace"
-            />
-            <div></div>
-            <ServiceCard
-              id="career-guide"
-              icon={Building2}
-              title="Karriere im Gleisbau"
-              description="Wie wird man SIPO? Wie gründe ich ein Subunternehmen?"
-              hashLink="#career-guide"
             />
           </div>
         </div>

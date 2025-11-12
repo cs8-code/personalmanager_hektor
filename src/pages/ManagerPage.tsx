@@ -3,7 +3,7 @@ import { ArrowLeft, Plus, Edit2, Trash2, Save, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import Navbar from '../components/Navbar';
+import Navbar from '../pages/HomePage/components/Navbar';
 
 interface Worker {
   id: string;

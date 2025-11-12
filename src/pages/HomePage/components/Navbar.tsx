@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { HardHat, Menu, X, User, LogOut } from 'lucide-react';
+import { Menu, X, User, LogOut } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import LoginModal from '../../../components/LoginModal';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -23,7 +23,7 @@ export default function Navbar() {
             >
               ← Zurück zu Hektor
             </Link>
-            {['Services', 'Über uns', 'Kontakt'].map((item) => (
+            {['Services', 'Karriere' , 'Kontakt'].map((item) => (
               <a
                 key={item}
                 href={`#${item.toLowerCase().replace(' ', '-')}`}
