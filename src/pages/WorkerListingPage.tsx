@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { ArrowLeft, MapPin, Clock, Mail, Phone, Edit2, Trash2, Plus, Send, Eye } from 'lucide-react';
+import { ArrowLeft, MapPin, Mail, Phone, Edit2, Trash2, Send, Eye, Clock } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
@@ -35,10 +35,6 @@ export default function WorkerListingPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
   const [userRole, setUserRole] = useState<string | null>(null);
-  // TODO: Implement add/edit worker modals - state setters are used but modals not yet implemented
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [showAddModal, setShowAddModal] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [editingWorker, setEditingWorker] = useState<Worker | null>(null);
   const [contactRequests, setContactRequests] = useState<Map<string, ContactRequest>>(new Map());
 
@@ -163,8 +159,6 @@ export default function WorkerListingPage() {
     ? workers
     : workers.filter(w => w.availability_status === filter);
 
-  const canAddWorker = userRole === 'administrator' || userRole === 'manager';
-
   return (
     <>
       <Navbar />
@@ -183,15 +177,6 @@ export default function WorkerListingPage() {
               <div className="h-8 w-px bg-gray-300"></div>
               <h1 className="text-2xl font-bold text-gray-900">Personalsuche</h1>
             </div>
-            {canAddWorker && (
-              <button
-                onClick={() => setShowAddModal(true)}
-                className="flex items-center px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-lg transition-all"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                Personal hinzufügen
-              </button>
-            )}
           </div>
         </div>
       </header>
@@ -437,6 +422,35 @@ export default function WorkerListingPage() {
         )}
       </div>
       </div>
+
+      {/* Edit Worker Modal */}
+      {editingWorker && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-md w-full p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Mitarbeiter bearbeiten</h2>
+            <p className="text-gray-600 mb-4">
+              Um die Daten von <strong>{editingWorker.name}</strong> zu bearbeiten, gehen Sie bitte zur Profilseite des Mitarbeiters.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setEditingWorker(null);
+                  navigate(`/workers/${editingWorker.id}`);
+                }}
+                className="flex-1 px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-lg transition-all"
+              >
+                Zum Profil
+              </button>
+              <button
+                onClick={() => setEditingWorker(null)}
+                className="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold rounded-lg transition-all"
+              >
+                Abbrechen
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

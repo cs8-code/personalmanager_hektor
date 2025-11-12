@@ -137,28 +137,6 @@ export default function ServiceSection() {
             />
           </div>
         </div>
-
-        {/* Manager-only services below the H */}
-        {isManager && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto mt-12">
-            <ServiceCard
-              id="personal-management"
-              icon={UserPlus}
-              title="Personal hinzufügen"
-              description="Verwalten Sie Ihre Mitarbeiter und fügen Sie neue hinzu"
-              hashLink="#personal-management"
-              customRoute="/personal"
-            />
-            <ServiceCard
-              id="jobs-management"
-              icon={Briefcase}
-              title="Jobs verwalten"
-              description="Erstellen und verwalten Sie Ihre Stellenanzeigen"
-              hashLink="#jobs-management"
-              customRoute="/jobs-management"
-            />
-          </div>
-        )}
       </div>
     </section>
   );

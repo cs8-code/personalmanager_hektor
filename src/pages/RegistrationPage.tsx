@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { HardHat, ArrowLeft, CheckCircle, Eye, EyeOff } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import ImageUpload from '../components/ImageUpload';
+import { useAuth } from '../contexts/AuthContext';
 
 interface RegistrationData {
   first_name: string;
@@ -29,6 +30,8 @@ interface RegistrationData {
 }
 
 export default function RegistrationPage() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState('');
@@ -58,6 +61,12 @@ export default function RegistrationPage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/profile');
+    }
+  }, [user, navigate]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
