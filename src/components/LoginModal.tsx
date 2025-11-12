@@ -65,9 +65,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       });
 
       if (error) throw error;
-      
-      console.log('Login successful:', data);
-      
+
       // Show success and close modal
       alert('Login erfolgreich! Willkommen zurück!');
       onClose();

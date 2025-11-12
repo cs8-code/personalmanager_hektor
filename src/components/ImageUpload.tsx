@@ -77,7 +77,6 @@ export default function ImageUpload({ currentImageUrl, onImageUpload, userId, si
 
       // Auto-save to database if enabled
       if (autoSave) {
-        console.log('Auto-saving image URL to database...');
         const { error: dbError } = await supabase
           .from('workers')
           .update({
@@ -89,8 +88,6 @@ export default function ImageUpload({ currentImageUrl, onImageUpload, userId, si
         if (dbError) {
           console.error('Error auto-saving to database:', dbError);
           alert('Bild hochgeladen, aber Fehler beim Speichern in der Datenbank. Bitte speichern Sie Ihr Profil manuell.');
-        } else {
-          console.log('Image URL successfully saved to database');
         }
       }
     } catch (error: unknown) {

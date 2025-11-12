@@ -55,7 +55,10 @@ export default function WorkerListingPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
   const [userRole, setUserRole] = useState<string | null>(null);
+  // TODO: Implement add/edit worker modals - state setters are used but modals not yet implemented
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [showAddModal, setShowAddModal] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [editingWorker, setEditingWorker] = useState<Worker | null>(null);
   const [contactRequests, setContactRequests] = useState<Map<string, ContactRequest>>(new Map());
 

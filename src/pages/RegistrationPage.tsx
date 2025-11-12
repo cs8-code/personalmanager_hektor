@@ -230,8 +230,7 @@ export default function RegistrationPage() {
 
         // If selbständig, also create company profile
         if (formData.employment_type === 'selbständig') {
-          console.log('Creating company profile for selbständig user...');
-          const { data: companyData, error: companyError } = await supabase
+          const { error: companyError } = await supabase
             .from('companies')
             .insert({
               id: authData.user.id,
@@ -240,18 +239,15 @@ export default function RegistrationPage() {
               contact_person: `${formData.first_name} ${formData.last_name}`,
               email: formData.email,
               phone: formData.phone || null
-            })
-            .select();
+            });
 
           if (companyError) {
             console.error('Company creation error:', companyError);
             throw companyError;
           }
-          console.log('Company created successfully:', companyData);
         }
       }
 
-      console.log('Registration successful:', authData);
       setIsSubmitted(true);
     } catch (error: unknown) {
       console.error('Registration error:', error);
