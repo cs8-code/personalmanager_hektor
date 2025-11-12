@@ -11,8 +11,6 @@ export default function UserProfile() {
   }
 
   const displayName = userProfile.name || user.email?.split('@')[0] || 'User';
-  const userRole = userProfile.user_role;
-
   const copyUserId = () => {
     navigator.clipboard.writeText(user.id);
     setCopied(true);
@@ -47,12 +45,6 @@ export default function UserProfile() {
               )}
             </button>
           </div>
-
-          {userRole && (
-            <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800 mb-3">
-              {userRole}
-            </div>
-          )}
 
           {userProfile.phone && (
             <p className="text-sm text-gray-600 mt-3">

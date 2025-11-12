@@ -43,7 +43,7 @@ export default function ProfilePage() {
     username: '',
     email: '',
     phone: '',
-    birth_date: '',
+    birthdate: '',
     gender: '' as 'männlich' | 'weiblich' | 'divers' | '',
     city: '',
     employment_type: '' as 'selbständig' | 'angestellt' | '',
@@ -78,19 +78,19 @@ export default function ProfilePage() {
         username: userProfile.username || '',
         email: userProfile.email || '',
         phone: userProfile.phone || '',
-        birth_date: userProfile.birth_date || '',
-        gender: userProfile.gender || '',
+        birthdate: userProfile.birthdate || '', 
+        gender: (userProfile.gender as 'männlich' | 'weiblich' | 'divers' | '') || '',
         city: userProfile.city || '',
-        employment_type: userProfile.employment_type || '',
+        employment_type: (userProfile.employment_type as 'selbständig' | 'angestellt' | '') || '',
         company_name: userProfile.company_name || '',
         company_address: userProfile.company_address || '',
         qualifications: userProfile.qualifications || [],
         languages: userProfile.languages || [],
-        work_days: userProfile.work_days || '',
-        shifts: userProfile.shifts || '',
-        smoking_status: userProfile.smoking_status || '',
+        work_days: (userProfile.work_days as 'Montag bis Freitag' | 'Nur Wochenende' | '7-Tage (ohne Feiertag)' | 'Täglich (inklusive Feiertag)' | '') || '',
+        shifts: (userProfile.shifts as 'Früh' | 'Mittag/Spät' | 'Nacht' | 'Alle' | '') || '',
+        smoking_status: (userProfile.smoking_status as 'Raucher' | 'Nicht-Raucher' | '') || '',
         remarks: userProfile.remarks || '',
-        availability_status: userProfile.availability_status || '',
+        availability_status: (userProfile.availability_status as 'Sofort verfügbar' | 'demnächst verfügbar' | 'nicht verfügbar' | 'zurzeit beschäftigt' | '') || '',
       });
       setProfileImageUrl(userProfile.image_url || '');
     }
@@ -117,7 +117,7 @@ export default function ProfilePage() {
           name: `${formData.first_name} ${formData.last_name}`,
           username: formData.username,
           phone: formData.phone,
-          birth_date: formData.birth_date,
+          birth_date: formData.birthdate,
           gender: formData.gender,
           city: formData.city,
           employment_type: formData.employment_type,
@@ -331,12 +331,12 @@ export default function ProfilePage() {
               {isEditing ? (
                 <input
                   type="date"
-                  value={formData.birth_date}
-                  onChange={(e) => setFormData({ ...formData, birth_date: e.target.value })}
+                  value={formData.birthdate}
+                  onChange={(e) => setFormData({ ...formData, birthdate: e.target.value })}
                   className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-yellow-400 focus:outline-none"
                 />
               ) : (
-                <p className="text-gray-700">{formData.birth_date || '-'}</p>
+                <p className="text-gray-700">{formData.birthdate || '-'}</p>
               )}
             </div>
 

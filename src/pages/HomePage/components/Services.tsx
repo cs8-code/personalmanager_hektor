@@ -1,5 +1,5 @@
-import { Users, Briefcase, HardHat, Stethoscope, ShoppingCart, FileText, MessageSquare, Building2, UserPlus } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Users, Briefcase, Stethoscope, ShoppingCart, FileText, MessageSquare, Building2, UserPlus } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useState } from 'react';
 import LoginModal from '../../../components/LoginModal';
@@ -14,9 +14,8 @@ interface ServiceCardProps {
   requiresAuth?: boolean;
 }
 
-function ServiceCard({ id, icon: Icon, title, description, hashLink, customRoute, requiresAuth = false }: ServiceCardProps) {
+function ServiceCard({ icon: Icon, title, description, hashLink, customRoute, requiresAuth = false }: ServiceCardProps) {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   const handleClick = (e: React.MouseEvent) => {

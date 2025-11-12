@@ -15,7 +15,7 @@ export default function HeroSection() {
         </h1>
 
         {/* Subtitle (smaller than h1) */}
-        <h2 className="text-3xl sm:text-4xl font-semibold text-gray-800 mb-8 leading-snug">
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-8 leading-snug">
           Die Plattform für Personal und Firmen in der Gleisbausicherung
         </h2>
 

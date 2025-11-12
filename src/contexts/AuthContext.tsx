@@ -5,11 +5,23 @@ import { User } from '@supabase/supabase-js';
 interface UserProfile {
   id: string;
   name: string;
+  username: string;
   email: string;
   phone: string;
-  user_role: 'Subunternehmer' | 'SIPO';
-  qualifications: string[];
-  availability_status: string;
+  birthdate: string | null;
+  gender: string | null;
+  city: string | null;
+  employment_type: string | null;
+  company_name: string | null;
+  company_address: string | null;
+  languages: string[] | null;
+  qualifications: string[] | null;
+  work_days: string | null;
+  shifts: string | null;
+  smoking_status: string | null;
+  remarks: string | null;
+  availability_status: string | null;
+  image_url: string;
   location: string;
   experience_years: number;
   bio: string;
@@ -48,7 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .eq('id', userId)
         .maybeSingle();
 
-      const { data: roleData, error: roleError } = await supabase
+      const { data: roleData } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', userId)
@@ -67,10 +79,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           id: userId,
           name: user?.email?.split('@')[0] || 'User',
           email: user?.email || '',
+          username: '',
           phone: '',
-          user_role: 'SIPO',
+          birthdate: null,
+          gender: null,
+          city: null,
+          employment_type: null,
+          company_name: null,
+          company_address: null,
           qualifications: [],
-          availability_status: 'available',
+          languages: [],
+          work_days: null,
+          shifts: null,
+          smoking_status: null,
+          remarks: null,
+          availability_status: 'Sofort verfügbar',
+          image_url: '',
           location: '',
           experience_years: 0,
           bio: '',

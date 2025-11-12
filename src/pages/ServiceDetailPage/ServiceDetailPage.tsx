@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Users, Briefcase, Stethoscope, ShoppingCart, MessageSquare, FileText, Building2, HardHat } from 'lucide-react';
+import { ArrowLeft, Users, Briefcase, Stethoscope, ShoppingCart, MessageSquare, Building2, HardHat } from 'lucide-react';
 
 interface Service {
   id: string;

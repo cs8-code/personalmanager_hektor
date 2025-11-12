@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Building2, CheckCircle2, AlertCircle, FileText, Shield, Briefcase, GraduationCap, Users, Euro, Calculator, Phone } from 'lucide-react';
+import { ArrowLeft, Building2, CheckCircle2, AlertCircle, FileText, Shield, Briefcase, GraduationCap, Euro, Calculator, Phone } from 'lucide-react';
 
 interface ChecklistItem {
   text: string;

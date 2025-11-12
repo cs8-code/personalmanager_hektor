@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Search, MapPin, Briefcase, Clock, Euro, ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
@@ -23,8 +23,7 @@ interface Job {
 }
 
 export default function JobsPage() {
-  const { user, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
+  const { loading: authLoading } = useAuth();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
