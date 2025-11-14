@@ -53,6 +53,7 @@ export default function WorkerDetailPage() {
         fetchContactRequest();
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, user]);
 
   const fetchWorkerDetails = async () => {

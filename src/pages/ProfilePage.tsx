@@ -113,7 +113,7 @@ export default function ProfilePage() {
     setSaving(true);
     try {
       // Prepare update data - only include arbeitsort if column exists
-      const updateData: any = {
+      const updateData: Record<string, string | string[] | null> = {
         name: `${formData.first_name} ${formData.last_name}`,
         username: formData.username,
         phone: formData.phone,

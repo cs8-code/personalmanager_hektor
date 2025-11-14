@@ -43,7 +43,6 @@ export default function AdminPanel() {
       fetchUserRoles();
       fetchContactMessages();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAdmin]);
 
   const checkAdminStatus = async () => {

@@ -1,4 +1,4 @@
-import { Users, Briefcase, Stethoscope, ShoppingCart, FileText, MessageSquare, UserPlus } from 'lucide-react';
+import { Users, Briefcase, Stethoscope, ShoppingCart, FileText, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useState } from 'react';
@@ -63,9 +63,6 @@ function ServiceCard({ icon: Icon, title, description, hashLink, customRoute, re
 }
 
 export default function ServiceSection() {
-  const { userProfile } = useAuth();
-  const isManager = userProfile?.systemRole === 'manager' || userProfile?.systemRole === 'administrator';
-
   return (
     <section id="services" className="pt-24 pb-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-7xl mx-auto">

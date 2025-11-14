@@ -46,6 +46,7 @@ export default function WorkerListingPage() {
         fetchContactRequests();
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, authLoading]);
 
   const checkUserRole = async () => {
