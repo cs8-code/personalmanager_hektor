@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Building2, Shield, Leaf, HelpCircle, ArrowRight, CheckCircle, Sparkles } from 'lucide-react';
 import Footer from './HomePage/components/Footer';
-import HektorLogo from '../components/HektorLogo';
 
 interface ServiceCardProps {
   icon: React.ComponentType<{ className?: string }>;
@@ -129,13 +128,7 @@ export default function PersonalmanagerHektorPage() {
           <div className="max-w-7xl mx-auto">
             {/* Hero Section */}
             <div className="text-center mb-16">
-              <div className="flex justify-center mb-8 animate-fade-in">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full blur-xl opacity-30"></div>
-                  <HektorLogo className="w-20 h-20 relative" textClassName="text-4xl" showText={true} />
-                </div>
-              </div>
-              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-emerald-800 to-teal-800">
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 pb-2">
                 Personalmanager Hektor
               </h1>
               <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
