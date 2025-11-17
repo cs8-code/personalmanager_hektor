@@ -1,3 +1,0 @@
-Now that we have auth, let's make it only possbile for authenticated users to be able to access the Personalsuche page. 
-Also remove the "Jobs" and "Subunternehmer" from the navbar for logged  out users. 
-Also once you're logged in the hero section should't be visible anymore but only for logged out users

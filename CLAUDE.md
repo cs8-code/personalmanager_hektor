@@ -2,6 +2,23 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🏗️ Architecture Documentation
+
+**IMPORTANT:** This project has a comprehensive architecture implementation. Before making changes, review:
+
+1. **[ARCHITECTURE_README.md](./ARCHITECTURE_README.md)** - Quick start guide
+2. **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Detailed architecture documentation
+3. **[MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md)** - How to use new patterns
+4. **[ARCHITECTURE_SUMMARY.md](./ARCHITECTURE_SUMMARY.md)** - Executive summary
+
+**Key Architecture Patterns:**
+- ✅ **Service Layer** - Use `src/services/` for data operations (NOT direct Supabase calls)
+- ✅ **Custom Hooks** - Use `src/hooks/` for data fetching and business logic
+- ✅ **Centralized Types** - Import from `src/types/` (NOT local interfaces)
+- ✅ **Constants** - Use `src/constants/` (NO magic strings)
+- ✅ **Toast Notifications** - Use `useToast()` hook (NOT alert())
+- ✅ **Reusable Components** - Use components from `src/components/`
+
 ## Project Overview
 
 Personal Manager Hektor (siportal) is a personnel/recruitment management platform built with React + TypeScript + Vite + Supabase. It enables job posting, worker profiles, contract management, and connects employers with workers.
@@ -13,6 +30,7 @@ Personal Manager Hektor (siportal) is a personnel/recruitment management platfor
 - React Router DOM 7.9.4
 - Tailwind CSS 3.4.1
 - Lucide React 0.344.0 (icons)
+- React Hot Toast 2.x (notifications)
 
 ## Development Commands
 

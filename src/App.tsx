@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './contexts/AuthContext';
 
 // Lazy load route components for code splitting
@@ -32,6 +33,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
+        <Toaster />
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<PersonalmanagerHektorPage />} />
