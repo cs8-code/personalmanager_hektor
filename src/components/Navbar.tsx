@@ -12,7 +12,11 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [pendingRequestsCount, setPendingRequestsCount] = useState(0);
-  const { user, signOut } = useAuth();
+  const { user, userProfile, signOut } = useAuth();
+
+  const isManager = userProfile?.systemRole === 'manager' || userProfile?.systemRole === 'administrator';
+  const isSelbstandig = userProfile?.employment_type === 'selbständig';
+  const canManageJobs = isManager || isSelbstandig;
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -122,10 +126,13 @@ export default function Navbar() {
                 </button>
 
                 {userMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
                     <div className="px-4 py-2 text-sm text-gray-500 border-b border-gray-100">
                       <div className="font-medium">{user.user_metadata?.first_name} {user.user_metadata?.last_name}</div>
                       <div className="text-xs">{user.email}</div>
+                      {isManager && (
+                        <div className="mt-1 text-xs font-semibold text-blue-600">Manager</div>
+                      )}
                     </div>
                     <Link
                       to="/profile"
@@ -150,6 +157,57 @@ export default function Navbar() {
                         </span>
                       )}
                     </Link>
+
+                    {/* Manager-specific links */}
+                    {isManager && (
+                      <>
+                        <div className="border-t border-gray-100 my-1"></div>
+                        <Link
+                          to="/manager"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center w-full px-4 py-2 text-sm text-blue-700 hover:bg-blue-50 font-medium"
+                        >
+                          👥 Personal verwalten
+                        </Link>
+                        <Link
+                          to="/jobs-management"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center w-full px-4 py-2 text-sm text-blue-700 hover:bg-blue-50 font-medium"
+                        >
+                          💼 Jobs verwalten
+                        </Link>
+                        <Link
+                          to="/contracts-management"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center w-full px-4 py-2 text-sm text-blue-700 hover:bg-blue-50 font-medium"
+                        >
+                          📄 Aufträge verwalten
+                        </Link>
+                      </>
+                    )}
+
+                    {/* Selbständig-specific links */}
+                    {!isManager && canManageJobs && (
+                      <>
+                        <div className="border-t border-gray-100 my-1"></div>
+                        <Link
+                          to="/jobs-management"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center w-full px-4 py-2 text-sm text-green-700 hover:bg-green-50 font-medium"
+                        >
+                          💼 Jobs verwalten
+                        </Link>
+                        <Link
+                          to="/contracts-management"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center w-full px-4 py-2 text-sm text-green-700 hover:bg-green-50 font-medium"
+                        >
+                          📄 Aufträge verwalten
+                        </Link>
+                      </>
+                    )}
+
+                    <div className="border-t border-gray-100 my-1"></div>
                     <button
                       onClick={() => {
                         signOut();
@@ -217,6 +275,9 @@ export default function Navbar() {
                 <div className="px-2 py-2 text-sm text-gray-500">
                   <div className="font-medium">{user.user_metadata?.first_name} {user.user_metadata?.last_name}</div>
                   <div className="text-xs">{user.email}</div>
+                  {isManager && (
+                    <div className="mt-1 text-xs font-semibold text-blue-600">Manager</div>
+                  )}
                 </div>
                 <Link
                   to="/profile"
@@ -241,6 +302,57 @@ export default function Navbar() {
                     </span>
                   )}
                 </Link>
+
+                {/* Manager-specific links for mobile */}
+                {isManager && (
+                  <>
+                    <div className="border-t border-gray-200 my-2"></div>
+                    <Link
+                      to="/manager"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center w-full text-left text-blue-700 font-medium py-2"
+                    >
+                      👥 Personal verwalten
+                    </Link>
+                    <Link
+                      to="/jobs-management"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center w-full text-left text-blue-700 font-medium py-2"
+                    >
+                      💼 Jobs verwalten
+                    </Link>
+                    <Link
+                      to="/contracts-management"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center w-full text-left text-blue-700 font-medium py-2"
+                    >
+                      📄 Aufträge verwalten
+                    </Link>
+                  </>
+                )}
+
+                {/* Selbständig-specific links for mobile */}
+                {!isManager && canManageJobs && (
+                  <>
+                    <div className="border-t border-gray-200 my-2"></div>
+                    <Link
+                      to="/jobs-management"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center w-full text-left text-green-700 font-medium py-2"
+                    >
+                      💼 Jobs verwalten
+                    </Link>
+                    <Link
+                      to="/contracts-management"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center w-full text-left text-green-700 font-medium py-2"
+                    >
+                      📄 Aufträge verwalten
+                    </Link>
+                  </>
+                )}
+
+                <div className="border-t border-gray-200 my-2"></div>
                 <button
                   onClick={() => {
                     signOut();

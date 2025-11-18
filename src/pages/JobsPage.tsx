@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Search, MapPin, Briefcase, Clock, Euro, ArrowRight } from 'lucide-react';
+import { Search, MapPin, Briefcase, Clock, Euro, ArrowRight, Plus } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import Navbar from '../components/Navbar';
@@ -23,12 +23,16 @@ interface Job {
 }
 
 export default function JobsPage() {
-  const { loading: authLoading } = useAuth();
+  const { user, userProfile, loading: authLoading } = useAuth();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const [employmentTypeFilter, setEmploymentTypeFilter] = useState('');
+
+  const isManager = userProfile?.systemRole === 'manager' || userProfile?.systemRole === 'administrator';
+  const isSelbstandig = userProfile?.employment_type === 'selbständig';
+  const canManageJobs = isManager || isSelbstandig;
 
   useEffect(() => {
     if (!authLoading) {
@@ -82,10 +86,23 @@ export default function JobsPage() {
           >
             ← Zurück zur Startseite
           </Link>
-          <h1 className="text-4xl font-bold mb-4">Jobs finden</h1>
-          <p className="text-xl text-blue-100">
-            Finden Sie Ihre nächste Karrierechance in der Bauüberwachung
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold mb-4">Jobs finden</h1>
+              <p className="text-xl text-blue-100">
+                Finden Sie Ihre nächste Karrierechance in der Bauüberwachung
+              </p>
+            </div>
+            {user && canManageJobs && (
+              <Link
+                to="/jobs-management"
+                className="flex items-center px-6 py-3 bg-white text-blue-600 font-bold rounded-lg hover:bg-gray-100 transition-all shadow-lg"
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                Job erstellen
+              </Link>
+            )}
+          </div>
         </div>
       </div>
 

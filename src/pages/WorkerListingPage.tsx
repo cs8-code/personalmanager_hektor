@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { ArrowLeft, MapPin, Mail, Phone, Edit2, Trash2, Send, Eye, Clock, Search } from 'lucide-react';
+import { ArrowLeft, MapPin, Mail, Phone, Edit2, Trash2, Send, Eye, Clock, Search, Plus } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
@@ -29,7 +29,7 @@ interface ContactRequest {
 }
 
 export default function WorkerListingPage() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, userProfile, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,6 +39,8 @@ export default function WorkerListingPage() {
   const [userRole, setUserRole] = useState<string | null>(null);
   const [editingWorker, setEditingWorker] = useState<Worker | null>(null);
   const [contactRequests, setContactRequests] = useState<Map<string, ContactRequest>>(new Map());
+
+  const isManager = userProfile?.systemRole === 'manager' || userProfile?.systemRole === 'administrator';
 
   useEffect(() => {
     if (!authLoading) {
@@ -193,6 +195,15 @@ export default function WorkerListingPage() {
               <div className="h-8 w-px bg-gray-300"></div>
               <h1 className="text-2xl font-bold text-gray-900">Personalsuche</h1>
             </div>
+            {isManager && (
+              <Link
+                to="/manager"
+                className="flex items-center px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded-lg transition-all shadow-lg"
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                Personal erstellen
+              </Link>
+            )}
           </div>
         </div>
       </header>

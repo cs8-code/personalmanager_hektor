@@ -15,10 +15,11 @@ interface Company {
 }
 
 export default function ContractManagementPage() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, userProfile, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [company, setCompany] = useState<Company | null>(null);
+  const isManager = userProfile?.systemRole === 'manager' || userProfile?.systemRole === 'administrator';
 
   const [formData, setFormData] = useState({
     location: '',
@@ -42,6 +43,32 @@ export default function ContractManagementPage() {
   const loadCompanyData = async () => {
     if (!user) return;
 
+    // Managers and administrators can create contracts without company data
+    if (isManager) {
+      // For managers, we'll use their worker profile data
+      try {
+        const { data: workerData } = await supabase
+          .from('workers')
+          .select('*')
+          .eq('id', user.id)
+          .maybeSingle();
+
+        if (workerData) {
+          setCompany({
+            id: workerData.id,
+            company_name: workerData.company_name || 'Management',
+            company_address: workerData.company_address || '',
+            contact_person: workerData.name,
+            email: workerData.email,
+            phone: workerData.phone
+          });
+        }
+      } catch (error) {
+        console.error('Error loading worker data:', error);
+      }
+      return;
+    }
+
     try {
       const { data, error } = await supabase
         .from('companies')
@@ -52,7 +79,7 @@ export default function ContractManagementPage() {
       if (error) throw error;
 
       if (!data) {
-        alert('Sie müssen als Selbständig registriert sein, um Aufträge zu erstellen.');
+        alert('Sie müssen als Selbständig registriert sein oder Manager-Rechte haben, um Aufträge zu erstellen.');
         navigate('/contracts');
         return;
       }

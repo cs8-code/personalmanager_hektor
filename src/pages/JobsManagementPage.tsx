@@ -45,13 +45,15 @@ export default function JobsManagementPage() {
   });
 
   const isManager = userProfile?.systemRole === 'manager' || userProfile?.systemRole === 'administrator';
+  const isSelbstandig = userProfile?.employment_type === 'selbständig';
+  const canManageJobs = isManager || isSelbstandig;
 
   useEffect(() => {
-    if (user && isManager) {
+    if (user && canManageJobs) {
       loadJobs();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, isManager]);
+  }, [user, canManageJobs]);
 
   const loadJobs = async () => {
     try {
@@ -191,14 +193,16 @@ export default function JobsManagementPage() {
     );
   }
 
-  if (!user || !isManager) {
+  if (!user || !canManageJobs) {
     return (
       <>
         <Navbar />
         <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-16">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Zugriff verweigert</h2>
-            <p className="text-gray-600 mb-6">Sie benötigen Manager-Rechte für diese Seite.</p>
+            <p className="text-gray-600 mb-6">
+              Sie benötigen Manager-Rechte oder müssen als Selbständiger registriert sein, um Jobs zu verwalten.
+            </p>
             <Link
               to="/siportal"
               className="text-blue-600 hover:text-blue-700 font-semibold"
