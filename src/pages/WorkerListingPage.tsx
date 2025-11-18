@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { ArrowLeft, MapPin, Mail, Phone, Edit2, Trash2, Send, Eye, Clock } from 'lucide-react';
+import { ArrowLeft, MapPin, Mail, Phone, Edit2, Trash2, Send, Eye, Clock, Search } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
@@ -34,6 +34,8 @@ export default function WorkerListingPage() {
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [locationFilter, setLocationFilter] = useState('');
   const [userRole, setUserRole] = useState<string | null>(null);
   const [editingWorker, setEditingWorker] = useState<Worker | null>(null);
   const [contactRequests, setContactRequests] = useState<Map<string, ContactRequest>>(new Map());
@@ -156,9 +158,22 @@ export default function WorkerListingPage() {
     }
   };
 
-  const filteredWorkers = filter === 'all'
-    ? workers
-    : workers.filter(w => w.availability_status === filter);
+  const filteredWorkers = workers.filter((worker) => {
+    const matchesAvailability = filter === 'all' || worker.availability_status === filter;
+
+    const matchesSearch =
+      searchTerm === '' ||
+      worker.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      worker.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      worker.bio.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      worker.qualifications.some(q => q.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const matchesLocation =
+      locationFilter === '' ||
+      worker.location.toLowerCase().includes(locationFilter.toLowerCase());
+
+    return matchesAvailability && matchesSearch && matchesLocation;
+  });
 
   return (
     <>
@@ -183,6 +198,34 @@ export default function WorkerListingPage() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Search and Location Filters */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Name, Qualifikation oder Beschreibung suchen..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+              />
+            </div>
+
+            <div className="relative">
+              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Ort"
+                value={locationFilter}
+                onChange={(e) => setLocationFilter(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Availability Filter */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Filter nach Verfügbarkeit</h2>
           <div className="flex flex-wrap gap-3">
