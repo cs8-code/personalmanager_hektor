@@ -7,8 +7,8 @@
 export const AVAILABILITY_STATUS = {
   IMMEDIATELY_AVAILABLE: 'sofort verfügbar',
   AVAILABLE_SOON: 'demnächst verfügbar',
-  MINIJOB_LOOKING_PARTTIME: 'Minijob beschäftigt und teilzeit arbeitssuchend',
-  CURRENTLY_EMPLOYED: 'aktuell beschäftigt',
+  NOT_AVAILABLE: 'nicht verfügbar',
+  CURRENTLY_EMPLOYED: 'zurzeit beschäftigt',
 } as const;
 
 export const AVAILABILITY_STATUS_VALUES = Object.values(AVAILABILITY_STATUS);
@@ -16,8 +16,8 @@ export const AVAILABILITY_STATUS_VALUES = Object.values(AVAILABILITY_STATUS);
 export const AVAILABILITY_STATUS_LABELS: Record<string, string> = {
   [AVAILABILITY_STATUS.IMMEDIATELY_AVAILABLE]: 'Sofort verfügbar',
   [AVAILABILITY_STATUS.AVAILABLE_SOON]: 'Demnächst verfügbar',
-  [AVAILABILITY_STATUS.MINIJOB_LOOKING_PARTTIME]: 'Minijob beschäftigt und teilzeit arbeitssuchend',
-  [AVAILABILITY_STATUS.CURRENTLY_EMPLOYED]: 'Aktuell beschäftigt',
+  [AVAILABILITY_STATUS.NOT_AVAILABLE]: 'Nicht verfügbar',
+  [AVAILABILITY_STATUS.CURRENTLY_EMPLOYED]: 'Zurzeit beschäftigt',
 };
 
 // Job statuses

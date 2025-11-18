@@ -56,7 +56,7 @@ export default function ProfilePage() {
     smoking_status: '' as 'Raucher' | 'Nicht-Raucher' | '',
     arbeitsort: '' as 'Nahbaustellen' | 'Montage (ohne km-Begrenzung)' | 'Montage (mit km-Begrenzung)' | 'Nahbau & Montage' | '',
     remarks: '',
-    availability_status: '' as 'Sofort verfügbar' | 'demnächst verfügbar' | 'nicht verfügbar' | 'zurzeit beschäftigt' | '',
+    availability_status: '' as 'sofort verfügbar' | 'demnächst verfügbar' | 'nicht verfügbar' | 'zurzeit beschäftigt' | '',
   });
 
   useEffect(() => {
@@ -92,7 +92,7 @@ export default function ProfilePage() {
         smoking_status: (userProfile.smoking_status as 'Raucher' | 'Nicht-Raucher' | '') || '',
         arbeitsort: (userProfile.arbeitsort as 'Nahbaustellen' | 'Montage (ohne km-Begrenzung)' | 'Montage (mit km-Begrenzung)' | 'Nahbau & Montage' | '') || '',
         remarks: userProfile.remarks || '',
-        availability_status: (userProfile.availability_status as 'Sofort verfügbar' | 'demnächst verfügbar' | 'nicht verfügbar' | 'zurzeit beschäftigt' | '') || '',
+        availability_status: (userProfile.availability_status as 'sofort verfügbar' | 'demnächst verfügbar' | 'nicht verfügbar' | 'zurzeit beschäftigt' | '') || '',
       });
       setProfileImageUrl(userProfile.image_url || '');
     }
@@ -552,11 +552,11 @@ export default function ProfilePage() {
               {isEditing ? (
                 <select
                   value={formData.availability_status}
-                  onChange={(e) => setFormData({ ...formData, availability_status: e.target.value as 'Sofort verfügbar' | 'demnächst verfügbar' | 'nicht verfügbar' | 'zurzeit beschäftigt' | '' })}
+                  onChange={(e) => setFormData({ ...formData, availability_status: e.target.value as 'sofort verfügbar' | 'demnächst verfügbar' | 'nicht verfügbar' | 'zurzeit beschäftigt' | '' })}
                   className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-yellow-400 focus:outline-none"
                 >
                   <option value="">Bitte wählen</option>
-                  <option value="Sofort verfügbar">Sofort verfügbar</option>
+                  <option value="sofort verfügbar">Sofort verfügbar</option>
                   <option value="demnächst verfügbar">demnächst verfügbar</option>
                   <option value="nicht verfügbar">nicht verfügbar</option>
                   <option value="zurzeit beschäftigt">zurzeit beschäftigt</option>

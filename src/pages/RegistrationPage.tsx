@@ -24,7 +24,7 @@ interface RegistrationData {
   smoking_status: 'Raucher' | 'Nicht-Raucher' | '';
   arbeitsort: 'Nahbaustellen' | 'Montage (ohne km-Begrenzung)' | 'Montage (mit km-Begrenzung)' | 'Nahbau & Montage' | '';
   remarks: string;
-  availability_status: 'Sofort verfügbar' | 'demnächst verfügbar' | 'nicht verfügbar' | 'zurzeit beschäftigt' | '';
+  availability_status: 'sofort verfügbar' | 'demnächst verfügbar' | 'nicht verfügbar' | 'zurzeit beschäftigt' | '';
   password: string;
   confirmPassword: string;
 }
@@ -605,7 +605,7 @@ export default function RegistrationPage() {
                     }`}
                   >
                     <option value="">Bitte wählen</option>
-                    <option value="Sofort verfügbar">Sofort verfügbar</option>
+                    <option value="sofort verfügbar">Sofort verfügbar</option>
                     <option value="demnächst verfügbar">demnächst verfügbar</option>
                     <option value="nicht verfügbar">nicht verfügbar</option>
                     <option value="zurzeit beschäftigt">zurzeit beschäftigt</option>

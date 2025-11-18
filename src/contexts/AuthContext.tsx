@@ -97,7 +97,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           smoking_status: null,
           arbeitsort: null,
           remarks: null,
-          availability_status: 'Sofort verfügbar',
+          availability_status: '',
           image_url: '',
           location: '',
           experience_years: 0,

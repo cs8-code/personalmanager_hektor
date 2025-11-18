@@ -259,15 +259,25 @@ export default function WorkerListingPage() {
             >
               Demnächst verfügbar
             </button>
+             <button
+              onClick={() => setFilter('nicht verfügbar')}
+              className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                filter === 'nicht verfügbar'
+                  ? 'bg-yellow-400 text-gray-900'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              Nicht verfügbar
+            </button>
             <button
-              onClick={() => setFilter('Minijob beschäftigt und teilzeit arbeitssuchend')}
+              onClick={() => setFilter('zurzeit beschäftigt')}
               className={`px-4 py-2 rounded-lg font-medium transition-all ${
                 filter === 'Minijob beschäftigt und teilzeit arbeitssuchend'
                   ? 'bg-yellow-400 text-gray-900'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              Teilzeit arbeitssuchend
+              Zurzeit beschäftigt
             </button>
           </div>
         </div>
