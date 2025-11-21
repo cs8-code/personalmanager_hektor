@@ -5,7 +5,8 @@
       "Bash(npm run build:*)",
       "Bash(npm install:*)",
       "Bash(npx supabase:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Skill(frontend-design:frontend-design)"
     ],
     "deny": [],
     "ask": []
