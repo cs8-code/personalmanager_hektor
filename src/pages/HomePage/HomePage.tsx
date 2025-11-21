@@ -1,4 +1,3 @@
-import { useAuth } from '../../contexts/AuthContext';
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Navbar from '../../components/Navbar';
@@ -10,7 +9,6 @@ import Footer from './components/Footer';
 import LoginModal from '../../components/LoginModal';
 
 export default function HomePage() {
-  const {user} = useAuth();
   const location = useLocation();
   const [showLoginModal, setShowLoginModal] = useState(false);
 
@@ -24,7 +22,7 @@ export default function HomePage() {
   <div className="min-h-screen bg-white">
     <Navbar />
     <main className='flex-grow'>
-      {!user && <HeroSection />}
+      <HeroSection />
       <Services />
       <CareerGuideCombined />
       <Contact />

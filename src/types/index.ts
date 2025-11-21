@@ -8,6 +8,7 @@ export * from './worker.types';
 export * from './job.types';
 export * from './contract.types';
 export * from './contactRequest.types';
+export * from './survey.types';
 
 // Common utility types
 export interface PaginationParams {

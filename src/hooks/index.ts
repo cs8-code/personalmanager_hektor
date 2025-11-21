@@ -10,3 +10,4 @@ export * from './useContactRequests';
 export * from './useForm';
 export * from './usePermissions';
 export * from './useToast';
+export * from './useSurvey';

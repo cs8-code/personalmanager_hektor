@@ -10,3 +10,4 @@ export * from './contactRequestService';
 export * from './authService';
 export * from './adminService';
 export * from './storageService';
+export * from './surveyService';

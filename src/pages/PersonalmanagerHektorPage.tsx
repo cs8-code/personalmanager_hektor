@@ -136,26 +136,6 @@ export default function PersonalmanagerHektorPage() {
               </p>
             </div>
 
-            {/* Welcome Banner */}
-            <div className="relative bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 rounded-3xl p-8 md:p-12 mb-16 shadow-2xl overflow-hidden">
-              <div className="absolute inset-0 bg-grid-white/10"></div>
-              <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-
-              <div className="max-w-3xl mx-auto text-center relative z-10">
-                <div className="flex justify-center mb-4">
-                  <Sparkles className="w-10 h-10 text-white/90" />
-                </div>
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                  Willkommen bei Personalmanager Hektor
-                </h2>
-                <p className="text-lg md:text-xl text-white/90 leading-relaxed">
-                  Wir bieten innovative Lösungen für Ihr Unternehmen. Von Bauüberwachung über Sicherheitsdienste
-                  bis hin zu Facility Management – alles aus einer Hand.
-                </p>
-              </div>
-            </div>
-
             {/* Services Grid */}
             <div className="grid md:grid-cols-2 gap-8 mb-16">
               {services.map((service) => (
