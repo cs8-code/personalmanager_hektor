@@ -626,14 +626,19 @@ export default function RegistrationPage() {
                     'SIPO',
                     'SAKRA',
                     'Büro & technisches Arbeiten',
+                    'Scheibenaufsteller',
+                    'AwS Monteur',
+                    'BM',
+                    'BüP',
+                    'HiBA',
+                    'SH2',
+                    'SAS',
+                    'Planprüfer',
+                    'Projektan',
                     '4.2',
                     'Koordinator',
                     'Einsatzleiter',
                     'Bahnerder',
-                    'BüP',
-                    'HIB',
-                    'Scheibenaufsteller',
-                    'BM',
                     'Führerschein'
                   ].map((qualification) => (
                     <label
@@ -795,8 +800,6 @@ export default function RegistrationPage() {
               </div>
 
  
-
-   
               {/* Password */}
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">

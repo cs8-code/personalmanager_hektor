@@ -10,14 +10,19 @@ const availableQualifications = [
   'SIPO',
   'SAKRA',
   'Büro & technisches Arbeiten',
+  'Scheibenaufsteller',
+  'AwS Monteur',
+  'BM',
+  'BüP',
+  'HiBA',
+  'SH2',
+  'SAS',
+  'Planprüfer',
+  'Projektan',
   '4.2',
   'Koordinator',
   'Einsatzleiter',
   'Bahnerder',
-  'BüP',
-  'HIB',
-  'Scheibenaufsteller',
-  'BM',
   'Führerschein'
 ];
 
