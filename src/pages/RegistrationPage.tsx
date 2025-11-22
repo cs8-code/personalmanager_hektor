@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import ImageUpload from '../components/ImageUpload';
 import { useAuth } from '../contexts/AuthContext';
+import { QUALIFICATIONS } from '../constants/qualifications';
 
 interface RegistrationData {
   first_name: string;
@@ -622,25 +623,7 @@ export default function RegistrationPage() {
                   Qualifikationen
                 </label>
                 <div className="grid grid-cols-2 gap-3">
-                  {[
-                    'SIPO',
-                    'SAKRA',
-                    'Büro & technisches Arbeiten',
-                    'Scheibenaufsteller',
-                    'AwS Monteur',
-                    'BM',
-                    'BüP',
-                    'HiBA',
-                    'SH2',
-                    'SAS',
-                    'Planprüfer',
-                    'Projektan',
-                    '4.2',
-                    'Koordinator',
-                    'Einsatzleiter',
-                    'Bahnerder',
-                    'Führerschein'
-                  ].map((qualification) => (
+                  {QUALIFICATIONS.map((qualification) => (
                     <label
                       key={qualification}
                       className="flex items-center space-x-2 cursor-pointer"

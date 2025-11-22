@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { ArrowLeft, MapPin, Mail, Phone, Edit2, Trash2, Send, Eye, Clock, Search, Plus } from 'lucide-react';
+import { ArrowLeft, MapPin, Mail, Phone, Edit2, Trash2, Send, Eye, Clock, Search, Plus, ChevronDown } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
 import { calculateAge } from '../utils/dateUtils';
 import { getStatusColor, getStatusIcon } from '../utils/statusUtils';
+import { QUALIFICATIONS } from '../constants/qualifications';
 
 interface Worker {
   id: string;
@@ -33,14 +34,25 @@ export default function WorkerListingPage() {
   const navigate = useNavigate();
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<string>('all');
+  const [availabilityFilter, setAvailabilityFilter] = useState<string>('all');
+  const [qualificationFilters, setQualificationFilters] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const [userRole, setUserRole] = useState<string | null>(null);
   const [editingWorker, setEditingWorker] = useState<Worker | null>(null);
   const [contactRequests, setContactRequests] = useState<Map<string, ContactRequest>>(new Map());
+  const [showAvailabilityDropdown, setShowAvailabilityDropdown] = useState(false);
+  const [showQualificationDropdown, setShowQualificationDropdown] = useState(false);
 
   const isManager = userProfile?.systemRole === 'manager' || userProfile?.systemRole === 'administrator';
+
+  const availabilityOptions = [
+    { value: 'all', label: 'Alle' },
+    { value: 'sofort verfügbar', label: 'Sofort verfügbar' },
+    { value: 'demnächst verfügbar', label: 'Demnächst verfügbar' },
+    { value: 'nicht verfügbar', label: 'Nicht verfügbar' },
+    { value: 'Minijob beschäftigt und teilzeit arbeitssuchend', label: 'Zurzeit beschäftigt' },
+  ];
 
   useEffect(() => {
     if (!authLoading) {
@@ -52,6 +64,26 @@ export default function WorkerListingPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, authLoading]);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      // Check if click is outside dropdown containers
+      if (!target.closest('.dropdown-container')) {
+        setShowAvailabilityDropdown(false);
+        setShowQualificationDropdown(false);
+      }
+    };
+
+    if (showAvailabilityDropdown || showQualificationDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showAvailabilityDropdown, showQualificationDropdown]);
 
   const checkUserRole = async () => {
     if (!user) return;
@@ -160,8 +192,20 @@ export default function WorkerListingPage() {
     }
   };
 
+  const toggleQualification = (qual: string) => {
+    setQualificationFilters(prev =>
+      prev.includes(qual)
+        ? prev.filter(q => q !== qual)
+        : [...prev, qual]
+    );
+  };
+
   const filteredWorkers = workers.filter((worker) => {
-    const matchesAvailability = filter === 'all' || worker.availability_status === filter;
+    const matchesAvailability = availabilityFilter === 'all' || worker.availability_status === availabilityFilter;
+
+    const matchesQualifications =
+      qualificationFilters.length === 0 ||
+      qualificationFilters.some(qual => worker.qualifications.includes(qual));
 
     const matchesSearch =
       searchTerm === '' ||
@@ -174,7 +218,7 @@ export default function WorkerListingPage() {
       locationFilter === '' ||
       worker.location.toLowerCase().includes(locationFilter.toLowerCase());
 
-    return matchesAvailability && matchesSearch && matchesLocation;
+    return matchesAvailability && matchesQualifications && matchesSearch && matchesLocation;
   });
 
   return (
@@ -236,61 +280,129 @@ export default function WorkerListingPage() {
           </div>
         </div>
 
-        {/* Availability Filter */}
+        {/* Filters */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Filter nach Verfügbarkeit</h2>
-          <div className="flex flex-wrap gap-3">
-            <button
-              onClick={() => setFilter('all')}
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                filter === 'all'
-                  ? 'bg-yellow-400 text-gray-900'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Alle anzeigen
-            </button>
-            <button
-              onClick={() => setFilter('sofort verfügbar')}
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                filter === 'sofort verfügbar'
-                  ? 'bg-yellow-400 text-gray-900'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Sofort verfügbar
-            </button>
-            <button
-              onClick={() => setFilter('demnächst verfügbar')}
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                filter === 'demnächst verfügbar'
-                  ? 'bg-yellow-400 text-gray-900'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Demnächst verfügbar
-            </button>
-             <button
-              onClick={() => setFilter('nicht verfügbar')}
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                filter === 'nicht verfügbar'
-                  ? 'bg-yellow-400 text-gray-900'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Nicht verfügbar
-            </button>
-            <button
-              onClick={() => setFilter('zurzeit beschäftigt')}
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                filter === 'Minijob beschäftigt und teilzeit arbeitssuchend'
-                  ? 'bg-yellow-400 text-gray-900'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Zurzeit beschäftigt
-            </button>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Filtern nach</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            {/* Verfügbarkeit Dropdown */}
+            <div className="relative dropdown-container">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Verfügbarkeit
+              </label>
+              <button
+                onClick={() => {
+                  setShowAvailabilityDropdown(!showAvailabilityDropdown);
+                  setShowQualificationDropdown(false);
+                }}
+                className="w-full flex items-center justify-between px-4 py-3 bg-white border-2 border-gray-300 rounded-lg hover:border-yellow-400 focus:border-yellow-400 focus:outline-none transition-colors"
+              >
+                <span className="text-gray-900">
+                  {availabilityOptions.find(opt => opt.value === availabilityFilter)?.label || 'Alle'}
+                </span>
+                <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${showAvailabilityDropdown ? 'rotate-180' : ''}`} />
+              </button>
+
+              {showAvailabilityDropdown && (
+                <div className="absolute z-50 w-full mt-2 bg-white border-2 border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                  {availabilityOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => {
+                        setAvailabilityFilter(option.value);
+                        setShowAvailabilityDropdown(false);
+                      }}
+                      className={`w-full text-left px-4 py-3 hover:bg-yellow-50 transition-colors ${
+                        availabilityFilter === option.value ? 'bg-yellow-100 font-semibold' : ''
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Qualifikation Dropdown */}
+            <div className="relative dropdown-container">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Qualifikation
+              </label>
+              <button
+                onClick={() => {
+                  setShowQualificationDropdown(!showQualificationDropdown);
+                  setShowAvailabilityDropdown(false);
+                }}
+                className="w-full flex items-center justify-between px-4 py-3 bg-white border-2 border-gray-300 rounded-lg hover:border-yellow-400 focus:border-yellow-400 focus:outline-none transition-colors"
+              >
+                <span className="text-gray-900 truncate">
+                  {qualificationFilters.length === 0
+                    ? 'Alle Qualifikationen'
+                    : `${qualificationFilters.length} ausgewählt`}
+                </span>
+                <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform flex-shrink-0 ${showQualificationDropdown ? 'rotate-180' : ''}`} />
+              </button>
+
+              {showQualificationDropdown && (
+                <div className="absolute z-50 w-full mt-2 bg-white border-2 border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                  {QUALIFICATIONS.map((qual) => (
+                    <label
+                      key={qual}
+                      className="flex items-center px-4 py-3 hover:bg-yellow-50 cursor-pointer transition-colors"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={qualificationFilters.includes(qual)}
+                        onChange={() => toggleQualification(qual)}
+                        className="w-4 h-4 text-yellow-400 border-gray-300 rounded focus:ring-yellow-400 focus:ring-2"
+                      />
+                      <span className="ml-3 text-gray-900">{qual}</span>
+                    </label>
+                  ))}
+                  {qualificationFilters.length > 0 && (
+                    <button
+                      onClick={() => setQualificationFilters([])}
+                      className="w-full px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold border-t-2 border-gray-200 transition-colors"
+                    >
+                      Alle abwählen
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
+
+          {/* Active Filters Display */}
+          {(qualificationFilters.length > 0 || availabilityFilter !== 'all') && (
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <div className="flex flex-wrap gap-2">
+                {availabilityFilter !== 'all' && (
+                  <span className="inline-flex items-center px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
+                    {availabilityOptions.find(opt => opt.value === availabilityFilter)?.label}
+                    <button
+                      onClick={() => setAvailabilityFilter('all')}
+                      className="ml-2 hover:text-yellow-900"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
+                {qualificationFilters.map((qual) => (
+                  <span
+                    key={qual}
+                    className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+                  >
+                    {qual}
+                    <button
+                      onClick={() => toggleQualification(qual)}
+                      className="ml-2 hover:text-blue-900"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {loading ? (
