@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Building2, Shield, Leaf, HelpCircle, ArrowRight, CheckCircle } from 'lucide-react';
 import Footer from './HomePage/components/Footer';
+import Contact from './HomePage/components/Contact';
 
 interface ServiceCardProps {
   icon: React.ComponentType<{ className?: string }>;
@@ -143,28 +144,11 @@ export default function PersonalmanagerHektorPage() {
               ))}
             </div>
 
-            {/* CTA Section */}
-            <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-12 text-center shadow-xl border border-gray-200/50">
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-50/50 to-teal-50/50 rounded-3xl"></div>
-              <div className="relative z-10">
-                <h3 className="text-3xl font-bold text-gray-900 mb-4">
-                  Haben Sie Fragen zu unseren Services?
-                </h3>
-                <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-                  Kontaktieren Sie uns für weitere Informationen oder um über kommende Services
-                  auf dem Laufenden zu bleiben.
-                </p>
-                <button
-                  onClick={() => navigate('/siportal#contact')}
-                  className="group px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold rounded-xl transition-all duration-300 inline-flex items-center shadow-lg hover:shadow-xl"
-                >
-                  Kontakt aufnehmen
-                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </div>
-            </div>
           </div>
         </section>
+
+        {/* Contact Section */}
+        <Contact />
       </main>
 
       <Footer />

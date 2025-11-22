@@ -1,4 +1,4 @@
-import { Users, Briefcase, Stethoscope, ShoppingCart, FileText, MessageSquare, GraduationCap } from 'lucide-react';
+import { Users, Briefcase, Stethoscope, ShoppingCart, FileText, GraduationCap, LayoutGrid } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useState } from 'react';
@@ -66,18 +66,19 @@ export default function ServiceSection() {
   return (
     <section id="services" className="pt-24 pb-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">
-            Services
-          </h2>
-          <p className="text-lg text-gray-600">
-            Alles, was du für deine Karriere in der Gleisbausicherung brauchst
-          </p>
-        </div>
-
         {/* Main Search Section */}
+        <div className="text-center mb-12">
+            <div className="flex items-center justify-center gap-3 mb-3">
+              <LayoutGrid className="w-8 h-8 text-yellow-600" />
+            </div>
+            <p className="text-4xl font-bold text-gray-900 mb-4">
+              Unsere Services
+            </p>
+            <p className="text-lg text-gray-600">
+              Alles, was du für deine Karriere in der Gleisbausicherung brauchst
+            </p>
+          </div>
         <div className="max-w-5xl mx-auto mb-12">
-          <div className="bg-white rounded-3xl p-8 shadow-xl border-2 border-gray-100">
             <div className="grid md:grid-cols-3 gap-6">
               {/* Personal */}
               <Link
@@ -116,45 +117,6 @@ export default function ServiceSection() {
                 <p className="text-gray-700 text-sm text-center">Neue Projekte für Ihr Subunternehmen</p>
               </Link>
             </div>
-          </div>
-        </div>
-
-        {/* SiPOS & SUPiS Featured Section */}
-        <div className="max-w-5xl mx-auto mb-12">
-          <div className="bg-white rounded-3xl p-8 shadow-xl border-2 border-gray-100">
-            <div className="flex items-center justify-center w-20 h-20 rounded-xl mb-6 mx-auto">
-               <MessageSquare className="w-10 h-10 text-gray-900" />
-            </div>
-
-            <h3 className="text-3xl font-bold text-gray-900 mb-4 text-center">SIPOS & SUPIS</h3>
-            <p className="text-lg text-gray-700 text-center mb-6">Community und Austausch für Subunternehmer oder Angestellte</p>
-
-            <div className="grid md:grid-cols-2 gap-6 mt-6">
-              {/* Business Room */}
-              <Link
-                to="/business-room"
-                className="group bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border-2 border-blue-200 hover:border-blue-400 hover:shadow-lg transition-all transform hover:scale-105 cursor-pointer"
-              >
-                <div className="flex items-center justify-center w-16 h-16 bg-blue-400 rounded-xl mb-4 group-hover:bg-blue-500 transition-colors mx-auto">
-                  <Briefcase className="w-8 h-8 text-white" />
-                </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-2 text-center">Business Room</h4>
-                <p className="text-gray-700 text-sm text-center">Für selbständige Subunternehmer</p>
-              </Link>
-
-              {/* Tal der SIPOS */}
-              <Link
-                to="/sipo-news"
-                className="group bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl p-6 border-2 border-yellow-200 hover:border-yellow-400 hover:shadow-lg transition-all transform hover:scale-105 cursor-pointer"
-              >
-                <div className="flex items-center justify-center w-16 h-16 bg-yellow-400 rounded-xl mb-4 group-hover:bg-yellow-500 transition-colors mx-auto">
-                  <Users className="w-8 h-8 text-gray-900" />
-                </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-2 text-center">Tal der SIPOS</h4>
-                <p className="text-gray-700 text-sm text-center">Für angestellte Bauleiter</p>
-              </Link>
-            </div>
-          </div>
         </div>
 
         {/* Additional Services Grid */}
