@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
 import { calculateAge } from '../utils/dateUtils';
 import { getStatusColor, getStatusIcon } from '../utils/statusUtils';
-import { QUALIFICATIONS } from '../constants/qualifications';
+import { QUALIFICATIONS, AVAILABILITY_STATUSES } from '../constants';
 
 interface Worker {
   id: string;
@@ -48,10 +48,10 @@ export default function WorkerListingPage() {
 
   const availabilityOptions = [
     { value: 'all', label: 'Alle' },
-    { value: 'sofort verfügbar', label: 'Sofort verfügbar' },
-    { value: 'demnächst verfügbar', label: 'Demnächst verfügbar' },
-    { value: 'nicht verfügbar', label: 'Nicht verfügbar' },
-    { value: 'Minijob beschäftigt und teilzeit arbeitssuchend', label: 'Zurzeit beschäftigt' },
+    ...AVAILABILITY_STATUSES.map(status => ({
+      value: status,
+      label: status
+    }))
   ];
 
   useEffect(() => {
@@ -201,7 +201,9 @@ export default function WorkerListingPage() {
   };
 
   const filteredWorkers = workers.filter((worker) => {
-    const matchesAvailability = availabilityFilter === 'all' || worker.availability_status === availabilityFilter;
+    const matchesAvailability =
+      availabilityFilter === 'all' ||
+      worker.availability_status.toLowerCase() === availabilityFilter.toLowerCase();
 
     const matchesQualifications =
       qualificationFilters.length === 0 ||

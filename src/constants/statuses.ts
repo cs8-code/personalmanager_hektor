@@ -3,22 +3,13 @@
  * Defines all status values used across the application
  */
 
-// Availability statuses for workers
-export const AVAILABILITY_STATUS = {
-  IMMEDIATELY_AVAILABLE: 'sofort verfügbar',
-  AVAILABLE_SOON: 'demnächst verfügbar',
-  NOT_AVAILABLE: 'nicht verfügbar',
-  CURRENTLY_EMPLOYED: 'zurzeit beschäftigt',
-} as const;
-
-export const AVAILABILITY_STATUS_VALUES = Object.values(AVAILABILITY_STATUS);
-
-export const AVAILABILITY_STATUS_LABELS: Record<string, string> = {
-  [AVAILABILITY_STATUS.IMMEDIATELY_AVAILABLE]: 'Sofort verfügbar',
-  [AVAILABILITY_STATUS.AVAILABLE_SOON]: 'Demnächst verfügbar',
-  [AVAILABILITY_STATUS.NOT_AVAILABLE]: 'Nicht verfügbar',
-  [AVAILABILITY_STATUS.CURRENTLY_EMPLOYED]: 'Zurzeit beschäftigt',
-};
+// Availability statuses for workers (stored in database)
+export const AVAILABILITY_STATUSES = [
+  'Sofort verfügbar',
+  'Demnächst verfügbar',
+  'Nicht verfügbar',
+  'Zurzeit beschäftigt',
+] as const;
 
 // Job statuses
 export const JOB_STATUS = {

@@ -7,19 +7,13 @@ export const LANGUAGES = [
   'Deutsch',
   'Englisch',
   'Türkisch',
+  'Italienisch',
+  'Albanisch',
   'Arabisch',
   'Polnisch',
-  'Rumänisch',
   'Russisch',
   'Spanisch',
   'Französisch',
-  'Italienisch',
-  'Portugiesisch',
-  'Griechisch',
-  'Kroatisch',
-  'Serbisch',
-  'Bulgarisch',
-  'Albanisch',
 ] as const;
 
 export type LanguageType = typeof LANGUAGES[number];

@@ -4,38 +4,32 @@
  */
 
 export const WORK_DAYS = [
-  'Montag',
-  'Dienstag',
-  'Mittwoch',
-  'Donnerstag',
-  'Freitag',
-  'Samstag',
-  'Sonntag',
+  'Montag bis Freitag',
+  'Nur Wochenende',
+  '7-Tage (ohne Feiertag)',
+  'Täglich (inklusive Feiertag)',
 ] as const;
-
-export type WorkDayType = typeof WORK_DAYS[number];
 
 export const SHIFTS = [
-  'Frühschicht',
-  'Spätschicht',
-  'Nachtschicht',
-  'Wechselschicht',
+  'Früh',
+  'Mittag/Spät',
+  'Nacht',
+  'Alle',
 ] as const;
 
-export type ShiftType = typeof SHIFTS[number];
+export const SMOKING_STATUS = [
+  'Raucher',
+  'Nicht-Raucher',
+] as const;
 
-export const SMOKING_STATUS = {
-  SMOKER: 'Raucher',
-  NON_SMOKER: 'Nichtraucher',
-} as const;
+export const ARBEITSORT = [
+  'Nahbaustellen',
+  'Montage (ohne km-Begrenzung)',
+  'Montage (mit km-Begrenzung)',
+  'Nahbau & Montage',
+] as const;
 
-export const SMOKING_STATUS_OPTIONS = [
-  { value: SMOKING_STATUS.SMOKER, label: 'Raucher' },
-  { value: SMOKING_STATUS.NON_SMOKER, label: 'Nichtraucher' },
-];
-
-export const GENDER_OPTIONS = [
-  { value: 'männlich', label: 'Männlich' },
-  { value: 'weiblich', label: 'Weiblich' },
-  { value: 'divers', label: 'Divers' },
-];
+export const GENDERS = [
+  'Mann',
+  'Frau',
+] as const;

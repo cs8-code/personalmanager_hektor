@@ -4,7 +4,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import ImageUpload from '../components/ImageUpload';
 import { useAuth } from '../contexts/AuthContext';
-import { QUALIFICATIONS } from '../constants/qualifications';
+import {
+  QUALIFICATIONS,
+  LANGUAGES,
+  AVAILABILITY_STATUSES,
+  WORK_DAYS,
+  SHIFTS,
+  SMOKING_STATUS,
+  ARBEITSORT,
+  GENDERS,
+} from '../constants';
 
 interface RegistrationData {
   first_name: string;
@@ -13,7 +22,7 @@ interface RegistrationData {
   email: string;
   phone: string;
   birth_date: string;
-  gender: 'männlich' | 'weiblich' | 'divers' | '';
+  gender: 'Mann' | 'Frau' | '';
   city: string;
   employment_type: 'selbständig' | 'angestellt' | '';
   company_name: string;
@@ -25,7 +34,7 @@ interface RegistrationData {
   smoking_status: 'Raucher' | 'Nicht-Raucher' | '';
   arbeitsort: 'Nahbaustellen' | 'Montage (ohne km-Begrenzung)' | 'Montage (mit km-Begrenzung)' | 'Nahbau & Montage' | '';
   remarks: string;
-  availability_status: 'sofort verfügbar' | 'demnächst verfügbar' | 'nicht verfügbar' | 'zurzeit beschäftigt' | '';
+  availability_status: 'Sofort verfügbar' | 'Demnächst verfügbar' | 'Nicht verfügbar' | 'Zurzeit beschäftigt' | '';
   password: string;
   confirmPassword: string;
 }
@@ -479,9 +488,11 @@ export default function RegistrationPage() {
                     }`}
                   >
                     <option value="">Bitte wählen</option>
-                    <option value="männlich">männlich</option>
-                    <option value="weiblich">weiblich</option>
-                    <option value="divers">divers</option>
+                    {GENDERS.map((gender) => (
+                      <option key={gender} value={gender}>
+                        {gender}
+                      </option>
+                    ))}
                   </select>
                   {errors.gender && (
                     <p className="mt-1 text-sm text-red-600">{errors.gender}</p>
@@ -606,10 +617,11 @@ export default function RegistrationPage() {
                     }`}
                   >
                     <option value="">Bitte wählen</option>
-                    <option value="sofort verfügbar">Sofort verfügbar</option>
-                    <option value="demnächst verfügbar">demnächst verfügbar</option>
-                    <option value="nicht verfügbar">nicht verfügbar</option>
-                    <option value="zurzeit beschäftigt">zurzeit beschäftigt</option>
+                    {AVAILABILITY_STATUSES.map((status) => (
+                      <option key={status} value={status}>
+                        {status}
+                      </option>
+                    ))}
                   </select>
                   {errors.availability_status && (
                     <p className="mt-1 text-sm text-red-600">{errors.availability_status}</p>
@@ -646,18 +658,7 @@ export default function RegistrationPage() {
                   Sprachen
                 </label>
                 <div className="grid grid-cols-2 gap-3">
-                  {[
-                    'Deutsch',
-                    'Englisch',
-                    'Türkisch',
-                    'Italienisch',
-                    'Albanisch',
-                    'Arabisch',
-                    'Polnisch',
-                    'Russisch',
-                    'Spanisch',
-                    'Französisch'
-                  ].map((language) => (
+                  {LANGUAGES.map((language) => (
                     <label
                       key={language}
                       className="flex items-center space-x-2 cursor-pointer"
@@ -688,10 +689,11 @@ export default function RegistrationPage() {
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
                   >
                     <option value="">Bitte wählen</option>
-                    <option value="Montag bis Freitag">Montag bis Freitag</option>
-                    <option value="Nur Wochenende">Nur Wochenende</option>
-                    <option value="7-Tage (ohne Feiertag)">7-Tage (ohne Feiertag)</option>
-                    <option value="Täglich (inklusive Feiertag)">Täglich (inklusive Feiertag)</option>
+                    {WORK_DAYS.map((day) => (
+                      <option key={day} value={day}>
+                        {day}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -710,10 +712,11 @@ export default function RegistrationPage() {
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
                   >
                     <option value="">Bitte wählen</option>
-                    <option value="Früh">Früh</option>
-                    <option value="Mittag/Spät">Mittag/Spät</option>
-                    <option value="Nacht">Nacht</option>
-                    <option value="Alle">Alle</option>
+                    {SHIFTS.map((shift) => (
+                      <option key={shift} value={shift}>
+                        {shift}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -732,8 +735,11 @@ export default function RegistrationPage() {
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
                   >
                     <option value="">Bitte wählen</option>
-                    <option value="Raucher">Raucher</option>
-                    <option value="Nicht-Raucher">Nicht-Raucher</option>
+                    {SMOKING_STATUS.map((status) => (
+                      <option key={status} value={status}>
+                        {status}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -752,10 +758,11 @@ export default function RegistrationPage() {
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
                   >
                     <option value="">Bitte wählen</option>
-                    <option value="Nahbaustellen">Nahbaustellen</option>
-                    <option value="Montage (ohne km-Begrenzung)">Montage (ohne km-Begrenzung)</option>
-                    <option value="Montage (mit km-Begrenzung)">Montage (mit km-Begrenzung)</option>
-                    <option value="Nahbau & Montage">Nahbau & Montage</option>
+                    {ARBEITSORT.map((ort) => (
+                      <option key={ort} value={ort}>
+                        {ort}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
