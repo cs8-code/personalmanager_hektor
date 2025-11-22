@@ -22,6 +22,7 @@ const BusinessRoomPage = lazy(() => import('./pages/BusinessRoomPage'));
 const ContractsPage = lazy(() => import('./pages/ContractsPage'));
 const ContractDetailPage = lazy(() => import('./pages/ContractDetailPage'));
 const ContractManagementPage = lazy(() => import('./pages/ContractManagementPage'));
+const KarrierePage = lazy(() => import('./pages/KarrierePage'));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -50,6 +51,7 @@ function App() {
             <Route path="/jobs/:id" element={<JobDetailPage />} />
             <Route path="/jobs-management" element={<JobsManagementPage />} />
             <Route path="/subcontractor-guide" element={<SubcontractorGuidePage />} />
+            <Route path="/karriere" element={<KarrierePage />} />
             <Route path="/sipo-news" element={<SipoNewsPage />} />
             <Route path="/business-room" element={<BusinessRoomPage />} />
             <Route path="/contracts" element={<ContractsPage />} />

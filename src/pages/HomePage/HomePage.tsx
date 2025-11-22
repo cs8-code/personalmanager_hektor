@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import Navbar from '../../components/Navbar';
 import HeroSection from './components/Hero';
 import Services from './components/Services';
-import CareerGuideCombined from './components/CareerGuideCombined';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import LoginModal from '../../components/LoginModal';
@@ -24,7 +23,6 @@ export default function HomePage() {
     <main className='flex-grow'>
       <HeroSection />
       <Services />
-      <CareerGuideCombined />
       <Contact />
     </main>
     <Footer />

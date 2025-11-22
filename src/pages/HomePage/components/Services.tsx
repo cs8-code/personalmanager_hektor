@@ -177,7 +177,7 @@ export default function ServiceSection() {
             />
 
             <Link
-              to="/subcontractor-guide"
+              to="/karriere"
               className="group bg-white rounded-2xl p-6 shadow-md hover:shadow-2xl border-2 border-gray-100 hover:border-yellow-400 transition-all transform hover:scale-105 cursor-pointer"
             >
               <div className="flex items-center justify-center w-16 h-16 bg-yellow-400 rounded-xl mb-4 group-hover:bg-yellow-500 transition-colors">
