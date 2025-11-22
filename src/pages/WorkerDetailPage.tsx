@@ -155,37 +155,34 @@ export default function WorkerDetailPage() {
             Zurück zur Übersicht
           </Link>
 
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div className="relative h-64 bg-gradient-to-br from-gray-200 to-gray-300">
-              {worker.image_url ? (
-                <img
-                  src={worker.image_url}
-                  alt={worker.name}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="w-32 h-32 rounded-full bg-yellow-400 flex items-center justify-center">
+          <div className="bg-white rounded-3xl shadow-lg border-2 border-gray-100 p-8">
+            {/* Profile Section - Horizontal Layout */}
+            <div className="flex items-start gap-8 mb-8 pb-8 border-b border-gray-200">
+              {/* Profile Image */}
+              <div className="flex-shrink-0">
+                {worker.image_url ? (
+                  <img
+                    src={worker.image_url}
+                    alt={worker.name}
+                    className="w-32 h-32 rounded-3xl object-cover"
+                  />
+                ) : (
+                  <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-yellow-400 to-yellow-500 flex items-center justify-center">
                     <span className="text-5xl font-bold text-gray-900">
                       {worker.name.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                </div>
-              )}
-              <div className="absolute top-4 right-4">
-                <div className={`flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-semibold border-2 ${getStatusColor(worker.availability_status)}`}>
-                  {getStatusIcon(worker.availability_status)}
-                  <span className="ml-1">{worker.availability_status}</span>
-                </div>
+                )}
               </div>
-            </div>
 
-            <div className="p-8">
-              <div className="flex items-start justify-between mb-6">
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900 mb-2">{worker.name}</h1>
+              {/* Name, Username, and Basic Info */}
+              <div className="flex-1 min-w-0">
+                <h1 className="text-4xl font-bold text-gray-900 mb-2">{worker.username}</h1>
+                <p className="text-xl text-gray-600 mb-4">{worker.name}</p>
+
+                <div className="flex items-center gap-4 mb-4 flex-wrap">
                   {worker.birth_date && (
-                    <div className="flex items-center text-gray-600 mb-2">
+                    <div className="flex items-center text-gray-600">
                       <UserIcon className="w-5 h-5 mr-2" />
                       <span>{calculateAge(worker.birth_date)} Jahre</span>
                     </div>
@@ -196,42 +193,57 @@ export default function WorkerDetailPage() {
                       <span>{worker.location}</span>
                     </div>
                   )}
+                  {worker.employment_type && (
+                    <div className="flex items-center text-gray-600">
+                      <span className="px-3 py-1 bg-gray-100 rounded-full text-sm font-medium">
+                        {worker.employment_type}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
-                {user && user.id !== worker.id && (
-                  <div>
-                    {contactRequest?.status === 'pending' ? (
-                      <button
-                        disabled
-                        className="flex items-center px-6 py-3 bg-gray-300 text-gray-600 font-semibold rounded-lg cursor-not-allowed"
-                      >
-                        <Clock className="w-5 h-5 mr-2" />
-                        Anfrage ausstehend
-                      </button>
-                    ) : contactRequest?.status === 'rejected' ? (
-                      <button
-                        disabled
-                        className="flex items-center px-6 py-3 bg-red-100 text-red-600 font-semibold rounded-lg cursor-not-allowed"
-                      >
-                        Anfrage abgelehnt
-                      </button>
-                    ) : contactRequest?.status === 'accepted' ? (
-                      <div className="text-green-600 font-semibold flex items-center">
-                        <CheckCircle2 className="w-5 h-5 mr-2" />
-                        Anfrage akzeptiert
-                      </div>
-                    ) : (
-                      <button
-                        onClick={handleSendRequest}
-                        className="flex items-center px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-lg transition-all shadow-md hover:shadow-lg"
-                      >
-                        <Send className="w-5 h-5 mr-2" />
-                        Anfrage senden
-                      </button>
-                    )}
-                  </div>
-                )}
+                {/* Availability Status */}
+                <div className={`inline-flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-semibold border-2 ${getStatusColor(worker.availability_status)}`}>
+                  {getStatusIcon(worker.availability_status)}
+                  <span>{worker.availability_status}</span>
+                </div>
               </div>
+
+              {/* Action Button */}
+              {user && user.id !== worker.id && (
+                <div className="flex-shrink-0">
+                  {contactRequest?.status === 'pending' ? (
+                    <button
+                      disabled
+                      className="flex items-center px-6 py-3 bg-gray-300 text-gray-600 font-semibold rounded-2xl cursor-not-allowed"
+                    >
+                      <Clock className="w-5 h-5 mr-2" />
+                      Ausstehend
+                    </button>
+                  ) : contactRequest?.status === 'rejected' ? (
+                    <button
+                      disabled
+                      className="flex items-center px-6 py-3 bg-red-100 text-red-600 font-semibold rounded-2xl cursor-not-allowed"
+                    >
+                      Abgelehnt
+                    </button>
+                  ) : contactRequest?.status === 'accepted' ? (
+                    <div className="text-green-600 font-semibold flex items-center px-6 py-3">
+                      <CheckCircle2 className="w-5 h-5 mr-2" />
+                      Akzeptiert
+                    </div>
+                  ) : (
+                    <button
+                      onClick={handleSendRequest}
+                      className="flex items-center px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-semibold rounded-2xl transition-all shadow-md hover:shadow-lg"
+                    >
+                      <Send className="w-5 h-5 mr-2" />
+                      Anfrage senden
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 {worker.gender && (
@@ -241,15 +253,6 @@ export default function WorkerDetailPage() {
                   </div>
                 )}
 
-                {worker.birth_date && (
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">Geburtsdatum</h3>
-                    <div className="flex items-center text-gray-900">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      {new Date(worker.birth_date).toLocaleDateString('de-DE')}
-                    </div>
-                  </div>
-                )}
 
                 {worker.city && (
                   <div>
@@ -376,7 +379,6 @@ export default function WorkerDetailPage() {
                   </div>
                 </div>
               )}
-            </div>
           </div>
         </div>
       </div>
