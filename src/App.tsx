@@ -18,6 +18,7 @@ const JobDetailPage = lazy(() => import('./pages/JobDetailPage'));
 const JobsManagementPage = lazy(() => import('./pages/JobsManagementPage'));
 const SubcontractorGuidePage = lazy(() => import('./pages/SubcontractorGuidePage'));
 const SipoNewsPage = lazy(() => import('./pages/SipoNewsPage'));
+const BusinessRoomPage = lazy(() => import('./pages/BusinessRoomPage'));
 const ContractsPage = lazy(() => import('./pages/ContractsPage'));
 const ContractDetailPage = lazy(() => import('./pages/ContractDetailPage'));
 const ContractManagementPage = lazy(() => import('./pages/ContractManagementPage'));
@@ -50,6 +51,7 @@ function App() {
             <Route path="/jobs-management" element={<JobsManagementPage />} />
             <Route path="/subcontractor-guide" element={<SubcontractorGuidePage />} />
             <Route path="/sipo-news" element={<SipoNewsPage />} />
+            <Route path="/business-room" element={<BusinessRoomPage />} />
             <Route path="/contracts" element={<ContractsPage />} />
             <Route path="/contracts/:id" element={<ContractDetailPage />} />
             <Route path="/contracts-management" element={<ContractManagementPage />} />

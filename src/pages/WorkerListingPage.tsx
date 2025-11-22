@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { ArrowLeft, MapPin, Mail, Phone, Edit2, Trash2, Send, Eye, Clock, Search, Plus, ChevronDown } from 'lucide-react';
+import { ArrowLeft, MapPin, Edit2, Trash2, Send, Search, Plus, ChevronDown } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
-import { calculateAge } from '../utils/dateUtils';
 import { getStatusColor, getStatusIcon } from '../utils/statusUtils';
 import { QUALIFICATIONS, AVAILABILITY_STATUSES } from '../constants';
 

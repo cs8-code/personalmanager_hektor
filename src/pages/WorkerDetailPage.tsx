@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
-import { ArrowLeft, Clock, CheckCircle2, Mail, Phone, MapPin, Send, Calendar, User as UserIcon } from 'lucide-react';
+import { ArrowLeft, Clock, CheckCircle2, Mail, Phone, MapPin, Send, User as UserIcon } from 'lucide-react';
 import { calculateAge } from '../utils/dateUtils';
 import { getStatusColor, getStatusIcon } from '../utils/statusUtils';
 

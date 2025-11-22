@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Building2, Shield, Leaf, HelpCircle, ArrowRight, CheckCircle, Sparkles } from 'lucide-react';
+import { Building2, Shield, Leaf, HelpCircle, ArrowRight, CheckCircle } from 'lucide-react';
 import Footer from './HomePage/components/Footer';
 
 interface ServiceCardProps {

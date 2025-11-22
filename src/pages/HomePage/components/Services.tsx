@@ -81,9 +81,10 @@ export default function ServiceSection() {
             <div className="grid md:grid-cols-3 gap-6">
               {/* Personal */}
               <Link
-                to="/workers"
-                className="group bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl p-6 border-2 border-yellow-200 hover:border-yellow-400 hover:shadow-lg transition-all transform hover:scale-105 cursor-pointer"
-              >
+                 to="/workers"
+                  className="group rounded-2xl p-6 border-2 border-yellow-200 hover:border-yellow-400 hover:shadow-lg transition-all transform hover:scale-105 cursor-pointer"
+                  >
+
                 <div className="flex items-center justify-center w-16 h-16 bg-yellow-400 rounded-xl mb-4 group-hover:bg-yellow-500 transition-colors mx-auto">
                   <Users className="w-8 h-8 text-gray-900" />
                 </div>
@@ -94,7 +95,7 @@ export default function ServiceSection() {
               {/* Jobs */}
               <Link
                 to="/jobs"
-                className="group bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border-2 border-blue-200 hover:border-blue-400 hover:shadow-lg transition-all transform hover:scale-105 cursor-pointer"
+                  className="group rounded-2xl p-6 border-2 border-blue-200 hover:border-blue-400 hover:shadow-lg transition-all transform hover:scale-105 cursor-pointer"
               >
                 <div className="flex items-center justify-center w-16 h-16 bg-blue-400 rounded-xl mb-4 group-hover:bg-blue-500 transition-colors mx-auto">
                   <Briefcase className="w-8 h-8 text-white" />
@@ -106,7 +107,7 @@ export default function ServiceSection() {
               {/* Aufträge */}
               <Link
                 to="/contracts"
-                className="group bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-6 border-2 border-green-200 hover:border-green-400 hover:shadow-lg transition-all transform hover:scale-105 cursor-pointer"
+                  className="group rounded-2xl p-6 border-2 border-green-200 hover:border-green-400 hover:shadow-lg transition-all transform hover:scale-105 cursor-pointer"
               >
                 <div className="flex items-center justify-center w-16 h-16 bg-green-400 rounded-xl mb-4 group-hover:bg-green-500 transition-colors mx-auto">
                   <FileText className="w-8 h-8 text-white" />
@@ -120,30 +121,40 @@ export default function ServiceSection() {
 
         {/* SiPOS & SUPiS Featured Section */}
         <div className="max-w-5xl mx-auto mb-12">
-          <Link
-            to="/sipo-news"
-            className="group block bg-white rounded-3xl p-8 shadow-xl border-2 border-gray-100 hover:border-yellow-400 transition-all transform hover:scale-[1.02] cursor-pointer"
-          >
-            <div className="flex items-center justify-center w-20 h-20 bg-yellow-400 rounded-xl mb-6 group-hover:bg-yellow-500 transition-colors mx-auto">
-              <MessageSquare className="w-10 h-10 text-gray-900" />
+          <div className="bg-white rounded-3xl p-8 shadow-xl border-2 border-gray-100">
+            <div className="flex items-center justify-center w-20 h-20 rounded-xl mb-6 mx-auto">
+               <MessageSquare className="w-10 h-10 text-gray-900" />
             </div>
-            <h3 className="text-3xl font-bold text-gray-900 mb-4 text-center">SiPOS & SUPiS</h3>
-            <p className="text-lg text-gray-700 text-center mb-4">Community und Austausch für Bauleiter</p>
-            <div className="grid md:grid-cols-3 gap-4 mt-6">
-              <div className="text-center p-4 bg-gray-50 rounded-xl">
-                <p className="text-sm font-semibold text-gray-900 mb-1">Aktuelles & News</p>
-                <p className="text-xs text-gray-600">Bleib informiert über Branchen-Updates</p>
-              </div>
-              <div className="text-center p-4 bg-gray-50 rounded-xl">
-                <p className="text-sm font-semibold text-gray-900 mb-1">Erfahrungsaustausch</p>
-                <p className="text-xs text-gray-600">Tausche dich mit Kollegen aus</p>
-              </div>
-              <div className="text-center p-4 bg-gray-50 rounded-xl">
-                <p className="text-sm font-semibold text-gray-900 mb-1">Best Practices</p>
-                <p className="text-xs text-gray-600">Lerne von anderen Profis</p>
-              </div>
+
+            <h3 className="text-3xl font-bold text-gray-900 mb-4 text-center">SIPOS & SUPIS</h3>
+            <p className="text-lg text-gray-700 text-center mb-6">Community und Austausch für Subunternehmer oder Angestellte</p>
+
+            <div className="grid md:grid-cols-2 gap-6 mt-6">
+              {/* Business Room */}
+              <Link
+                to="/business-room"
+                className="group bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border-2 border-blue-200 hover:border-blue-400 hover:shadow-lg transition-all transform hover:scale-105 cursor-pointer"
+              >
+                <div className="flex items-center justify-center w-16 h-16 bg-blue-400 rounded-xl mb-4 group-hover:bg-blue-500 transition-colors mx-auto">
+                  <Briefcase className="w-8 h-8 text-white" />
+                </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-2 text-center">Business Room</h4>
+                <p className="text-gray-700 text-sm text-center">Für selbständige Subunternehmer</p>
+              </Link>
+
+              {/* Tal der SIPOS */}
+              <Link
+                to="/sipo-news"
+                className="group bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl p-6 border-2 border-yellow-200 hover:border-yellow-400 hover:shadow-lg transition-all transform hover:scale-105 cursor-pointer"
+              >
+                <div className="flex items-center justify-center w-16 h-16 bg-yellow-400 rounded-xl mb-4 group-hover:bg-yellow-500 transition-colors mx-auto">
+                  <Users className="w-8 h-8 text-gray-900" />
+                </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-2 text-center">Tal der SIPOS</h4>
+                <p className="text-gray-700 text-sm text-center">Für angestellte Bauleiter</p>
+              </Link>
             </div>
-          </Link>
+          </div>
         </div>
 
         {/* Additional Services Grid */}
