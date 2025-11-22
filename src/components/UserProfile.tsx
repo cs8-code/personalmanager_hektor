@@ -58,12 +58,6 @@ export default function UserProfile() {
             </p>
           )}
 
-          {userProfile.experience_years > 0 && (
-            <p className="text-sm text-gray-600 mt-1">
-              <span className="font-medium">Erfahrung:</span> {userProfile.experience_years} Jahre
-            </p>
-          )}
-
           {userProfile.bio && (
             <p className="text-sm text-gray-600 mt-3">{userProfile.bio}</p>
           )}

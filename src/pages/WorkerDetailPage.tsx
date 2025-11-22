@@ -10,17 +10,16 @@ import { getStatusColor, getStatusIcon } from '../utils/statusUtils';
 interface Worker {
   id: string;
   name: string;
+  username: string;
   email: string;
   phone: string;
   image_url: string;
   qualifications: string[];
   availability_status: string;
   location: string;
-  experience_years: number;
-  bio: string;
   birth_date: string;
-  gender: string;
   city: string;
+  gender: string;
   employment_type: string;
   company_name: string;
   company_address: string;
@@ -233,13 +232,6 @@ export default function WorkerDetailPage() {
                   </div>
                 )}
               </div>
-
-              {worker.bio && (
-                <div className="mb-6">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-3">Über mich</h2>
-                  <p className="text-gray-700 leading-relaxed">{worker.bio}</p>
-                </div>
-              )}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 {worker.gender && (

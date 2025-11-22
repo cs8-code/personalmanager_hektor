@@ -18,9 +18,8 @@ interface Worker {
   image_url: string;
   qualifications: string[];
   availability_status: string;
+  employment_type: string;
   location: string;
-  experience_years: number;
-  bio: string;
   created_by?: string;
 }
 
@@ -213,7 +212,6 @@ export default function WorkerListingPage() {
       searchTerm === '' ||
       worker.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       worker.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      worker.bio.toLowerCase().includes(searchTerm.toLowerCase()) ||
       worker.qualifications.some(q => q.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const matchesLocation =
@@ -420,180 +418,177 @@ export default function WorkerListingPage() {
             {filteredWorkers.map((worker) => (
               <div
                 key={worker.id}
-                className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer"
+                className="bg-white rounded-3xl shadow-md border-2 border-gray-100 hover:shadow-xl transition-all duration-300 p-8 cursor-pointer relative flex flex-col"
                 onClick={() => navigate(`/workers/${worker.id}`)}
               >
-                <div className="relative h-48 bg-gradient-to-br from-gray-200 to-gray-300">
-                  {worker.image_url ? (
-                    <img
-                      src={worker.image_url}
-                      alt={worker.name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <div className="w-24 h-24 rounded-full bg-yellow-400 flex items-center justify-center">
+                {/* Edit/Delete Buttons */}
+                {(canEdit(worker) || canDelete(worker)) && (
+                  <div className="absolute top-4 right-4 flex gap-2">
+                    {canEdit(worker) && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingWorker(worker);
+                        }}
+                        className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
+                      >
+                        <Edit2 className="w-4 h-4 text-gray-700" />
+                      </button>
+                    )}
+                    {canDelete(worker) && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(worker.id);
+                        }}
+                        className="p-2 bg-gray-100 rounded-full hover:bg-red-50 transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4 text-red-600" />
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                {/* Profile Section */}
+                <div className="flex items-start gap-4 mb-6">
+                  {/* Profile Image */}
+                  <div className="flex-shrink-0">
+                    {worker.image_url ? (
+                      <img
+                        src={worker.image_url}
+                        alt={worker.name}
+                        className="w-24 h-24 rounded-3xl object-cover"
+                      />
+                    ) : (
+                      <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-yellow-400 to-yellow-500 flex items-center justify-center">
                         <span className="text-3xl font-bold text-gray-900">
                           {worker.name.charAt(0).toUpperCase()}
                         </span>
                       </div>
-                    </div>
-                  )}
-                  <div className="absolute top-3 right-3">
-                    <div className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-semibold border-2 ${getStatusColor(worker.availability_status)}`}>
-                      {getStatusIcon(worker.availability_status)}
-                      <span className="ml-1">{worker.availability_status}</span>
-                    </div>
+                    )}
                   </div>
-                  {(canEdit(worker) || canDelete(worker)) && (
-                    <div className="absolute top-3 left-3 flex gap-2">
-                      {canEdit(worker) && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setEditingWorker(worker);
-                          }}
-                          className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
-                        >
-                          <Edit2 className="w-4 h-4 text-gray-700" />
-                        </button>
-                      )}
-                      {canDelete(worker) && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDelete(worker.id);
-                          }}
-                          className="p-2 bg-white rounded-full shadow-lg hover:bg-red-50 transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4 text-red-600" />
-                        </button>
-                      )}
-                    </div>
-                  )}
+
+                  {/* Username */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-1 truncate">{worker.username}</h3>
+                     {/* Location and Age */}
+                      <div className="mb-6 space-y-2">
+                          <div className="flex items-center text-gray-600">
+                            <span className="text-sm">{worker.employment_type}</span>
+                          </div>
+                        {worker.location && (
+                          <div className="flex items-center text-gray-600">
+                            <MapPin className="w-4 h-4 mr-2" />
+                            <span className="text-sm">{worker.location}</span>
+                          </div>
+                        )}
+                      </div>
+                  </div>
                 </div>
 
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{worker.name}</h3>
+                
 
-                  <div className="flex items-center text-gray-600 mb-3">
-                    <span className="text-sm">{calculateAge(worker.birth_date)} Jahre</span>
+                 {/* Availability Status & Age */}
+                <div className="flex items-center justify-between mb-6">
+
+                  {/* Status (flat, single line) */}
+                  <div className={`inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-semibold border-2 ${getStatusColor(worker.availability_status)}`}>
+                    {getStatusIcon(worker.availability_status, 'w-4 h-4')}
+                    <span>{worker.availability_status}</span>
                   </div>
+                </div>
 
-                  {worker.location && (
-                    <div className="flex items-center text-gray-600 mb-3">
-                      <MapPin className="w-4 h-4 mr-2" />
-                      <span className="text-sm">{worker.location}</span>
-                    </div>
-                  )}
 
-                  <div className="mb-4">
-                    <h4 className="text-sm font-semibold text-gray-700 mb-2">Qualifikationen:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {worker.qualifications.map((qual, idx) => (
-                        <span
-                          key={idx}
-                          className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full"
-                        >
-                          {qual}
-                        </span>
-                      ))}
-                    </div>
+               
+                {/* Qualifications */}
+                <div className="mb-6">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Qualifikationen:</h4>
+                  <div className="flex gap-2 overflow-hidden">
+                    {worker.qualifications.slice(0, 2).map((qual, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full whitespace-nowrap"
+                      >
+                        {qual}
+                      </span>
+                    ))}
+                    {worker.qualifications.length > 2 && (
+                      <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full whitespace-nowrap">
+                        +{worker.qualifications.length - 2}
+                      </span>
+                    )}
                   </div>
+                </div>
 
-                  {worker.bio && (
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">{worker.bio}</p>
-                  )}
+                {/* Spacer to push buttons to bottom */}
+                <div className="flex-grow"></div>
 
-                  <div className="space-y-2 mt-4">
+                {/* Action Buttons */}
+                <div className="flex gap-3 mt-auto">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/workers/${worker.id}`);
+                    }}
+                    className="flex-1 flex items-center justify-center px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-semibold rounded-2xl transition-all"
+                  >
+                    Details
+                  </button>
+                  {user && user.id !== worker.id ? (
+                    (() => {
+                      const request = contactRequests.get(worker.id);
+                      if (request?.status === 'accepted') {
+                        return (
+                          <a
+                            href={`mailto:${worker.email}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="flex-1 flex items-center justify-center px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold rounded-2xl transition-all"
+                          >
+                          <Send className="w-5 h-5 mr-2" />
+                            Anfragen
+                          </a>
+                        );
+                      } else if (request?.status === 'pending') {
+                        return (
+                          <button
+                            disabled
+                            onClick={(e) => e.stopPropagation()}
+                            className="flex-1 flex items-center justify-center px-6 py-3 bg-gray-300 text-gray-600 font-semibold rounded-2xl cursor-not-allowed"
+                          >
+                            Ausstehend
+                          </button>
+                        );
+                      } else {
+                        return (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSendRequest(worker.id);
+                            }}
+                            className="flex-1 flex items-center justify-center px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold rounded-2xl transition-all"
+                          >
+                          <Send className="w-5 h-5 mr-2" />
+                            Anfragen
+                          </button>
+                        );
+
+                      }
+                    })()
+                  ) : user && user.id === worker.id ? (
+                    <div className="flex-1 flex items-center justify-center px-6 py-3 bg-gray-200 text-gray-600 font-semibold rounded-2xl">
+                      Ihr Profil
+                    </div>
+                  ) : (
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate(`/workers/${worker.id}`);
+                        alert('Bitte melden Sie sich an, um Kontakt aufzunehmen.');
                       }}
-                      className="w-full flex items-center justify-center px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold rounded-lg transition-all"
+                      className="flex-1 flex items-center justify-center px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold rounded-2xl transition-all"
                     >
-                      <Eye className="w-4 h-4 mr-2" />
-                      Details ansehen
+                      Message
                     </button>
-
-                    <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-                    {user && user.id !== worker.id ? (
-                      (() => {
-                        const request = contactRequests.get(worker.id);
-                        if (request?.status === 'accepted') {
-                          // Show contact details if request is accepted
-                          return (
-                            <>
-                              <a
-                                href={`mailto:${worker.email}`}
-                                className="flex-1 flex items-center justify-center px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-lg transition-all"
-                              >
-                                <Mail className="w-4 h-4 mr-2" />
-                                {worker.email}
-                              </a>
-                              {worker.phone && (
-                                <a
-                                  href={`tel:${worker.phone}`}
-                                  className="flex items-center justify-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg transition-all"
-                                  title={worker.phone}
-                                >
-                                  <Phone className="w-4 h-4" />
-                                </a>
-                              )}
-                            </>
-                          );
-                        } else if (request?.status === 'pending') {
-                          // Show pending status
-                          return (
-                            <button
-                              disabled
-                              className="flex-1 flex items-center justify-center px-4 py-2 bg-gray-300 text-gray-600 font-semibold rounded-lg cursor-not-allowed"
-                            >
-                              <Clock className="w-4 h-4 mr-2" />
-                              Anfrage ausstehend
-                            </button>
-                          );
-                        } else if (request?.status === 'rejected') {
-                          // Show rejected status
-                          return (
-                            <button
-                              disabled
-                              className="flex-1 flex items-center justify-center px-4 py-2 bg-red-100 text-red-600 font-semibold rounded-lg cursor-not-allowed"
-                            >
-                              Anfrage abgelehnt
-                            </button>
-                          );
-                        } else {
-                          // Show send request button
-                          return (
-                            <button
-                              onClick={() => handleSendRequest(worker.id)}
-                              className="flex-1 flex items-center justify-center px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-lg transition-all"
-                            >
-                              <Send className="w-4 h-4 mr-2" />
-                              Anfrage senden
-                            </button>
-                          );
-                        }
-                      })()
-                    ) : user && user.id === worker.id ? (
-                      // Current user viewing their own profile
-                      <div className="flex-1 flex items-center justify-center px-4 py-2 bg-gray-200 text-gray-600 font-semibold rounded-lg">
-                        Ihr Profil
-                      </div>
-                    ) : (
-                      // Not logged in
-                      <button
-                        onClick={() => alert('Bitte melden Sie sich an, um Kontakt aufzunehmen.')}
-                        className="flex-1 flex items-center justify-center px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-lg transition-all"
-                      >
-                        <Send className="w-4 h-4 mr-2" />
-                        Anfrage senden
-                      </button>
-                    )}
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             ))}
