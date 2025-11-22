@@ -125,7 +125,7 @@ export default function PersonalmanagerHektorPage() {
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl -z-10"></div>
 
       <main className="flex-grow">
-        <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+        <section id="start" className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             {/* Hero Section */}
             <div className="text-center mb-16">

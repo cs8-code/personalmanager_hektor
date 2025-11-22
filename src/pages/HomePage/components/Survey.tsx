@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ThumbsUp, ThumbsDown, X } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, X, BarChart3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useSurvey } from '../../../hooks';
@@ -31,9 +31,12 @@ export default function Survey() {
     <section id="umfrage" className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white scroll-mt-16">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Ihre Meinung zählt
-          </h2>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <BarChart3 className="w-9 h-9 text-yellow-600" />
+            <h2 className="text-4xl font-bold text-gray-900">
+              Ihre Meinung zählt
+            </h2>
+          </div>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Teilen Sie uns Ihre Meinung mit und sehen Sie, was andere denken
           </p>
@@ -41,14 +44,10 @@ export default function Survey() {
 
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
           <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-            Umfrage
+              Wie finden Sie die neue ELBA-Regelung der DB?
           </h3>
 
           <div className="mb-6">
-            <p className="text-lg font-semibold text-gray-800 mb-4 text-center">
-              Was halten Sie von der neuen ELBA-Regelung?
-            </p>
-
             <div className="space-y-4">
               {/* Vote Buttons */}
               <div className="flex gap-4 justify-center">
@@ -62,7 +61,7 @@ export default function Survey() {
                   }`}
                 >
                   <ThumbsUp className="w-6 h-6" />
-                  <span>Positiv</span>
+                  <span>Gut</span>
                 </button>
 
                 <button
@@ -75,7 +74,7 @@ export default function Survey() {
                   }`}
                 >
                   <ThumbsDown className="w-6 h-6" />
-                  <span>Negativ</span>
+                  <span>Schlecht</span>
                 </button>
               </div>
 
@@ -105,7 +104,7 @@ export default function Survey() {
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <ThumbsUp className="w-5 h-5 text-green-600" />
-                    <span className="font-medium text-gray-700">Positiv</span>
+                    <span className="font-medium text-gray-700">Gut</span>
                   </div>
                   <span className="font-bold text-green-600">
                     {results.thumbs_up_percentage.toFixed(1)}%
@@ -127,7 +126,7 @@ export default function Survey() {
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <ThumbsDown className="w-5 h-5 text-red-600" />
-                    <span className="font-medium text-gray-700">Negativ</span>
+                    <span className="font-medium text-gray-700">Schlecht</span>
                   </div>
                   <span className="font-bold text-red-600">
                     {results.thumbs_down_percentage.toFixed(1)}%
