@@ -80,14 +80,20 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link to="/siportal" className="flex items-center">
-            <HardHat className="w-8 h-8 text-yellow-500" />
-            <span className="ml-2 text-xl font-bold text-gray-900">Siportal</span>
-          </Link>
+          {location.pathname === '/siportal' ? (
+            <Link to="/" className="flex items-center">
+              <span className="ml-2 text-xl font-bold text-gray-900">HEKTOR</span>
+            </Link>
+          ) : (
+            <Link to="/siportal" className="flex items-center">
+              <HardHat className="w-8 h-8 text-yellow-500" />
+              <span className="ml-2 text-xl font-bold text-gray-900">Siportal</span>
+            </Link>
+          )}
 
           <div className="hidden md:flex items-center space-x-8">
             <button
-              onClick={() => handleNavClick('start', '/')}
+              onClick={() => handleNavClick('hero')}
               className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
             >
               Start
