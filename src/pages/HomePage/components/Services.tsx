@@ -30,12 +30,12 @@ function ServiceCard({ icon: Icon, title, description, hashLink, customRoute, re
     return (
       <Link
         to={customRoute}
-        className="group bg-white rounded-2xl p-6 shadow-md hover:shadow-2xl border-2 border-gray-100 hover:border-yellow-400 transition-all transform hover:scale-105 cursor-pointer"
+              className="group bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 shadow-lg hover:shadow-2xl border-2 border-gray-200 hover:border-gray-400 transition-all transform hover:scale-105 cursor-pointer"
       >
-        <div className="flex items-center justify-center w-16 h-16 bg-yellow-400 rounded-xl mb-4 group-hover:bg-yellow-500 transition-colors">
+              <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-50 border-2 border-gray-200 rounded-xl mb-4 group-hover:border-gray-400 group-hover:from-gray-50 group-hover:to-gray-100 transition-all mx-auto">
           <Icon className="w-8 h-8 text-gray-900" />
         </div>
-        <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
+        <h3 className="text-xl font-bold text-gray-900 mb-2 text-center">{title}</h3>
         <p className="text-gray-600 text-sm">{description}</p>
       </Link>
     );
@@ -122,6 +122,22 @@ export default function ServiceSection() {
         {/* Additional Services Grid */}
         <div className="max-w-5xl mx-auto">
           <div className="grid md:grid-cols-3 gap-6">
+             <ServiceCard
+              id="equipment-marketplace"
+              icon={ShoppingCart}
+              title="ATWS-Warnanlagen"
+              description="Neu oder gebraucht kaufen, verkaufen, mieten oder vermieten"
+              hashLink="#equipment-marketplace"
+              customRoute="/atws"
+            />
+            <ServiceCard
+              id="career"
+              icon={GraduationCap}
+              title="Karriere"
+              description="Wie wird man SIPO oder wie gründet man ein Subunternehmen?"
+              hashLink="#career"
+              customRoute="/karriere"
+            />
             <ServiceCard
               id="health-services"
               icon={Stethoscope}
@@ -129,25 +145,6 @@ export default function ServiceSection() {
               description="FiT & Schulungen - Bahnärztliche Untersuchungen"
               hashLink="#health-services"
             />
-
-            <ServiceCard
-              id="equipment-marketplace"
-              icon={ShoppingCart}
-              title="ATWS-Warnanlagen"
-              description="Neu oder gebraucht kaufen, verkaufen, mieten oder vermieten"
-              hashLink="#equipment-marketplace"
-            />
-
-            <Link
-              to="/karriere"
-              className="group bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 shadow-lg hover:shadow-2xl border-2 border-gray-200 hover:border-gray-400 transition-all transform hover:scale-105 cursor-pointer"
-            >
-              <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-50 border-2 border-gray-200 rounded-xl mb-4 group-hover:border-gray-400 group-hover:from-gray-50 group-hover:to-gray-100 transition-all mx-auto">
-                <GraduationCap className="w-8 h-8 text-gray-600 group-hover:text-black transition-colors" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2 text-center">Karriere</h3>
-              <p className="text-gray-600 text-sm text-center">Ratgeber für Subunternehmer und Karrieretipps</p>
-            </Link>
           </div>
         </div>
       </div>

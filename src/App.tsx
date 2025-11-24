@@ -23,6 +23,9 @@ const ContractsPage = lazy(() => import('./pages/ContractsPage'));
 const ContractDetailPage = lazy(() => import('./pages/ContractDetailPage'));
 const ContractManagementPage = lazy(() => import('./pages/ContractManagementPage'));
 const KarrierePage = lazy(() => import('./pages/KarrierePage'));
+const ATWSListingsPage = lazy(() => import('./pages/ATWSListingsPage'));
+const ATWSListingDetailPage = lazy(() => import('./pages/ATWSListingDetailPage'));
+const ATWSListingFormPage = lazy(() => import('./pages/ATWSListingFormPage'));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -57,6 +60,10 @@ function App() {
             <Route path="/contracts" element={<ContractsPage />} />
             <Route path="/contracts/:id" element={<ContractDetailPage />} />
             <Route path="/contracts-management" element={<ContractManagementPage />} />
+            <Route path="/atws" element={<ATWSListingsPage />} />
+            <Route path="/atws/create" element={<ATWSListingFormPage />} />
+            <Route path="/atws/edit/:id" element={<ATWSListingFormPage />} />
+            <Route path="/atws/:id" element={<ATWSListingDetailPage />} />
           </Routes>
         </Suspense>
       </Router>
