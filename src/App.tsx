@@ -37,8 +37,8 @@ const PageLoader = () => (
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <Toaster />
         <Suspense fallback={<PageLoader />}>
           <Routes>
@@ -68,8 +68,8 @@ function App() {
             <Route path="/untersuchungen" element={<UntersuchungenPage />} />
           </Routes>
         </Suspense>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 

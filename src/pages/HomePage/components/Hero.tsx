@@ -42,7 +42,7 @@ export default function HeroSection() {
                 className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
               >
                 <Vote className="w-6 h-6" />
-                <span>An aktueller Umfrage teilnehmen</span>
+                <span>Aktuelle Umfrage</span>
                 <ChevronRight className="w-5 h-5" />
               </button>
               <p className="text-sm text-gray-600 mt-3">
