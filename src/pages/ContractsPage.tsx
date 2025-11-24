@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Search, MapPin, Calendar, Users, ArrowRight, Plus } from 'lucide-react';
+import { Search, MapPin, Calendar, Users, ArrowLeft, Plus, FileText } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import Navbar from '../components/Navbar';
@@ -33,7 +33,6 @@ export default function ContractsPage() {
         checkIfSelbstandig();
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authLoading, user]);
 
   const checkIfSelbstandig = async () => {
@@ -60,7 +59,7 @@ export default function ContractsPage() {
         .from('contracts')
         .select('*')
         .eq('status', 'active')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false});
 
       if (error) throw error;
       setContracts(data || []);
@@ -86,127 +85,149 @@ export default function ContractsPage() {
   });
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('de-DE');
+    return new Date(dateString).toLocaleDateString('de-DE', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  const formatDateShort = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return 'Heute';
+    if (diffDays === 1) return 'Gestern';
+    if (diffDays < 7) return `vor ${diffDays} Tagen`;
+    if (diffDays < 30) return `vor ${Math.floor(diffDays / 7)} Wochen`;
+    return date.toLocaleDateString('de-DE');
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
       <Navbar />
-      <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white py-16 px-4 pt-24">
-        <div className="max-w-7xl mx-auto">
-          <Link
-            to="/siportal"
-            className="inline-flex items-center text-yellow-100 hover:text-white mb-6 transition-colors"
-          >
-            ← Zurück zur Startseite
-          </Link>
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-4xl font-bold mb-4">Aufträge suchen</h1>
-              <p className="text-xl text-yellow-100">
-                Finden Sie passende Aufträge von Subunternehmen
-              </p>
-            </div>
-            {user && isSelbstandig && (
-              <Link
-                to="/contracts-management"
-                className="flex items-center px-6 py-3 bg-white text-yellow-600 font-bold rounded-lg hover:bg-gray-100 transition-all shadow-lg"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                Auftrag erstellen
-              </Link>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Firma oder Beschreibung suchen..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-              />
-            </div>
-
-            <div className="relative">
-              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Ort"
-                value={locationFilter}
-                onChange={(e) => setLocationFilter(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-              />
+      <div className="min-h-screen bg-gray-50 pt-16">
+        <header className="bg-white border-b border-gray-200 sticky top-16 z-40">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <Link
+                  to="/siportal"
+                  className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  <ArrowLeft className="w-5 h-5 mr-2" />
+                  Zurück
+                </Link>
+                <div className="h-8 w-px bg-gray-300"></div>
+                <h1 className="text-2xl font-bold text-gray-900">Aufträge</h1>
+              </div>
+              {user && (
+                <Link
+                  to="/contracts-management"
+                  className="flex items-center px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded-lg transition-all shadow-lg"
+                >
+                  <Plus className="w-5 h-5 mr-2" />
+                  Auftrag erstellen
+                </Link>
+              )}
             </div>
           </div>
-        </div>
+        </header>
 
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
-            <p className="mt-4 text-gray-600">Aufträge werden geladen...</p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Search and Location Filters */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Firma, Projekt oder Beschreibung suchen..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                />
+              </div>
+
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Ort"
+                  value={locationFilter}
+                  onChange={(e) => setLocationFilter(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                />
+              </div>
+            </div>
           </div>
-        ) : filteredContracts.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow-md">
-            <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">
-              Keine Aufträge gefunden
-            </h3>
-            <p className="text-gray-500">
-              Versuchen Sie, Ihre Suchfilter anzupassen
+
+          {/* Results Count */}
+          <div className="mb-6">
+            <p className="text-gray-600">
+              <span className="font-semibold text-gray-900">{filteredContracts.length}</span> Aufträge gefunden
             </p>
           </div>
-        ) : (
-          <div className="space-y-6">
-            {filteredContracts.map((contract) => (
-              <div
-                key={contract.id}
-                className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6"
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                      {contract.company_name}
-                    </h3>
-                    <div className="flex items-center text-gray-600 mb-2">
-                      <MapPin className="w-4 h-4 mr-2" />
-                      <span>{contract.location}</span>
-                    </div>
-                  </div>
-                  <Link
-                    to={`/contracts/${contract.id}`}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-lg transition-colors inline-flex items-center gap-2 whitespace-nowrap"
-                  >
-                    Details
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
 
-                <div className="flex flex-wrap gap-4 mb-4 text-gray-600">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    <span>
-                      {formatDate(contract.start_date)} - {formatDate(contract.end_date)}
+          {/* Contracts Grid */}
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
+            </div>
+          ) : filteredContracts.length === 0 ? (
+            <div className="text-center py-12 bg-white rounded-lg shadow-sm">
+              <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Keine Aufträge gefunden</h3>
+              <p className="text-gray-600">Versuchen Sie es mit anderen Suchkriterien</p>
+            </div>
+          ) : (
+            <div className="grid gap-6">
+              {filteredContracts.map((contract) => (
+                <Link
+                  key={contract.id}
+                  to={`/contracts/${contract.id}`}
+                  className="group bg-white rounded-xl shadow-sm border-2 border-gray-200 hover:border-yellow-400 hover:shadow-lg transition-all p-6"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-gray-900 group-hover:text-yellow-600 transition-colors mb-2">
+                        {contract.company_name}
+                      </h3>
+                      <p className="text-gray-600 mb-3 line-clamp-2">{contract.description}</p>
+                    </div>
+                    <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold whitespace-nowrap ml-4">
+                      {contract.status === 'active' ? 'Aktiv' : contract.status}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4" />
-                    <span>1 + {contract.num_workers}</span>
-                  </div>
-                </div>
 
-                <p className="text-gray-700 line-clamp-2">{contract.description}</p>
-              </div>
-            ))}
-          </div>
-        )}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div className="flex items-center text-gray-600">
+                      <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
+                      <span className="truncate">{contract.location}</span>
+                    </div>
+                    <div className="flex items-center text-gray-600">
+                      <Users className="w-4 h-4 mr-2 flex-shrink-0" />
+                      <span>{contract.num_workers} Mitarbeiter</span>
+                    </div>
+                    <div className="flex items-center text-gray-600">
+                      <Calendar className="w-4 h-4 mr-2 flex-shrink-0" />
+                      <span className="truncate">
+                        {formatDate(contract.start_date)} - {formatDate(contract.end_date)}
+                      </span>
+                    </div>
+                    <div className="flex items-center text-gray-600">
+                      <Calendar className="w-4 h-4 mr-2 flex-shrink-0" />
+                      <span>Erstellt {formatDateShort(contract.created_at)}</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

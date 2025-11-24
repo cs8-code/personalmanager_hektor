@@ -129,6 +129,13 @@ export default function PersonalmanagerHektorPage() {
           <div className="max-w-7xl mx-auto">
             {/* Hero Section */}
             <div className="text-center mb-16">
+              <div className="flex justify-center mb-8">
+                <img
+                  src="/assets/hektor-logo-removebg-preview.png"
+                  alt="Personalmanager HEKTOR Logo"
+                  className="w-64 h-64 object-contain"
+                />
+              </div>
               <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 pb-2">
                 Personalmanager HEKTOR
               </h1>

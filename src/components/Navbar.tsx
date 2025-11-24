@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, User, LogOut, Bell, HardHat } from 'lucide-react';
+import { Menu, X, User, LogOut, Bell, HardHat, ArrowLeft } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import LoginModal from './LoginModal';
 import { useAuth } from '../contexts/AuthContext';
@@ -81,8 +81,13 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {location.pathname === '/siportal' ? (
-            <Link to="/" className="flex items-center">
-              <span className="ml-2 text-xl font-bold text-gray-900">HEKTOR</span>
+            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <ArrowLeft className="w-5 h-5 text-gray-700" />
+              <img
+                src="/assets/hektor-logo-removebg-preview.png"
+                alt="HEKTOR Logo"
+                className="h-10 w-auto object-contain"
+              />
             </Link>
           ) : (
             <Link to="/siportal" className="flex items-center">
