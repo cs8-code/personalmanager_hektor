@@ -26,6 +26,7 @@ const KarrierePage = lazy(() => import('./pages/KarrierePage'));
 const ATWSListingsPage = lazy(() => import('./pages/ATWSListingsPage'));
 const ATWSListingDetailPage = lazy(() => import('./pages/ATWSListingDetailPage'));
 const ATWSListingFormPage = lazy(() => import('./pages/ATWSListingFormPage'));
+const UntersuchungenPage = lazy(() => import('./pages/UntersuchungenPage'));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -64,6 +65,7 @@ function App() {
             <Route path="/atws/create" element={<ATWSListingFormPage />} />
             <Route path="/atws/edit/:id" element={<ATWSListingFormPage />} />
             <Route path="/atws/:id" element={<ATWSListingDetailPage />} />
+            <Route path="/untersuchungen" element={<UntersuchungenPage />} />
           </Routes>
         </Suspense>
       </Router>

@@ -142,8 +142,9 @@ export default function ServiceSection() {
               id="health-services"
               icon={Stethoscope}
               title="Untersuchungen"
-              description="FiT & Schulungen - Bahnärztliche Untersuchungen"
+              description="Physiologische & bahnärztliche Untersuchungen - FiT & Schulungen"
               hashLink="#health-services"
+              customRoute="/untersuchungen"
             />
           </div>
         </div>
