@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { Upload, X, User } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useToast } from '../hooks';
 
 interface ImageUploadProps {
   currentImageUrl?: string;
@@ -11,6 +12,7 @@ interface ImageUploadProps {
 }
 
 export default function ImageUpload({ currentImageUrl, onImageUpload, userId, size = 'medium', autoSave = false }: ImageUploadProps) {
+  const { showSuccess, showError, showWarning } = useToast();
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(currentImageUrl);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -32,12 +34,12 @@ export default function ImageUpload({ currentImageUrl, onImageUpload, userId, si
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      alert('Bitte wählen Sie eine Bilddatei aus.');
+      showWarning('Bitte wählen Sie eine Bilddatei aus.');
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      alert('Die Datei ist zu groß. Maximale Dateigröße: 5MB');
+      showWarning('Die Datei ist zu groß. Maximale Dateigröße: 5MB');
       return;
     }
 
@@ -87,13 +89,17 @@ export default function ImageUpload({ currentImageUrl, onImageUpload, userId, si
 
         if (dbError) {
           console.error('Error auto-saving to database:', dbError);
-          alert('Bild hochgeladen, aber Fehler beim Speichern in der Datenbank. Bitte speichern Sie Ihr Profil manuell.');
+          showWarning('Bild hochgeladen, aber Fehler beim Speichern in der Datenbank. Bitte speichern Sie Ihr Profil manuell.');
+        } else {
+          showSuccess('Profilbild erfolgreich hochgeladen');
         }
+      } else {
+        showSuccess('Bild erfolgreich hochgeladen');
       }
     } catch (error: unknown) {
       console.error('Error uploading image:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unbekannter Fehler';
-      alert(`Fehler beim Hochladen des Bildes: ${errorMessage}\n\nBitte überprüfen Sie:\n- Ihre Internetverbindung\n- Ob der Speicher konfiguriert ist\n- Die Browser-Konsole für Details`);
+      showError(`Fehler beim Hochladen des Bildes: ${errorMessage}`);
     } finally {
       setUploading(false);
     }
@@ -113,9 +119,10 @@ export default function ImageUpload({ currentImageUrl, onImageUpload, userId, si
 
       setPreviewUrl(undefined);
       onImageUpload('');
+      showSuccess('Bild erfolgreich entfernt');
     } catch (error) {
       console.error('Error removing image:', error);
-      alert('Fehler beim Entfernen des Bildes.');
+      showError('Fehler beim Entfernen des Bildes');
     }
   };
 

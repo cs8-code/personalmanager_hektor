@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import Navbar from '../components/Navbar';
+import { useToast } from '../hooks';
 
 interface Worker {
   id: string;
@@ -22,6 +23,7 @@ interface Worker {
 
 export default function ManagerPage() {
   const { user, userProfile, loading } = useAuth();
+  const { showSuccess, showError, showWarning } = useToast();
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [loadingWorkers, setLoadingWorkers] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -84,7 +86,7 @@ export default function ManagerPage() {
 
   const handleAdd = async () => {
     if (!user || !formData.name || !formData.email) {
-      alert('Name und E-Mail sind erforderlich');
+      showWarning('Name und E-Mail sind erforderlich');
       return;
     }
 
@@ -98,9 +100,9 @@ export default function ManagerPage() {
 
     if (error) {
       console.error('Error adding worker:', error);
-      alert('Fehler beim Hinzufügen des Mitarbeiters: ' + error.message);
+      showError('Fehler beim Hinzufügen des Mitarbeiters: ' + error.message);
     } else {
-      alert('Mitarbeiter erfolgreich hinzugefügt');
+      showSuccess('Mitarbeiter erfolgreich hinzugefügt');
       resetForm();
       loadWorkers();
     }
@@ -126,7 +128,7 @@ export default function ManagerPage() {
 
   const handleUpdate = async () => {
     if (!editingId || !formData.name || !formData.email) {
-      alert('Name und E-Mail sind erforderlich');
+      showWarning('Name und E-Mail sind erforderlich');
       return;
     }
 
@@ -150,9 +152,9 @@ export default function ManagerPage() {
 
     if (error) {
       console.error('Error updating worker:', error);
-      alert('Fehler beim Aktualisieren des Mitarbeiters: ' + error.message);
+      showError('Fehler beim Aktualisieren des Mitarbeiters: ' + error.message);
     } else {
-      alert('Mitarbeiter erfolgreich aktualisiert');
+      showSuccess('Mitarbeiter erfolgreich aktualisiert');
       resetForm();
       loadWorkers();
     }
@@ -168,9 +170,9 @@ export default function ManagerPage() {
 
     if (error) {
       console.error('Error deleting worker:', error);
-      alert('Fehler beim Löschen des Mitarbeiters: ' + error.message);
+      showError('Fehler beim Löschen des Mitarbeiters: ' + error.message);
     } else {
-      alert('Mitarbeiter erfolgreich gelöscht');
+      showSuccess('Mitarbeiter erfolgreich gelöscht');
       loadWorkers();
     }
   };

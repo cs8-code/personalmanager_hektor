@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import ContactRequests from '../components/ContactRequests';
 import ImageUpload from '../components/ImageUpload';
+import { useToast } from '../hooks';
 
 const availableQualifications = [
   'SIPO',
@@ -39,6 +40,7 @@ const availableLanguages = [
 
 export default function ProfilePage() {
   const { user, userProfile, loading, refreshUserProfile } = useAuth();
+  const { showSuccess, showError } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState('');
@@ -181,12 +183,12 @@ export default function ProfilePage() {
       }
 
       await refreshUserProfile();
-      alert('Profil erfolgreich aktualisiert');
+      showSuccess('Profil erfolgreich aktualisiert');
       setIsEditing(false);
     } catch (error: unknown) {
       console.error('Error updating profile:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unbekannter Fehler';
-      alert(`Fehler beim Speichern des Profils: ${errorMessage}`);
+      showError(`Fehler beim Speichern des Profils: ${errorMessage}`);
     } finally {
       setSaving(false);
     }

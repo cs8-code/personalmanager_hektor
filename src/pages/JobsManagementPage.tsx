@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import Navbar from '../components/Navbar';
+import { useToast } from '../hooks';
 
 interface Job {
   id: string;
@@ -24,6 +25,7 @@ interface Job {
 
 export default function JobsManagementPage() {
   const { user, userProfile, loading } = useAuth();
+  const { showError } = useToast();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loadingJobs, setLoadingJobs] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -95,7 +97,7 @@ export default function JobsManagementPage() {
       resetForm();
     } catch (error) {
       console.error('Error adding job:', error);
-      alert('Fehler beim Hinzufügen des Jobs: ' + (error as Error).message);
+      showError('Fehler beim Hinzufügen des Jobs: ' + (error as Error).message);
     } finally {
       setSaving(false);
     }
@@ -123,7 +125,7 @@ export default function JobsManagementPage() {
       resetForm();
     } catch (error) {
       console.error('Error updating job:', error);
-      alert('Fehler beim Aktualisieren des Jobs: ' + (error as Error).message);
+      showError('Fehler beim Aktualisieren des Jobs: ' + (error as Error).message);
     } finally {
       setSaving(false);
     }
@@ -140,7 +142,7 @@ export default function JobsManagementPage() {
       await loadJobs();
     } catch (error) {
       console.error('Error deleting job:', error);
-      alert('Fehler beim Löschen des Jobs: ' + (error as Error).message);
+      showError('Fehler beim Löschen des Jobs: ' + (error as Error).message);
     }
   };
 

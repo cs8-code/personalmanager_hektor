@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Shield, UserPlus, X, Loader2, Mail, MessageSquare } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../hooks';
 
 interface UserRole {
   id: string;
@@ -23,6 +24,7 @@ interface ContactMessage {
 
 export default function AdminPanel() {
   const { user } = useAuth();
+  const { showSuccess, showError, showWarning } = useToast();
   const [isAdmin, setIsAdmin] = useState(false);
   const [userRoles, setUserRoles] = useState<UserRole[]>([]);
   const [contactMessages, setContactMessages] = useState<ContactMessage[]>([]);
@@ -97,7 +99,7 @@ export default function AdminPanel() {
 
   const grantManagerRole = async () => {
     if (!userIdInput.trim()) {
-      alert('Please enter a user ID');
+      showWarning('Bitte geben Sie eine Benutzer-ID ein');
       return;
     }
 
@@ -112,9 +114,9 @@ export default function AdminPanel() {
 
     if (error) {
       console.error('Error granting manager role:', error);
-      alert(`Failed to grant manager role: ${error.message}`);
+      showError(`Fehler beim Zuweisen der Manager-Rolle: ${error.message}`);
     } else {
-      alert('Manager role granted successfully');
+      showSuccess('Manager-Rolle erfolgreich zugewiesen');
       setUserIdInput('');
       fetchUserRoles();
     }
@@ -125,11 +127,11 @@ export default function AdminPanel() {
 
   const revokeRole = async (userId: string, role: string) => {
     if (role === 'administrator') {
-      alert('Cannot revoke administrator role');
+      showWarning('Administrator-Rolle kann nicht entzogen werden');
       return;
     }
 
-    if (!confirm('Are you sure you want to revoke this role?')) return;
+    if (!confirm('Möchten Sie diese Rolle wirklich entziehen?')) return;
 
     const { error } = await supabase
       .from('user_roles')
@@ -139,9 +141,9 @@ export default function AdminPanel() {
 
     if (error) {
       console.error('Error revoking role:', error);
-      alert('Failed to revoke role');
+      showError('Fehler beim Entziehen der Rolle');
     } else {
-      alert('Role revoked successfully');
+      showSuccess('Rolle erfolgreich entzogen');
       fetchUserRoles();
     }
   };
@@ -154,8 +156,9 @@ export default function AdminPanel() {
 
     if (error) {
       console.error('Error updating message status:', error);
-      alert('Failed to update message status');
+      showError('Fehler beim Aktualisieren des Nachrichtenstatus');
     } else {
+      showSuccess('Nachrichtenstatus aktualisiert');
       fetchContactMessages();
       if (selectedMessage?.id === messageId) {
         setSelectedMessage({ ...selectedMessage, status });

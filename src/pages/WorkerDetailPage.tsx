@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar';
 import { ArrowLeft, Clock, CheckCircle2, Mail, Phone, MapPin, Send, User as UserIcon } from 'lucide-react';
 import { calculateAge } from '../utils/dateUtils';
 import { getStatusColor, getStatusIcon } from '../utils/statusUtils';
+import { useToast } from '../hooks';
 
 interface Worker {
   id: string;
@@ -41,6 +42,7 @@ export default function WorkerDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { showSuccess, showError, showWarning } = useToast();
   const [worker, setWorker] = useState<Worker | null>(null);
   const [loading, setLoading] = useState(true);
   const [contactRequest, setContactRequest] = useState<ContactRequest | null>(null);
@@ -98,7 +100,7 @@ export default function WorkerDetailPage() {
 
   const handleSendRequest = async () => {
     if (!user || !id) {
-      alert('Bitte melden Sie sich an, um eine Anfrage zu senden.');
+      showWarning('Bitte melden Sie sich an, um eine Anfrage zu senden.');
       return;
     }
 
@@ -113,14 +115,14 @@ export default function WorkerDetailPage() {
 
       if (error) throw error;
 
-      alert('Anfrage erfolgreich gesendet!');
+      showSuccess('Anfrage erfolgreich gesendet!');
       fetchContactRequest();
     } catch (error: unknown) {
       console.error('Error sending request:', error);
       if (error && typeof error === 'object' && 'code' in error && error.code === '23505') {
-        alert('Sie haben bereits eine ausstehende Anfrage an diese Person gesendet.');
+        showWarning('Sie haben bereits eine ausstehende Anfrage an diese Person gesendet.');
       } else {
-        alert('Fehler beim Senden der Anfrage. Bitte versuchen Sie es erneut.');
+        showError('Fehler beim Senden der Anfrage. Bitte versuchen Sie es erneut.');
       }
     }
   };

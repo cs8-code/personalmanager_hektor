@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
 import { getStatusColor, getStatusIcon } from '../utils/statusUtils';
 import { QUALIFICATIONS, AVAILABILITY_STATUSES } from '../constants';
+import { useToast } from '../hooks';
 
 interface Worker {
   id: string;
@@ -30,6 +31,7 @@ interface ContactRequest {
 export default function WorkerListingPage() {
   const { user, userProfile, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const { showSuccess, showError, showWarning } = useToast();
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [loading, setLoading] = useState(true);
   const [availabilityFilter, setAvailabilityFilter] = useState<string>('all');
@@ -136,7 +138,7 @@ export default function WorkerListingPage() {
 
   const handleSendRequest = async (workerId: string) => {
     if (!user) {
-      alert('Bitte melden Sie sich an, um eine Anfrage zu senden.');
+      showWarning('Bitte melden Sie sich an, um eine Anfrage zu senden.');
       return;
     }
 
@@ -151,14 +153,14 @@ export default function WorkerListingPage() {
 
       if (error) throw error;
 
-      alert('Anfrage erfolgreich gesendet!');
+      showSuccess('Anfrage erfolgreich gesendet!');
       fetchContactRequests();
     } catch (error: unknown) {
       console.error('Error sending request:', error);
       if (error && typeof error === 'object' && 'code' in error && error.code === '23505') {
-        alert('Sie haben bereits eine ausstehende Anfrage an diese Person gesendet.');
+        showWarning('Sie haben bereits eine ausstehende Anfrage an diese Person gesendet.');
       } else {
-        alert('Fehler beim Senden der Anfrage. Bitte versuchen Sie es erneut.');
+        showError('Fehler beim Senden der Anfrage. Bitte versuchen Sie es erneut.');
       }
     }
   };
@@ -184,7 +186,7 @@ export default function WorkerListingPage() {
 
     if (error) {
       console.error('Error deleting worker:', error);
-      alert('Failed to delete worker');
+      showError('Fehler beim Löschen des Mitarbeiters');
     } else {
       fetchWorkers();
     }
@@ -581,7 +583,7 @@ export default function WorkerListingPage() {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        alert('Bitte melden Sie sich an, um Kontakt aufzunehmen.');
+                        showWarning('Bitte melden Sie sich an, um Kontakt aufzunehmen.');
                       }}
                       className="flex-1 flex items-center justify-center px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold rounded-2xl transition-all"
                     >

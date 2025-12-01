@@ -4,6 +4,7 @@ import { ArrowLeft, Save, X, Plus, Minus } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
+import { useToast } from '../hooks';
 
 interface Company {
   id: string;
@@ -17,6 +18,7 @@ interface Company {
 export default function ContractManagementPage() {
   const { user, userProfile, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const { showSuccess, showError, showWarning } = useToast();
   const [loading, setLoading] = useState(false);
   const [company, setCompany] = useState<Company | null>(null);
   const isManager = userProfile?.systemRole === 'manager' || userProfile?.systemRole === 'administrator';
@@ -79,7 +81,7 @@ export default function ContractManagementPage() {
       if (error) throw error;
 
       if (!data) {
-        alert('Sie müssen als Selbständig registriert sein oder Manager-Rechte haben, um Aufträge zu erstellen.');
+        showWarning('Sie müssen als Selbständig registriert sein oder Manager-Rechte haben, um Aufträge zu erstellen.');
         navigate('/contracts');
         return;
       }
@@ -87,7 +89,7 @@ export default function ContractManagementPage() {
       setCompany(data);
     } catch (error) {
       console.error('Error loading company:', error);
-      alert('Fehler beim Laden der Firmendaten');
+      showError('Fehler beim Laden der Firmendaten');
       navigate('/contracts');
     }
   };
@@ -97,12 +99,12 @@ export default function ContractManagementPage() {
     if (!user || !company) return;
 
     if (formData.description.length > 200) {
-      alert('Die Beschreibung darf maximal 200 Zeichen enthalten');
+      showWarning('Die Beschreibung darf maximal 200 Zeichen enthalten');
       return;
     }
 
     if (new Date(formData.end_date) < new Date(formData.start_date)) {
-      alert('Das Enddatum muss nach dem Startdatum liegen');
+      showWarning('Das Enddatum muss nach dem Startdatum liegen');
       return;
     }
 
@@ -130,11 +132,11 @@ export default function ContractManagementPage() {
 
       if (error) throw error;
 
-      alert('Auftrag erfolgreich erstellt!');
+      showSuccess('Auftrag erfolgreich erstellt!');
       navigate('/contracts');
     } catch (error) {
       console.error('Error creating contract:', error);
-      alert('Fehler beim Erstellen des Auftrags');
+      showError('Fehler beim Erstellen des Auftrags');
     } finally {
       setLoading(false);
     }

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { Check, X, Mail, Phone, Clock } from 'lucide-react';
+import { useToast } from '../hooks';
 
 interface ContactRequest {
   id: string;
@@ -17,6 +18,7 @@ interface ContactRequest {
 
 export default function ContactRequests() {
   const { user } = useAuth();
+  const { showSuccess, showError } = useToast();
   const [requests, setRequests] = useState<ContactRequest[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -80,10 +82,11 @@ export default function ContactRequests() {
 
       if (error) throw error;
 
+      showSuccess('Anfrage akzeptiert');
       fetchRequests();
     } catch (error) {
       console.error('Error accepting request:', error);
-      alert('Fehler beim Akzeptieren der Anfrage');
+      showError('Fehler beim Akzeptieren der Anfrage');
     }
   };
 
@@ -96,10 +99,11 @@ export default function ContactRequests() {
 
       if (error) throw error;
 
+      showSuccess('Anfrage abgelehnt');
       fetchRequests();
     } catch (error) {
       console.error('Error rejecting request:', error);
-      alert('Fehler beim Ablehnen der Anfrage');
+      showError('Fehler beim Ablehnen der Anfrage');
     }
   };
 

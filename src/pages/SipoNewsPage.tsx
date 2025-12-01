@@ -4,6 +4,7 @@ import { ArrowLeft, Plus, MessageSquare, Newspaper, HelpCircle, Send, Trash2, Ed
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import LoginModal from '../components/LoginModal';
+import { useToast } from '../hooks';
 
 interface Post {
   id: string;
@@ -28,6 +29,7 @@ interface Comment {
 
 export default function SipoNewsPage() {
   const { user } = useAuth();
+  const { showError } = useToast();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -146,7 +148,7 @@ export default function SipoNewsPage() {
       fetchPosts();
     } catch (error) {
       console.error('Error creating post:', error);
-      alert('Fehler beim Erstellen des Beitrags');
+      showError('Fehler beim Erstellen des Beitrags');
     } finally {
       setSubmitting(false);
     }
@@ -173,7 +175,7 @@ export default function SipoNewsPage() {
       fetchComments(selectedPost.id);
     } catch (error) {
       console.error('Error adding comment:', error);
-      alert('Fehler beim Hinzufügen des Kommentars');
+      showError('Fehler beim Hinzufügen des Kommentars');
     }
   };
 
@@ -194,7 +196,7 @@ export default function SipoNewsPage() {
       fetchPosts();
     } catch (error) {
       console.error('Error deleting post:', error);
-      alert('Fehler beim Löschen des Beitrags');
+      showError('Fehler beim Löschen des Beitrags');
     }
   };
 
@@ -214,7 +216,7 @@ export default function SipoNewsPage() {
       }
     } catch (error) {
       console.error('Error deleting comment:', error);
-      alert('Fehler beim Löschen des Kommentars');
+      showError('Fehler beim Löschen des Kommentars');
     }
   };
 
@@ -235,7 +237,7 @@ export default function SipoNewsPage() {
       }
     } catch (error) {
       console.error('Error updating post:', error);
-      alert('Fehler beim Aktualisieren des Beitrags');
+      showError('Fehler beim Aktualisieren des Beitrags');
     }
   };
 
@@ -255,7 +257,7 @@ export default function SipoNewsPage() {
       }
     } catch (error) {
       console.error('Error updating comment:', error);
-      alert('Fehler beim Aktualisieren des Kommentars');
+      showError('Fehler beim Aktualisieren des Kommentars');
     }
   };
 

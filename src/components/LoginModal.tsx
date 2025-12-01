@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { X, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useToast } from '../hooks';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -8,6 +9,7 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
+  const { showSuccess, showError } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -67,15 +69,15 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       if (error) throw error;
 
       // Show success and close modal
-      alert('Login erfolgreich! Willkommen zurück!');
+      showSuccess('Login erfolgreich! Willkommen zurück!');
       onClose();
-      
+
       // Reset form
       setFormData({ email: '', password: '' });
       setErrors({});
     } catch (error: unknown) {
       console.error('Login error:', error);
-      setErrors({ submit: error instanceof Error ? error.message : 'Login fehlgeschlagen. Bitte versuchen Sie es erneut.' });
+      showError(error instanceof Error ? error.message : 'Login fehlgeschlagen. Bitte versuchen Sie es erneut.');
     } finally {
       setLoading(false);
     }
