@@ -9,7 +9,7 @@ import type { SurveyVote } from '../../../types';
 export default function Survey() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { showToast } = useToast();
+  const { showSuccess, showError } = useToast();
   const { results, userStatus, loading: surveyLoading, submitVote } = useSurvey(user?.id);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
@@ -21,9 +21,9 @@ export default function Survey() {
 
     try {
       await submitVote(vote);
-      showToast('Vielen Dank für Ihre Teilnahme!', 'success');
+      showSuccess('Vielen Dank für Ihre Teilnahme!');
     } catch (error) {
-      showToast('Fehler beim Speichern Ihrer Stimme. Bitte versuchen Sie es erneut.', 'error');
+      showError('Fehler beim Speichern Ihrer Stimme. Bitte versuchen Sie es erneut.');
     }
   };
 

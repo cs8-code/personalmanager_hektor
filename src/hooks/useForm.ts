@@ -55,17 +55,17 @@ export const useForm = <T extends Record<string, unknown>>({
         }
 
         // Min length validation
-        if (rule.minLength && value && value.length < rule.minLength) {
+        if (rule.minLength && value && typeof value === 'string' && value.length < rule.minLength) {
           return rule.message;
         }
 
         // Max length validation
-        if (rule.maxLength && value && value.length > rule.maxLength) {
+        if (rule.maxLength && value && typeof value === 'string' && value.length > rule.maxLength) {
           return rule.message;
         }
 
         // Pattern validation
-        if (rule.pattern && value && !rule.pattern.test(value)) {
+        if (rule.pattern && value && typeof value === 'string' && !rule.pattern.test(value)) {
           return rule.message;
         }
 

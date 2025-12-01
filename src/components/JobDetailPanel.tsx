@@ -48,11 +48,11 @@ export default function JobDetailPanel({ job, onClose }: JobDetailPanelProps) {
                 <span className="text-sm font-semibold text-green-900">{job.salary_range}</span>
               </div>
             )}
-            {job.experience_required !== null && (
+            {job.experience_required && (
               <div className="flex items-center px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg">
                 <Award className="w-5 h-5 mr-2 text-blue-600" />
                 <span className="text-sm font-semibold text-blue-900">
-                  {job.experience_required} {job.experience_required === 1 ? 'Jahr' : 'Jahre'} Erfahrung
+                  {job.experience_required} {job.experience_required === '1' ? 'Jahr' : 'Jahre'} Erfahrung
                 </span>
               </div>
             )}

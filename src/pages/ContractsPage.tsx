@@ -13,34 +13,13 @@ export default function ContractsPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
-  const [isSelbstandig, setIsSelbstandig] = useState(false);
   const [selectedContract, setSelectedContract] = useState<Contract | null>(null);
 
   useEffect(() => {
     if (!authLoading) {
       loadContracts();
-      if (user) {
-        checkIfSelbstandig();
-      }
     }
-  }, [authLoading, user]);
-
-  const checkIfSelbstandig = async () => {
-    if (!user) return;
-
-    try {
-      const { data } = await supabase
-        .from('companies')
-        .select('id')
-        .eq('id', user.id)
-        .maybeSingle();
-
-      setIsSelbstandig(!!data);
-    } catch (error) {
-      console.error('Error checking company status:', error);
-      setIsSelbstandig(false);
-    }
-  };
+  }, [authLoading]);
 
   const loadContracts = async () => {
     try {

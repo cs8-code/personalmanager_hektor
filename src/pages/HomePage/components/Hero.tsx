@@ -1,9 +1,6 @@
 import { ChevronRight, HardHat, Vote } from 'lucide-react';
-import { useAuth } from '../../../contexts/AuthContext';
 
 export default function HeroSection() {
-  const { user } = useAuth();
-
   const scrollToSurvey = () => {
     const surveySection = document.getElementById('umfrage');
     if (surveySection) {
