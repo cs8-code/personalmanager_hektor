@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Stethoscope, Heart, FileCheck, GraduationCap, Clock, MapPin, Phone, Mail, CheckCircle, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Stethoscope, Heart, FileCheck, GraduationCap, Clock, MapPin, Phone, Mail, CheckCircle, ArrowRight, ArrowLeft } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../pages/HomePage/components/Footer';
 
@@ -155,92 +156,106 @@ export default function UntersuchungenPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-teal-50">
+    <>
       <Navbar />
-
-      {/* Hero Section */}
-      <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <Stethoscope className="w-12 h-12 text-blue-600" />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-teal-50 pt-16">
+        <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-16 z-40">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex items-center space-x-4">
+              <Link
+                to="/siportal"
+                className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5 mr-2" />
+                Zurück
+              </Link>
+              <div className="h-8 w-px bg-gray-300"></div>
+              <div className="flex items-center gap-3">
+                <Stethoscope className="w-6 h-6 text-blue-600" />
+                <h1 className="text-2xl font-bold text-gray-900">Medizinische Untersuchungen</h1>
+              </div>
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-              Medizinische Untersuchungen & Schulungen
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Professionelle medizinische Untersuchungen und Schulungen für Mitarbeiter im Gleisbau.
-              Zertifiziert, zuverlässig und bundesweit verfügbar.
-            </p>
           </div>
+        </header>
 
-          {/* Quick Navigation */}
-          <div className="bg-white rounded-2xl shadow-xl p-6 mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Unsere Services</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Hero Section */}
+        <div className="pt-12 pb-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Professionelle medizinische Untersuchungen und Schulungen für Mitarbeiter im Gleisbau.
+                Zertifiziert, zuverlässig und bundesweit verfügbar.
+              </p>
+            </div>
+
+            {/* Quick Navigation */}
+            <div className="bg-white rounded-2xl shadow-xl p-6 mb-12">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Unsere Services</h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {services.map((service) => (
+                  <button
+                    key={service.id}
+                    onClick={() => scrollToSection(service.id)}
+                    className={`group p-4 rounded-xl border-2 transition-all transform hover:scale-105 ${
+                      activeSection === service.id
+                        ? `border-${service.color}-500 bg-${service.color}-50`
+                        : 'border-gray-200 hover:border-gray-400 bg-white'
+                    }`}
+                  >
+                    <div className={`flex items-center justify-center w-12 h-12 bg-${service.color}-500 rounded-lg mb-3 mx-auto group-hover:scale-110 transition-transform`}>
+                      <service.icon className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-1">{service.title}</h3>
+                    <div className="flex items-center justify-center text-sm text-gray-600">
+                      <span>Mehr erfahren</span>
+                      <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Service Sections */}
+            <div className="max-w-6xl mx-auto">
               {services.map((service) => (
-                <button
-                  key={service.id}
-                  onClick={() => scrollToSection(service.id)}
-                  className={`group p-4 rounded-xl border-2 transition-all transform hover:scale-105 ${
-                    activeSection === service.id
-                      ? `border-${service.color}-500 bg-${service.color}-50`
-                      : 'border-gray-200 hover:border-gray-400 bg-white'
-                  }`}
-                >
-                  <div className={`flex items-center justify-center w-12 h-12 bg-${service.color}-500 rounded-lg mb-3 mx-auto group-hover:scale-110 transition-transform`}>
-                    <service.icon className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-1">{service.title}</h3>
-                  <div className="flex items-center justify-center text-sm text-gray-600">
-                    <span>Mehr erfahren</span>
-                    <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </button>
+                <ServiceSection key={service.id} {...service} />
               ))}
             </div>
-          </div>
 
-          {/* Service Sections */}
-          <div className="max-w-6xl mx-auto">
-            {services.map((service) => (
-              <ServiceSection key={service.id} {...service} />
-            ))}
-          </div>
-
-          {/* Contact Section */}
-          <div className="mt-16 bg-white rounded-2xl shadow-xl p-8 md:p-12 text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Interesse an unseren Services?</h2>
-            <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-              Kontaktieren Sie uns für weitere Informationen zu unseren medizinischen Untersuchungen und Schulungen.
-              Wir beraten Sie gerne!
-            </p>
-            <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
-              <div className="flex items-center gap-3 px-6 py-4 bg-gray-50 rounded-lg">
-                <Phone className="w-5 h-5 text-blue-600" />
-                <div className="text-left">
-                  <p className="text-sm text-gray-500">Telefon</p>
-                  <p className="font-semibold text-gray-900">Bald verfügbar</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 px-6 py-4 bg-gray-50 rounded-lg">
-                <Mail className="w-5 h-5 text-blue-600" />
-                <div className="text-left">
-                  <p className="text-sm text-gray-500">E-Mail</p>
-                  <p className="font-semibold text-gray-900">Bald verfügbar</p>
-                </div>
-              </div>
-            </div>
-            <div className="mt-8 p-6 bg-yellow-50 border-2 border-yellow-200 rounded-xl">
-              <p className="text-yellow-800 font-semibold">
-                🚧 Dieser Service befindet sich derzeit im Aufbau. Buchungen werden in Kürze möglich sein.
+            {/* Contact Section */}
+            <div className="mt-16 bg-white rounded-2xl shadow-xl p-8 md:p-12 text-center">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Interesse an unseren Services?</h2>
+              <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+                Kontaktieren Sie uns für weitere Informationen zu unseren medizinischen Untersuchungen und Schulungen.
+                Wir beraten Sie gerne!
               </p>
+              <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
+                <div className="flex items-center gap-3 px-6 py-4 bg-gray-50 rounded-lg">
+                  <Phone className="w-5 h-5 text-blue-600" />
+                  <div className="text-left">
+                    <p className="text-sm text-gray-500">Telefon</p>
+                    <p className="font-semibold text-gray-900">Bald verfügbar</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 px-6 py-4 bg-gray-50 rounded-lg">
+                  <Mail className="w-5 h-5 text-blue-600" />
+                  <div className="text-left">
+                    <p className="text-sm text-gray-500">E-Mail</p>
+                    <p className="font-semibold text-gray-900">Bald verfügbar</p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-8 p-6 bg-yellow-50 border-2 border-yellow-200 rounded-xl">
+                <p className="text-yellow-800 font-semibold">
+                  🚧 Dieser Service befindet sich derzeit im Aufbau. Buchungen werden in Kürze möglich sein.
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <Footer />
-    </div>
+    </>
   );
 }

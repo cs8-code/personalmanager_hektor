@@ -1,33 +1,42 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Building2, HardHat, ChevronRight, GraduationCap } from 'lucide-react';
+import Navbar from '../components/Navbar';
 
 export default function KarrierePage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-8">
-          <Link
-            to="/siportal"
-            className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Zurück zur Startseite
-          </Link>
-        </div>
-
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center w-20 h-20 bg-yellow-400 rounded-2xl mb-6 mx-auto">
-            <GraduationCap className="w-10 h-10 text-gray-900" />
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-16">
+        <header className="bg-white border-b border-gray-200 sticky top-16 z-40">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex items-center space-x-4">
+              <Link
+                to="/siportal"
+                className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5 mr-2" />
+                Zurück
+              </Link>
+              <div className="h-8 w-px bg-gray-300"></div>
+              <div className="flex items-center gap-3">
+                <GraduationCap className="w-6 h-6 text-yellow-600" />
+                <h1 className="text-2xl font-bold text-gray-900">Karriere</h1>
+              </div>
+            </div>
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Deine Karriere im Gleisbau
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Alles was du wissen musst: Vom SiPO zur eigenen Firma
-          </p>
-        </div>
+        </header>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Deine Karriere im Gleisbau
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Alles was du wissen musst: Vom SiPO zur eigenen Firma
+            </p>
+          </div>
 
         <div className="grid lg:grid-cols-2 gap-8 mb-16">
           {/* Wie wird man SiPO? */}
@@ -227,7 +236,8 @@ export default function KarrierePage() {
             </Link>
           </div>
         </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

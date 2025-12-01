@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Plus, Search, Filter, MapPin, Euro, Clock } from 'lucide-react';
+import { ShoppingCart, Plus, Search, Filter, MapPin, Euro, Clock, ArrowLeft } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { ATWSListing, ListingType } from '../types/atws';
 import { useAuth } from '../contexts/AuthContext';
@@ -83,36 +83,47 @@ export default function ATWSListingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
       <Navbar />
-
-      <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <ShoppingCart className="w-10 h-10 text-yellow-600" />
-                  <h1 className="text-4xl font-bold text-gray-900">ATWS-Warnanlagen Marktplatz</h1>
+      <div className="min-h-screen bg-gray-50 pt-16">
+        <header className="bg-white border-b border-gray-200 sticky top-16 z-40">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <Link
+                  to="/siportal"
+                  className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  <ArrowLeft className="w-5 h-5 mr-2" />
+                  Zurück
+                </Link>
+                <div className="h-8 w-px bg-gray-300"></div>
+                <div className="flex items-center gap-3">
+                  <ShoppingCart className="w-6 h-6 text-yellow-600" />
+                  <h1 className="text-2xl font-bold text-gray-900">ATWS-Warnanlagen Marktplatz</h1>
                 </div>
-                <p className="text-lg text-gray-600">
-                  Kaufen, verkaufen, mieten oder vermieten Sie ATWS-Warnanlagen
-                </p>
               </div>
               {user && (
                 <Link
                   to="/atws/create"
-                  className="flex items-center gap-2 px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-lg transition-colors shadow-md hover:shadow-lg"
+                  className="flex items-center gap-2 px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded-lg transition-all shadow-lg"
                 >
                   <Plus className="w-5 h-5" />
                   Inserat erstellen
                 </Link>
               )}
             </div>
+          </div>
+        </header>
 
-            {/* Search and Filter */}
-            <div className="flex flex-col md:flex-row gap-4 mt-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <p className="text-lg text-gray-600 mb-6">
+            Kaufen, verkaufen, mieten oder vermieten Sie ATWS-Warnanlagen
+          </p>
+
+          {/* Search and Filter */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+            <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1 relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
@@ -236,6 +247,6 @@ export default function ATWSListingsPage() {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }
