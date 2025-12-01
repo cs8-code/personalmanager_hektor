@@ -4,19 +4,8 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import Navbar from '../components/Navbar';
 import { useAuth } from '../contexts/AuthContext';
-
-interface Contract {
-  id: string;
-  user_id: string;
-  company_name: string;
-  location: string;
-  start_date: string;
-  end_date: string;
-  num_workers: number;
-  description: string;
-  status: string;
-  created_at: string;
-}
+import { Contract } from '../types/contract.types';
+import ContractDetailPanel from '../components/ContractDetailPanel';
 
 export default function ContractsPage() {
   const { user, loading: authLoading } = useAuth();
@@ -25,6 +14,7 @@ export default function ContractsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const [isSelbstandig, setIsSelbstandig] = useState(false);
+  const [selectedContract, setSelectedContract] = useState<Contract | null>(null);
 
   useEffect(() => {
     if (!authLoading) {
@@ -73,13 +63,13 @@ export default function ContractsPage() {
   const filteredContracts = contracts.filter((contract) => {
     const matchesSearch =
       searchTerm === '' ||
-      contract.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contract.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contract.location.toLowerCase().includes(searchTerm.toLowerCase());
+      contract.company_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      contract.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      contract.location?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesLocation =
       locationFilter === '' ||
-      contract.location.toLowerCase().includes(locationFilter.toLowerCase());
+      contract.location?.toLowerCase().includes(locationFilter.toLowerCase());
 
     return matchesSearch && matchesLocation;
   });
@@ -183,47 +173,62 @@ export default function ContractsPage() {
               <p className="text-gray-600">Versuchen Sie es mit anderen Suchkriterien</p>
             </div>
           ) : (
-            <div className="grid gap-6">
-              {filteredContracts.map((contract) => (
-                <Link
-                  key={contract.id}
-                  to={`/contracts/${contract.id}`}
-                  className="group bg-white rounded-xl shadow-sm border-2 border-gray-200 hover:border-yellow-400 hover:shadow-lg transition-all p-6"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-gray-900 group-hover:text-yellow-600 transition-colors mb-2">
-                        {contract.company_name}
-                      </h3>
-                      <p className="text-gray-600 mb-3 line-clamp-2">{contract.description}</p>
-                    </div>
-                    <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold whitespace-nowrap ml-4">
-                      {contract.status === 'active' ? 'Aktiv' : contract.status}
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                    <div className="flex items-center text-gray-600">
-                      <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
-                      <span className="truncate">{contract.location}</span>
-                    </div>
-                    <div className="flex items-center text-gray-600">
-                      <Users className="w-4 h-4 mr-2 flex-shrink-0" />
-                      <span>{contract.num_workers} Mitarbeiter</span>
-                    </div>
-                    <div className="flex items-center text-gray-600">
-                      <Calendar className="w-4 h-4 mr-2 flex-shrink-0" />
-                      <span className="truncate">
-                        {formatDate(contract.start_date)} - {formatDate(contract.end_date)}
+            <div className={`flex gap-6 transition-all duration-300 ${selectedContract ? 'flex-col lg:flex-row' : 'flex-col'}`}>
+              {/* Contracts List */}
+              <div className={`grid gap-6 transition-all duration-300 ${
+                selectedContract ? 'grid-cols-1 flex-1' : 'grid-cols-1'
+              }`}>
+                {filteredContracts.map((contract) => (
+                  <div
+                    key={contract.id}
+                    onClick={() => setSelectedContract(contract)}
+                    className={`group bg-white rounded-xl shadow-sm border-2 hover:shadow-lg transition-all p-6 cursor-pointer ${
+                      selectedContract?.id === contract.id ? 'border-yellow-400' : 'border-gray-200 hover:border-yellow-400'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold text-gray-900 group-hover:text-yellow-600 transition-colors mb-2">
+                          {contract.company_name}
+                        </h3>
+                        <p className="text-gray-600 mb-3 line-clamp-2">{contract.description}</p>
+                      </div>
+                      <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold whitespace-nowrap ml-4">
+                        {contract.status === 'active' ? 'Aktiv' : contract.status}
                       </span>
                     </div>
-                    <div className="flex items-center text-gray-600">
-                      <Calendar className="w-4 h-4 mr-2 flex-shrink-0" />
-                      <span>Erstellt {formatDateShort(contract.created_at)}</span>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                      <div className="flex items-center text-gray-600">
+                        <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
+                        <span className="truncate">{contract.location}</span>
+                      </div>
+                      <div className="flex items-center text-gray-600">
+                        <Users className="w-4 h-4 mr-2 flex-shrink-0" />
+                        <span>{contract.num_workers} Mitarbeiter</span>
+                      </div>
+                      <div className="flex items-center text-gray-600">
+                        <Calendar className="w-4 h-4 mr-2 flex-shrink-0" />
+                        <span className="truncate">
+                          {formatDate(contract.start_date)} - {formatDate(contract.end_date)}
+                        </span>
+                      </div>
+                      <div className="flex items-center text-gray-600">
+                        <Calendar className="w-4 h-4 mr-2 flex-shrink-0" />
+                        <span>Erstellt {formatDateShort(contract.created_at)}</span>
+                      </div>
                     </div>
                   </div>
-                </Link>
-              ))}
+                ))}
+              </div>
+
+              {/* Contract Detail Panel */}
+              {selectedContract && (
+                <ContractDetailPanel
+                  contract={selectedContract}
+                  onClose={() => setSelectedContract(null)}
+                />
+              )}
             </div>
           )}
         </div>

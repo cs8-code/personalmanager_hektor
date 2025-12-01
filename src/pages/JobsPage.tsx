@@ -4,23 +4,8 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import Navbar from '../components/Navbar';
 import { useAuth } from '../contexts/AuthContext';
-
-interface Job {
-  id: string;
-  title: string;
-  description: string;
-  company: string;
-  location: string;
-  employment_type: string;
-  experience_required: number | null;
-  salary_range: string | null;
-  requirements: string[];
-  benefits: string[];
-  contact_email: string;
-  contact_phone: string | null;
-  status: string;
-  created_at: string;
-}
+import { Job } from '../types/job.types';
+import JobDetailPanel from '../components/JobDetailPanel';
 
 export default function JobsPage() {
   const { user, userProfile, loading: authLoading } = useAuth();
@@ -30,6 +15,7 @@ export default function JobsPage() {
   const [locationFilter, setLocationFilter] = useState('');
   const [employmentTypeFilter, setEmploymentTypeFilter] = useState('');
   const [showEmploymentTypeDropdown, setShowEmploymentTypeDropdown] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
   const isManager = userProfile?.systemRole === 'manager' || userProfile?.systemRole === 'administrator';
   const isSelbstandig = userProfile?.employment_type === 'selbständig';
@@ -237,51 +223,66 @@ export default function JobsPage() {
               <p className="text-gray-600">Versuchen Sie es mit anderen Suchkriterien</p>
             </div>
           ) : (
-            <div className="grid gap-6">
-              {filteredJobs.map((job) => (
-                <Link
-                  key={job.id}
-                  to={`/jobs/${job.id}`}
-                  className="group bg-white rounded-xl shadow-sm border-2 border-gray-200 hover:border-yellow-400 hover:shadow-lg transition-all p-6"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-gray-900 group-hover:text-yellow-600 transition-colors mb-2">
-                        {job.title}
-                      </h3>
-                      <p className="text-lg text-gray-700 mb-2">{job.company}</p>
-                    </div>
-                    <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">
-                      {job.employment_type}
-                    </span>
-                  </div>
-
-                  <p className="text-gray-600 mb-4 line-clamp-2">{job.description}</p>
-
-                  <div className="flex flex-wrap gap-4 text-sm text-gray-600">
-                    <div className="flex items-center">
-                      <MapPin className="w-4 h-4 mr-1" />
-                      {job.location}
-                    </div>
-                    {job.experience_required && (
-                      <div className="flex items-center">
-                        <Briefcase className="w-4 h-4 mr-1" />
-                        {job.experience_required} Jahre Erfahrung
+            <div className={`flex gap-6 transition-all duration-300 ${selectedJob ? 'flex-col lg:flex-row' : 'flex-col'}`}>
+              {/* Jobs List */}
+              <div className={`grid gap-6 transition-all duration-300 ${
+                selectedJob ? 'grid-cols-1 flex-1' : 'grid-cols-1'
+              }`}>
+                {filteredJobs.map((job) => (
+                  <div
+                    key={job.id}
+                    onClick={() => setSelectedJob(job)}
+                    className={`group bg-white rounded-xl shadow-sm border-2 hover:shadow-lg transition-all p-6 cursor-pointer ${
+                      selectedJob?.id === job.id ? 'border-yellow-400' : 'border-gray-200 hover:border-yellow-400'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold text-gray-900 group-hover:text-yellow-600 transition-colors mb-2">
+                          {job.title}
+                        </h3>
+                        <p className="text-lg text-gray-700 mb-2">{job.company}</p>
                       </div>
-                    )}
-                    {job.salary_range && (
+                      <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">
+                        {job.employment_type}
+                      </span>
+                    </div>
+
+                    <p className="text-gray-600 mb-4 line-clamp-2">{job.description}</p>
+
+                    <div className="flex flex-wrap gap-4 text-sm text-gray-600">
                       <div className="flex items-center">
-                        <Euro className="w-4 h-4 mr-1" />
-                        {job.salary_range}
+                        <MapPin className="w-4 h-4 mr-1" />
+                        {job.location}
                       </div>
-                    )}
-                    <div className="flex items-center ml-auto">
-                      <Clock className="w-4 h-4 mr-1" />
-                      {formatDate(job.created_at)}
+                      {job.experience_required && (
+                        <div className="flex items-center">
+                          <Briefcase className="w-4 h-4 mr-1" />
+                          {job.experience_required} Jahre Erfahrung
+                        </div>
+                      )}
+                      {job.salary_range && (
+                        <div className="flex items-center">
+                          <Euro className="w-4 h-4 mr-1" />
+                          {job.salary_range}
+                        </div>
+                      )}
+                      <div className="flex items-center ml-auto">
+                        <Clock className="w-4 h-4 mr-1" />
+                        {formatDate(job.created_at)}
+                      </div>
                     </div>
                   </div>
-                </Link>
-              ))}
+                ))}
+              </div>
+
+              {/* Job Detail Panel */}
+              {selectedJob && (
+                <JobDetailPanel
+                  job={selectedJob}
+                  onClose={() => setSelectedJob(null)}
+                />
+              )}
             </div>
           )}
         </div>
