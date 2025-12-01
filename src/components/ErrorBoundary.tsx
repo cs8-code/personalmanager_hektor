@@ -1,27 +1,25 @@
-/**
- * ErrorBoundary Component
- * Catches JavaScript errors anywhere in the child component tree and displays a fallback UI
- */
-
-import React, { Component, ReactNode } from 'react';
-import { AlertTriangle } from 'lucide-react';
+import { Component, ErrorInfo, ReactNode } from 'react';
+import { Link } from 'react-router-dom';
+import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
+import Navbar from './Navbar';
 
 interface Props {
   children: ReactNode;
-  fallback?: ReactNode;
 }
 
 interface State {
   hasError: boolean;
   error: Error | null;
+  errorInfo: ErrorInfo | null;
 }
 
-export class ErrorBoundary extends Component<Props, State> {
+export default class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
       hasError: false,
       error: null,
+      errorInfo: null,
     };
   }
 
@@ -29,77 +27,103 @@ export class ErrorBoundary extends Component<Props, State> {
     return {
       hasError: true,
       error,
+      errorInfo: null,
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
-
-    // You can log the error to an error reporting service here
-    // Example: logErrorToService(error, errorInfo);
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('Error caught by ErrorBoundary:', error, errorInfo);
+    this.setState({
+      error,
+      errorInfo,
+    });
   }
 
   handleReset = () => {
     this.setState({
       hasError: false,
       error: null,
+      errorInfo: null,
     });
   };
 
   render() {
     if (this.state.hasError) {
-      // Custom fallback UI
-      if (this.props.fallback) {
-        return this.props.fallback;
-      }
-
-      // Default fallback UI
       return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-lg p-8 max-w-lg w-full">
-            <div className="flex items-center justify-center mb-6">
-              <div className="bg-red-100 rounded-full p-3">
-                <AlertTriangle className="w-12 h-12 text-red-600" />
+        <>
+          <Navbar />
+          <div className="min-h-screen bg-gradient-to-b from-red-50 to-white pt-16 flex items-center justify-center px-4">
+            <div className="max-w-2xl mx-auto text-center">
+              {/* Error Icon */}
+              <div className="mb-8">
+                <div className="inline-flex items-center justify-center w-24 h-24 bg-red-100 rounded-full">
+                  <AlertTriangle className="w-12 h-12 text-red-600" />
+                </div>
+              </div>
+
+              {/* Error Message */}
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                Etwas ist schiefgelaufen
+              </h1>
+              <p className="text-xl text-gray-600 mb-8">
+                Es ist ein unerwarteter Fehler aufgetreten. Bitte versuchen Sie es erneut.
+              </p>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+                <button
+                  onClick={this.handleReset}
+                  className="flex items-center px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded-lg transition-all shadow-md hover:shadow-lg"
+                >
+                  <RefreshCw className="w-5 h-5 mr-2" />
+                  Seite neu laden
+                </button>
+                <Link
+                  to="/siportal"
+                  onClick={this.handleReset}
+                  className="flex items-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg transition-colors"
+                >
+                  <Home className="w-5 h-5 mr-2" />
+                  Zur Startseite
+                </Link>
+              </div>
+
+              {/* Error Details (Development Only) */}
+              {process.env.NODE_ENV === 'development' && this.state.error && (
+                <div className="mt-8 text-left">
+                  <details className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <summary className="cursor-pointer font-semibold text-gray-900 mb-2">
+                      Technische Details (nur in Entwicklung sichtbar)
+                    </summary>
+                    <div className="space-y-2 text-sm">
+                      <div>
+                        <strong className="text-red-600">Fehler:</strong>
+                        <pre className="mt-1 p-2 bg-red-50 border border-red-200 rounded overflow-x-auto text-xs">
+                          {this.state.error.toString()}
+                        </pre>
+                      </div>
+                      {this.state.errorInfo && (
+                        <div>
+                          <strong className="text-red-600">Stack Trace:</strong>
+                          <pre className="mt-1 p-2 bg-red-50 border border-red-200 rounded overflow-x-auto text-xs">
+                            {this.state.errorInfo.componentStack}
+                          </pre>
+                        </div>
+                      )}
+                    </div>
+                  </details>
+                </div>
+              )}
+
+              {/* Help Text */}
+              <div className="mt-12 pt-8 border-t border-gray-200">
+                <p className="text-sm text-gray-600">
+                  Falls das Problem weiterhin besteht, kontaktieren Sie bitte den Support.
+                </p>
               </div>
             </div>
-
-            <h1 className="text-2xl font-bold text-gray-900 text-center mb-4">
-              Oops! Etwas ist schiefgelaufen
-            </h1>
-
-            <p className="text-gray-600 text-center mb-6">
-              Es tut uns leid, aber es ist ein unerwarteter Fehler aufgetreten.
-              Bitte versuchen Sie, die Seite neu zu laden.
-            </p>
-
-            {process.env.NODE_ENV === 'development' && this.state.error && (
-              <details className="mb-6 bg-gray-50 rounded-lg p-4">
-                <summary className="cursor-pointer font-medium text-gray-700 mb-2">
-                  Fehlerdetails (nur in Entwicklung sichtbar)
-                </summary>
-                <pre className="text-xs text-red-600 overflow-auto">
-                  {this.state.error.toString()}
-                  {this.state.error.stack}
-                </pre>
-              </details>
-            )}
-
-            <div className="flex gap-4">
-              <button
-                onClick={this.handleReset}
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
-              >
-                Erneut versuchen
-              </button>
-              <button
-                onClick={() => window.location.href = '/'}
-                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md transition-colors"
-              >
-                Zur Startseite
-              </button>
-            </div>
           </div>
-        </div>
+        </>
       );
     }
 

@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './contexts/AuthContext';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Lazy load route components for code splitting
 const PersonalmanagerHektorPage = lazy(() => import('./pages/PersonalmanagerHektorPage'));
@@ -27,6 +28,9 @@ const ATWSListingsPage = lazy(() => import('./pages/ATWSListingsPage'));
 const ATWSListingDetailPage = lazy(() => import('./pages/ATWSListingDetailPage'));
 const ATWSListingFormPage = lazy(() => import('./pages/ATWSListingFormPage'));
 const UntersuchungenPage = lazy(() => import('./pages/UntersuchungenPage'));
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
+const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -37,39 +41,44 @@ const PageLoader = () => (
 
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <Toaster />
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/" element={<PersonalmanagerHektorPage />} />
-            <Route path="/siportal" element={<HomePage />} />
-            <Route path="/register" element={<RegistrationPage />} />
-            <Route path="/workers" element={<WorkerListingPage />} />
-            <Route path="/workers/:id" element={<WorkerDetailPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/service/:serviceId" element={<ServiceDetailPage />} />
-            <Route path="/admin" element={<AdminPanel />} />
-            <Route path="/manager" element={<ManagerPage />} />
-            <Route path="/jobs" element={<JobsPage />} />
-            <Route path="/jobs/:id" element={<JobDetailPage />} />
-            <Route path="/jobs-management" element={<JobsManagementPage />} />
-            <Route path="/subcontractor-guide" element={<SubcontractorGuidePage />} />
-            <Route path="/karriere" element={<KarrierePage />} />
-            <Route path="/sipo-news" element={<SipoNewsPage />} />
-            <Route path="/business-room" element={<BusinessRoomPage />} />
-            <Route path="/contracts" element={<ContractsPage />} />
-            <Route path="/contracts/:id" element={<ContractDetailPage />} />
-            <Route path="/contracts-management" element={<ContractManagementPage />} />
-            <Route path="/atws" element={<ATWSListingsPage />} />
-            <Route path="/atws/create" element={<ATWSListingFormPage />} />
-            <Route path="/atws/edit/:id" element={<ATWSListingFormPage />} />
-            <Route path="/atws/:id" element={<ATWSListingDetailPage />} />
-            <Route path="/untersuchungen" element={<UntersuchungenPage />} />
-          </Routes>
-        </Suspense>
-      </AuthProvider>
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <AuthProvider>
+          <Toaster />
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<PersonalmanagerHektorPage />} />
+              <Route path="/siportal" element={<HomePage />} />
+              <Route path="/register" element={<RegistrationPage />} />
+              <Route path="/workers" element={<WorkerListingPage />} />
+              <Route path="/workers/:id" element={<WorkerDetailPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/service/:serviceId" element={<ServiceDetailPage />} />
+              <Route path="/admin" element={<AdminPanel />} />
+              <Route path="/manager" element={<ManagerPage />} />
+              <Route path="/jobs" element={<JobsPage />} />
+              <Route path="/jobs/:id" element={<JobDetailPage />} />
+              <Route path="/jobs-management" element={<JobsManagementPage />} />
+              <Route path="/subcontractor-guide" element={<SubcontractorGuidePage />} />
+              <Route path="/karriere" element={<KarrierePage />} />
+              <Route path="/sipo-news" element={<SipoNewsPage />} />
+              <Route path="/business-room" element={<BusinessRoomPage />} />
+              <Route path="/contracts" element={<ContractsPage />} />
+              <Route path="/contracts/:id" element={<ContractDetailPage />} />
+              <Route path="/contracts-management" element={<ContractManagementPage />} />
+              <Route path="/atws" element={<ATWSListingsPage />} />
+              <Route path="/atws/create" element={<ATWSListingFormPage />} />
+              <Route path="/atws/edit/:id" element={<ATWSListingFormPage />} />
+              <Route path="/atws/:id" element={<ATWSListingDetailPage />} />
+              <Route path="/untersuchungen" element={<UntersuchungenPage />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+              <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </Suspense>
+        </AuthProvider>
+      </Router>
+    </ErrorBoundary>
   );
 }
 
