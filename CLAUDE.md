@@ -25,12 +25,12 @@ Personal Manager Hektor (siportal) is a personnel/recruitment management platfor
 
 **Tech Stack:**
 - React 18.3.1 + TypeScript 5.5.3
-- Vite 5.4.2 (build tool)
-- Supabase 2.57.4 (backend, auth, database, storage)
+- Vite 7.2.4 (build tool)
+- Supabase 2.58.5 (backend, auth, database, storage)
 - React Router DOM 7.9.4
 - Tailwind CSS 3.4.1
 - Lucide React 0.344.0 (icons)
-- React Hot Toast 2.x (notifications)
+- React Hot Toast 2.6.0 (notifications)
 
 ## Development Commands
 
@@ -126,27 +126,62 @@ if (isManager) {
 8. **posts & comments** - Community forum functionality
    - Created in: `20251028114200_create_posts_and_comments_tables.sql`
 
+9. **elba_survey_responses** - ELBA survey voting system
+   - Fields: id, user_id, vote (thumbs_up|thumbs_down), created_at
+   - One vote per user (unique constraint on user_id)
+   - Created in: `20251121000000_create_elba_survey_table.sql`
+
+10. **business_posts & business_comments** - Business Room for selbständige users
+    - Exclusive to users with employment_type = 'selbständig'
+    - Posts can be 'news' or 'question' types
+    - RLS enforces access based on employment_type
+    - Created in: `20251122100000_create_business_room_tables.sql`
+
+11. **atws_listings** - ATWS marketplace (Arbeitstauschbörse)
+    - Fields: title, description, listing_type (verkaufen|kaufen|vermieten|mieten), condition, price, images[], status
+    - Supports multiple images via Supabase Storage bucket `atws-images`
+    - View tracking with `views` counter
+    - Created in: `20251124000000_create_atws_listings_table.sql`
+
 ### Routing Structure
 
-All routes defined in [src/App.tsx](src/App.tsx) (lines 36-54):
+All routes defined in [src/App.tsx](src/App.tsx) (lines 44-69):
 
+**Main Routes:**
 - `/` - Landing page (PersonalmanagerHektorPage)
 - `/siportal` - Main portal (HomePage)
 - `/register` - User registration
+- `/profile` - User's own profile (protected)
+
+**Worker & Job Routes:**
 - `/workers` - Browse workers
 - `/workers/:id` - Worker details
-- `/profile` - User's own profile (protected)
-- `/admin` - Admin panel (administrator only)
-- `/manager` - Manager dashboard (manager/admin only)
 - `/jobs` - Browse job postings
 - `/jobs/:id` - Job details
 - `/jobs-management` - Create/edit jobs (manager/admin only)
+
+**Contract Routes:**
 - `/contracts` - Browse contracts
 - `/contracts/:id` - Contract details
 - `/contracts-management` - Manage contracts (authenticated)
+
+**ATWS Marketplace Routes:**
+- `/atws` - Browse ATWS listings
+- `/atws/:id` - ATWS listing details
+- `/atws/create` - Create new listing
+- `/atws/edit/:id` - Edit existing listing
+
+**Business & Information Routes:**
+- `/business-room` - Business Room (selbständige only)
+- `/karriere` - Career information
+- `/untersuchungen` - Medical examinations page
 - `/service/:serviceId` - Service information
 - `/subcontractor-guide` - Guide for subcontractors
 - `/sipo-news` - News/updates
+
+**Admin Routes:**
+- `/admin` - Admin panel (administrator only)
+- `/manager` - Manager dashboard (manager/admin only)
 
 All route components are lazy-loaded with React.lazy() and Suspense for code splitting.
 
@@ -208,7 +243,34 @@ Availability statuses:
 
 ### Common Patterns
 
-**Supabase Data Operations:**
+**Using Services (Recommended):**
+```typescript
+import { jobService, workerService } from '../services';
+
+// Fetch data
+const jobs = await jobService.getAll({ status: JOB_STATUS.ACTIVE });
+const worker = await workerService.getById(workerId);
+
+// Create data
+await jobService.create(newJobData);
+
+// Update data
+await workerService.update(workerId, updateData);
+```
+
+**Using Custom Hooks:**
+```typescript
+import { useJobs, useWorkers, useToast } from '../hooks';
+
+const { jobs, loading, error, refetch } = useJobs();
+const { showSuccess, showError } = useToast();
+
+// Show notifications
+showSuccess('Operation successful!');
+showError('Something went wrong');
+```
+
+**Direct Supabase Operations (Legacy - prefer services):**
 ```typescript
 // Fetch
 const { data, error } = await supabase
@@ -228,13 +290,17 @@ await supabase.from('table').delete().eq('id', id);
 
 **Error Handling:**
 ```typescript
+import { useToast } from '../hooks';
+
+const { showError } = useToast();
+
 try {
   const { data, error } = await supabase.from('table').select();
   if (error) throw error;
   // Handle data
 } catch (error) {
   console.error('Error:', error);
-  // Show user-friendly error message
+  showError('Failed to load data');
 }
 ```
 
@@ -271,10 +337,17 @@ if (!user || !isManager) {
 
 ### Storage
 
-**Supabase Storage Bucket:** `profile-pictures`
-- Public access for profile images
-- Organization: `userId/profile.ext`
-- Created in: `20251112133100_create_profile_pictures_storage.sql`
+**Supabase Storage Buckets:**
+1. **profile-pictures** - User profile images
+   - Public access
+   - Organization: `userId/profile.ext`
+   - Created in: `20251112133100_create_profile_pictures_storage.sql`
+
+2. **atws-images** - ATWS marketplace images
+   - Public access for viewing
+   - Organization: `userId/filename.ext`
+   - Users can only modify their own images
+   - Created in: `20251124000000_create_atws_listings_table.sql`
 
 ### Real-time Subscriptions
 
@@ -315,4 +388,8 @@ return () => { supabase.removeChannel(channel); };
 
 7. **Lazy Loading:** All route components are lazy-loaded. When adding new routes, use React.lazy() for consistency.
 
-8. **Type Safety:** Maintain TypeScript interfaces for all data structures. See AuthContext.tsx for UserProfile interface definition.
+8. **Type Safety:** Maintain TypeScript interfaces for all data structures. Import centralized types from `src/types/`.
+
+9. **Employment Type Access:** The Business Room feature (`business_posts` and `business_comments`) is exclusively for users with `employment_type = 'selbständig'`. RLS policies enforce this at the database level.
+
+10. **ATWS Marketplace:** The ATWS listings support multiple images and require authenticated users to create listings. All listings must have valid listing_type and status values.
