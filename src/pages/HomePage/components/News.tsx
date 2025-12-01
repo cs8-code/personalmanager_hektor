@@ -1,4 +1,4 @@
-import { MessageSquare, Briefcase, Users } from 'lucide-react';
+import { MessageSquare, HardHat, Handshake } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function News() {
@@ -19,29 +19,30 @@ export default function News() {
 
         <div className="max-w-5xl mx-auto">
             <div className="grid md:grid-cols-2 gap-6 mt-6">
-              {/* Business Room */}
-              <Link
-                to="/business-room"
-                className="group bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border-2 border-blue-200 hover:border-blue-400 hover:shadow-lg transition-all transform hover:scale-105 cursor-pointer"
-              >
-                <div className="flex items-center justify-center w-16 h-16 bg-blue-400 rounded-xl mb-4 group-hover:bg-blue-500 transition-colors mx-auto">
-                  <Briefcase className="w-8 h-8 text-white" />
-                </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-2 text-center">Business Room</h4>
-                <p className="text-gray-700 text-sm text-center">Für selbständige Subunternehmer</p>
-              </Link>
-
               {/* Tal der SIPOS */}
               <Link
                 to="/sipo-news"
                 className="group bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl p-6 border-2 border-yellow-200 hover:border-yellow-400 hover:shadow-lg transition-all transform hover:scale-105 cursor-pointer"
               >
                 <div className="flex items-center justify-center w-16 h-16 bg-yellow-400 rounded-xl mb-4 group-hover:bg-yellow-500 transition-colors mx-auto">
-                  <Users className="w-8 h-8 text-gray-900" />
+                  <HardHat className="w-8 h-8 text-gray-900" />
                 </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-2 text-center">Tal der SIPOS</h4>
-                <p className="text-gray-700 text-sm text-center">Für angestellte Bauleiter</p>
+                <h4 className="text-xl font-bold text-gray-900 mb-2 text-center">Tal der Sipos</h4>
+                <p className="text-gray-700 text-sm text-center">Für angestellte Sicherheitsposten</p>
               </Link>
+
+              {/* Business Room */}
+              <Link
+                to="/business-room"
+                className="group bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border-2 border-blue-200 hover:border-blue-400 hover:shadow-lg transition-all transform hover:scale-105 cursor-pointer"
+              >
+                <div className="flex items-center justify-center w-16 h-16 bg-blue-400 rounded-xl mb-4 group-hover:bg-blue-500 transition-colors mx-auto">
+                  <Handshake className="w-8 h-8 text-white" />
+                </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-2 text-center">Business Room</h4>
+                <p className="text-gray-700 text-sm text-center">Für selbständige Subunternehmer</p>
+              </Link>
+          
             </div>
         </div>
       </div>

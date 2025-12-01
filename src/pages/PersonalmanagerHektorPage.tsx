@@ -137,10 +137,10 @@ export default function PersonalmanagerHektorPage() {
                 />
               </div>
               <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 pb-2">
-                Personalmanager HEKTOR
+                HEKTOR
               </h1>
               <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Ihre umfassende Lösung für Personal- und Dienstleistungsmanagement
+                Ihr umfassender Service für Personal- und Dienstleistungsmanagement
               </p>
             </div>
 
