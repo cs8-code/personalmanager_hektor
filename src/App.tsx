@@ -28,6 +28,7 @@ const ATWSListingsPage = lazy(() => import('./pages/ATWSListingsPage'));
 const ATWSListingDetailPage = lazy(() => import('./pages/ATWSListingDetailPage'));
 const ATWSListingFormPage = lazy(() => import('./pages/ATWSListingFormPage'));
 const UntersuchungenPage = lazy(() => import('./pages/UntersuchungenPage'));
+const ImpressumPage = lazy(() => import('./pages/ImpressumPage'));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
 const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
@@ -71,6 +72,7 @@ function App() {
               <Route path="/atws/edit/:id" element={<ATWSListingFormPage />} />
               <Route path="/atws/:id" element={<ATWSListingDetailPage />} />
               <Route path="/untersuchungen" element={<UntersuchungenPage />} />
+              <Route path="/impressum" element={<ImpressumPage />} />
               <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
               <Route path="/terms-of-service" element={<TermsOfServicePage />} />
               <Route path="*" element={<NotFoundPage />} />
