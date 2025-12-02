@@ -32,6 +32,8 @@ const UntersuchungenPage = lazy(() => import('./pages/UntersuchungenPage'));
 const ImpressumPage = lazy(() => import('./pages/ImpressumPage'));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
 const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage'));
+const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage'));
+const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 // Loading fallback component
@@ -78,6 +80,8 @@ function App() {
                   <Route path="/impressum" element={<ImpressumPage />} />
                   <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
                   <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+                  <Route path="/verify-email" element={<VerifyEmailPage />} />
+                  <Route path="/reset-password" element={<ResetPasswordPage />} />
                   <Route path="*" element={<NotFoundPage />} />
                 </Routes>
               </Suspense>

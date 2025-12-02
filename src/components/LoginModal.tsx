@@ -11,6 +11,8 @@ interface LoginModalProps {
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const { showSuccess, showError } = useToast();
   const [showPassword, setShowPassword] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -85,8 +87,44 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
   const handleClose = () => {
     setFormData({ email: '', password: '' });
+    setResetEmail('');
+    setShowForgotPassword(false);
     setErrors({});
     onClose();
+  };
+
+  const handlePasswordReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!resetEmail) {
+      setErrors({ resetEmail: 'E-Mail ist erforderlich' });
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(resetEmail)) {
+      setErrors({ resetEmail: 'Bitte geben Sie eine gültige E-Mail-Adresse ein' });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) throw error;
+
+      showSuccess('Passwort-Reset-Link wurde an Ihre E-Mail gesendet!');
+      setShowForgotPassword(false);
+      setResetEmail('');
+      setErrors({});
+    } catch (error: unknown) {
+      console.error('Password reset error:', error);
+      showError(error instanceof Error ? error.message : 'Fehler beim Senden des Reset-Links.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -106,7 +144,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-gray-900">
-                Anmelden
+                {showForgotPassword ? 'Passwort zurücksetzen' : 'Anmelden'}
               </h3>
               <button
                 onClick={handleClose}
@@ -118,106 +156,180 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="px-4 pb-4 sm:px-6">
-            <div className="space-y-4">
-              {/* Email */}
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  E-Mail-Adresse
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className={`appearance-none block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm ${
-                      errors.email ? 'border-red-300' : 'border-gray-300'
-                    }`}
-                    placeholder="max@beispiel.de"
-                  />
-                  {errors.email && (
-                    <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-                  )}
+          {!showForgotPassword ? (
+            <form onSubmit={handleSubmit} className="px-4 pb-4 sm:px-6">
+              <div className="space-y-4">
+                {/* Email */}
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                    E-Mail-Adresse
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className={`appearance-none block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm ${
+                        errors.email ? 'border-red-300' : 'border-gray-300'
+                      }`}
+                      placeholder="max@beispiel.de"
+                    />
+                    {errors.email && (
+                      <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                    )}
+                  </div>
                 </div>
-              </div>
 
-              {/* Password */}
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                  Passwort
-                </label>
-                <div className="mt-1 relative">
-                  <input
-                    id="password"
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    className={`appearance-none block w-full px-3 py-2 pr-10 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm ${
-                      errors.password ? 'border-red-300' : 'border-gray-300'
-                    }`}
-                    placeholder="Ihr Passwort"
-                  />
+                {/* Password */}
+                <div>
+                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                    Passwort
+                  </label>
+                  <div className="mt-1 relative">
+                    <input
+                      id="password"
+                      name="password"
+                      type={showPassword ? 'text' : 'password'}
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      className={`appearance-none block w-full px-3 py-2 pr-10 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm ${
+                        errors.password ? 'border-red-300' : 'border-gray-300'
+                      }`}
+                      placeholder="Ihr Passwort"
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4 text-gray-400" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-gray-400" />
+                      )}
+                    </button>
+                    {errors.password && (
+                      <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Forgot Password Link */}
+                <div className="text-right">
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    onClick={() => setShowPassword(!showPassword)}
+                    onClick={() => setShowForgotPassword(true)}
+                    className="text-sm font-medium text-yellow-600 hover:text-yellow-500"
                   >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-gray-400" />
+                    Passwort vergessen?
+                  </button>
+                </div>
+
+                {/* Submit Error */}
+                {errors.submit && (
+                  <div className="bg-red-50 border border-red-200 rounded-md p-3">
+                    <p className="text-sm text-red-600">{errors.submit}</p>
+                  </div>
+                )}
+
+                {/* Submit Button */}
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {loading ? (
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                     ) : (
-                      <Eye className="h-4 w-4 text-gray-400" />
+                      'Anmelden'
                     )}
                   </button>
-                  {errors.password && (
-                    <p className="mt-1 text-sm text-red-600">{errors.password}</p>
-                  )}
+                </div>
+
+                {/* Additional Options */}
+                <div className="text-center">
+                  <p className="text-sm text-gray-600">
+                    Noch kein Konto?{' '}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleClose();
+                        window.location.href = '/register';
+                      }}
+                      className="font-medium text-yellow-600 hover:text-yellow-500"
+                    >
+                      Jetzt registrieren
+                    </button>
+                  </p>
                 </div>
               </div>
-
-              {/* Submit Error */}
-              {errors.submit && (
-                <div className="bg-red-50 border border-red-200 rounded-md p-3">
-                  <p className="text-sm text-red-600">{errors.submit}</p>
-                </div>
-              )}
-
-              {/* Submit Button */}
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {loading ? (
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                  ) : (
-                    'Anmelden'
-                  )}
-                </button>
-              </div>
-
-              {/* Additional Options */}
-              <div className="text-center">
+            </form>
+          ) : (
+            <form onSubmit={handlePasswordReset} className="px-4 pb-4 sm:px-6">
+              <div className="space-y-4">
                 <p className="text-sm text-gray-600">
-                  Noch kein Konto?{' '}
+                  Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.
+                </p>
+
+                {/* Reset Email */}
+                <div>
+                  <label htmlFor="resetEmail" className="block text-sm font-medium text-gray-700">
+                    E-Mail-Adresse
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      id="resetEmail"
+                      name="resetEmail"
+                      type="email"
+                      value={resetEmail}
+                      onChange={(e) => {
+                        setResetEmail(e.target.value);
+                        if (errors.resetEmail) {
+                          setErrors(prev => ({ ...prev, resetEmail: '' }));
+                        }
+                      }}
+                      className={`appearance-none block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm ${
+                        errors.resetEmail ? 'border-red-300' : 'border-gray-300'
+                      }`}
+                      placeholder="max@beispiel.de"
+                    />
+                    {errors.resetEmail && (
+                      <p className="mt-1 text-sm text-red-600">{errors.resetEmail}</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Buttons */}
+                <div className="flex gap-3">
                   <button
                     type="button"
                     onClick={() => {
-                      handleClose();
-                      // You could navigate to registration here
-                      window.location.href = '/register';
+                      setShowForgotPassword(false);
+                      setResetEmail('');
+                      setErrors({});
                     }}
-                    className="font-medium text-yellow-600 hover:text-yellow-500"
+                    className="flex-1 flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
                   >
-                    Jetzt registrieren
+                    Zurück
                   </button>
-                </p>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex-1 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {loading ? (
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    ) : (
+                      'Link senden'
+                    )}
+                  </button>
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
+          )}
         </div>
       </div>
     </div>

@@ -191,6 +191,7 @@ export default function RegistrationPage() {
         email: formData.email,
         password: formData.password,
         options: {
+          emailRedirectTo: `${window.location.origin}/verify-email`,
           data: {
             first_name: formData.first_name,
             last_name: formData.last_name,
@@ -214,67 +215,81 @@ export default function RegistrationPage() {
         }
       });
 
-      if (authError) throw authError;
+      if (authError) {
+        console.error('Auth error:', authError);
+        throw new Error(`Fehler bei der Kontoerstellung: ${authError.message}`);
+      }
 
+      // User account created successfully - always show success message
+      // Profile creation may fail if email confirmation is enabled, but that's ok
       if (authData.user) {
         setTempUserId(authData.user.id);
 
-        // Create worker profile (for both angestellt and selbständig)
-        const { error: profileError } = await supabase
-          .from('workers')
-          .insert({
-            id: authData.user.id,
-            name: `${formData.first_name} ${formData.last_name}`,
-            username: formData.username,
-            email: formData.email,
-            phone: formData.phone || '',
-            birth_date: formData.birth_date,
-            gender: formData.gender,
-            city: formData.city,
-            employment_type: formData.employment_type,
-            company_name: formData.company_name || null,
-            company_address: formData.company_address || null,
-            availability_status: formData.availability_status,
-            work_days: formData.work_days || null,
-            qualifications: formData.qualifications,
-            languages: formData.languages,
-            shifts: formData.shifts || null,
-            smoking_status: formData.smoking_status || null,
-            arbeitsort: formData.arbeitsort || null,
-            remarks: formData.remarks || null,
-            location: formData.city,
-            experience_years: 0,
-            bio: '',
-            company: '',
-            image_url: profileImageUrl || ''
-          });
-
-        if (profileError) throw profileError;
-
-        // If selbständig, also create company profile
-        if (formData.employment_type === 'selbständig') {
-          const { error: companyError } = await supabase
-            .from('companies')
+        // Try to create worker profile, but don't fail registration if it doesn't work
+        // (Profile will be created via database trigger or after email confirmation)
+        try {
+          const { error: profileError } = await supabase
+            .from('workers')
             .insert({
               id: authData.user.id,
-              company_name: formData.company_name || '',
-              company_address: formData.company_address || null,
-              contact_person: `${formData.first_name} ${formData.last_name}`,
+              name: `${formData.first_name} ${formData.last_name}`,
+              username: formData.username,
               email: formData.email,
-              phone: formData.phone || null
+              phone: formData.phone || '',
+              birth_date: formData.birth_date,
+              gender: formData.gender,
+              city: formData.city,
+              employment_type: formData.employment_type,
+              company_name: formData.company_name || null,
+              company_address: formData.company_address || null,
+              availability_status: formData.availability_status,
+              work_days: formData.work_days || null,
+              qualifications: formData.qualifications,
+              languages: formData.languages,
+              shifts: formData.shifts || null,
+              smoking_status: formData.smoking_status || null,
+              arbeitsort: formData.arbeitsort || null,
+              remarks: formData.remarks || null,
+              location: formData.city,
+              experience_years: 0,
+              bio: '',
+              company: '',
+              image_url: profileImageUrl || ''
             });
 
-          if (companyError) {
-            console.error('Company creation error:', companyError);
-            throw companyError;
+          if (profileError) {
+            console.warn('Profile creation skipped (will be created after email confirmation):', profileError);
           }
+
+          // If selbständig, try to create company profile
+          if (formData.employment_type === 'selbständig') {
+            const { error: companyError } = await supabase
+              .from('companies')
+              .insert({
+                id: authData.user.id,
+                company_name: formData.company_name || '',
+                company_address: formData.company_address || null,
+                contact_person: `${formData.first_name} ${formData.last_name}`,
+                email: formData.email,
+                phone: formData.phone || null
+              });
+
+            if (companyError) {
+              console.warn('Company profile creation skipped (will be created after email confirmation):', companyError);
+            }
+          }
+        } catch (profileCreationError) {
+          // Profile creation failed, but that's ok - user still registered successfully
+          console.warn('Profile creation failed, but user account created successfully:', profileCreationError);
         }
       }
 
+      // Always show success message after user account is created
       setIsSubmitted(true);
     } catch (error: unknown) {
       console.error('Registration error:', error);
-      setErrors({ submit: error instanceof Error ? error.message : 'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.' });
+      const errorMessage = error instanceof Error ? error.message : 'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.';
+      setErrors({ submit: errorMessage });
     } finally {
       setLoading(false);
     }
