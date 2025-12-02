@@ -26,17 +26,18 @@ function ServiceCard({ icon: Icon, title, description, hashLink, customRoute, re
     }
   };
 
-  if (user && customRoute) {
+  // Use customRoute if provided, regardless of auth status
+  if (customRoute) {
     return (
       <Link
         to={customRoute}
-              className="group bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 shadow-lg hover:shadow-2xl border-2 border-gray-200 hover:border-gray-400 transition-all transform hover:scale-105 cursor-pointer"
+        className="group bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 shadow-lg hover:shadow-2xl border-2 border-gray-200 hover:border-gray-400 transition-all transform hover:scale-105 cursor-pointer"
       >
-              <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-50 border-2 border-gray-200 rounded-xl mb-4 group-hover:border-gray-400 group-hover:from-gray-50 group-hover:to-gray-100 transition-all mx-auto">
+        <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-50 border-2 border-gray-200 rounded-xl mb-4 group-hover:border-gray-400 group-hover:from-gray-50 group-hover:to-gray-100 transition-all mx-auto">
           <Icon className="w-8 h-8 text-gray-900" />
         </div>
         <h3 className="text-xl font-bold text-gray-900 mb-2 text-center">{title}</h3>
-        <p className="text-gray-600 text-sm">{description}</p>
+        <p className="text-gray-600 text-sm text-center">{description}</p>
       </Link>
     );
   }
