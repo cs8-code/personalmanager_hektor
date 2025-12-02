@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Stethoscope, Heart, FileCheck, GraduationCap, Clock, MapPin, Phone, Mail, CheckCircle, ArrowRight, ArrowLeft } from 'lucide-react';
 import Navbar from '../components/Navbar';
-import Footer from '../pages/HomePage/components/Footer';
 
 interface ServiceSectionProps {
   id: string;
@@ -254,8 +253,6 @@ export default function UntersuchungenPage() {
           </div>
         </div>
       </div>
-
-      <Footer />
     </>
   );
 }

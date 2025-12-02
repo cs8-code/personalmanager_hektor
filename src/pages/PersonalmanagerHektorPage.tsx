@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { Building2, Shield, Leaf, HelpCircle, ArrowRight, CheckCircle } from 'lucide-react';
-import Footer from './HomePage/components/Footer';
 import Contact from './HomePage/components/Contact';
 
 interface ServiceCardProps {
@@ -157,8 +156,6 @@ export default function PersonalmanagerHektorPage() {
         {/* Contact Section */}
         <Contact />
       </main>
-
-      <Footer />
     </div>
   );
 }
