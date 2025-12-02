@@ -120,9 +120,9 @@ export default function ProfilePage() {
     setSaving(true);
     try {
       // Prepare update data - only include arbeitsort if column exists
+      // Note: username is excluded - it cannot be changed after registration
       const updateData: Record<string, string | string[] | null> = {
         name: `${formData.first_name} ${formData.last_name}`,
-        username: formData.username,
         phone: formData.phone,
         birth_date: formData.birthdate,
         gender: formData.gender,
@@ -310,21 +310,13 @@ export default function ProfilePage() {
               )}
             </div>
 
-            {/* Username */}
+            {/* Username (read-only) */}
             <div>
               <label className="block text-sm font-medium text-gray-900 mb-2">
                 Benutzername
               </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={formData.username}
-                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-yellow-400 focus:outline-none"
-                />
-              ) : (
-                <p className="text-gray-700">{formData.username || '-'}</p>
-              )}
+              <p className="text-gray-700">{formData.username || '-'}</p>
+              <p className="text-xs text-gray-500 mt-1">Der Benutzername kann nicht geändert werden</p>
             </div>
 
             {/* Email (read-only) */}
