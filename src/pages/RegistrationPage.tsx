@@ -35,6 +35,7 @@ interface RegistrationData {
   arbeitsort: 'Nahbaustellen' | 'Montage (ohne km-Begrenzung)' | 'Montage (mit km-Begrenzung)' | 'Nahbau & Montage' | '';
   remarks: string;
   availability_status: 'Sofort verfügbar' | 'Demnächst verfügbar' | 'Nicht verfügbar' | 'Zurzeit beschäftigt' | '';
+  visible_in_listing: boolean;
   password: string;
   confirmPassword: string;
 }
@@ -66,6 +67,7 @@ export default function RegistrationPage() {
     arbeitsort: '',
     remarks: '',
     availability_status: '',
+    visible_in_listing: false,
     password: '',
     confirmPassword: ''
   });
@@ -220,13 +222,14 @@ export default function RegistrationPage() {
         throw new Error(`Fehler bei der Kontoerstellung: ${authError.message}`);
       }
 
-      // User account created successfully - always show success message
-      // Profile creation may fail if email confirmation is enabled, but that's ok
+      // User account created successfully!
       if (authData.user) {
         setTempUserId(authData.user.id);
 
-        // Try to create worker profile, but don't fail registration if it doesn't work
-        // (Profile will be created via database trigger or after email confirmation)
+        // Wait a moment for user to be fully created in auth system
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Try to create worker profile - log errors but don't fail registration
         try {
           const { error: profileError } = await supabase
             .from('workers')
@@ -254,11 +257,15 @@ export default function RegistrationPage() {
               experience_years: 0,
               bio: '',
               company: '',
-              image_url: profileImageUrl || ''
+              image_url: profileImageUrl || '',
+              visible_in_listing: formData.visible_in_listing
             });
 
           if (profileError) {
-            console.warn('Profile creation skipped (will be created after email confirmation):', profileError);
+            console.warn('Profile creation warning:', profileError);
+            // Profile will need to be completed after email verification
+          } else {
+            console.log('Profile created successfully');
           }
 
           // If selbständig, try to create company profile
@@ -275,16 +282,15 @@ export default function RegistrationPage() {
               });
 
             if (companyError) {
-              console.warn('Company profile creation skipped (will be created after email confirmation):', companyError);
+              console.warn('Company profile creation warning:', companyError);
             }
           }
-        } catch (profileCreationError) {
-          // Profile creation failed, but that's ok - user still registered successfully
-          console.warn('Profile creation failed, but user account created successfully:', profileCreationError);
+        } catch (error) {
+          console.warn('Profile creation failed but registration succeeded:', error);
         }
       }
 
-      // Always show success message after user account is created
+      // Always show success message
       setIsSubmitted(true);
     } catch (error: unknown) {
       console.error('Registration error:', error);
@@ -643,7 +649,28 @@ export default function RegistrationPage() {
                   )}
                 </div>
               </div>
-              
+
+              {/* Visibility in Listing */}
+              <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4">
+                <label className="flex items-start space-x-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.visible_in_listing}
+                    onChange={(e) => setFormData(prev => ({ ...prev, visible_in_listing: e.target.checked }))}
+                    className="mt-1 rounded border-gray-300 text-yellow-400 focus:ring-yellow-500 w-5 h-5"
+                  />
+                  <div className="flex-1">
+                    <span className="block text-sm font-semibold text-gray-900 mb-1">
+                      Auf der Personalsuche-Seite sichtbar sein
+                    </span>
+                    <p className="text-xs text-gray-600">
+                      Möchten Sie auf der Personalsuche-Seite erscheinen und von anderen Subunternehmern kontaktiert werden können?
+                      Wenn Sie diese Option aktivieren, wird Ihr Profil öffentlich in der Personalliste angezeigt.
+                    </p>
+                  </div>
+                </label>
+              </div>
+
               {/* Qualifications */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">

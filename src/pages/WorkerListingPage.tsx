@@ -104,6 +104,7 @@ export default function WorkerListingPage() {
       const { data, error } = await supabase
         .from('workers')
         .select('*')
+        .eq('visible_in_listing', true)  // Only show workers who opted in
         .order('created_at', { ascending: false });
 
       if (error) throw error;
