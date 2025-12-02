@@ -21,3 +21,15 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Manual SQL scripts (run in Supabase Dashboard)
+/*.sql
+/sql_archive/
+
+# Troubleshooting/debug documentation
+/DIAGNOSE_*.md
+/FIX_*.md
+/URGENT_*.md
+/DEBUG_*.md
+/ACTION_*.md
+/FILES_*.md

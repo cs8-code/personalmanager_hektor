@@ -47,6 +47,8 @@ export default function RegistrationPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState('');
   const [tempUserId, setTempUserId] = useState('');
+  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
+  const [checkingUsername, setCheckingUsername] = useState(false);
   const [formData, setFormData] = useState<RegistrationData>({
     first_name: '',
     last_name: '',
@@ -113,6 +115,55 @@ export default function RegistrationPage() {
     }));
   };
 
+  const checkUsernameAvailability = async (username: string) => {
+    if (!username || username.length < 3) {
+      setUsernameAvailable(null);
+      return;
+    }
+
+    setCheckingUsername(true);
+    try {
+      const { data, error } = await supabase
+        .from('workers')
+        .select('username')
+        .eq('username', username)
+        .single();
+
+      if (error && error.code === 'PGRST116') {
+        // No rows returned - username is available
+        setUsernameAvailable(true);
+      } else if (data) {
+        // Username already exists
+        setUsernameAvailable(false);
+      }
+    } catch (error) {
+      console.error('Error checking username:', error);
+      setUsernameAvailable(null);
+    } finally {
+      setCheckingUsername(false);
+    }
+  };
+
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const username = e.target.value;
+    setFormData(prev => ({ ...prev, username }));
+
+    // Clear errors
+    if (errors.username) {
+      setErrors(prev => ({ ...prev, username: '' }));
+    }
+  };
+
+  // Debounced username availability check
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (formData.username) {
+        checkUsernameAvailability(formData.username);
+      }
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [formData.username]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -127,6 +178,12 @@ export default function RegistrationPage() {
 
     if (!formData.username) {
       newErrors.username = 'Benutzername ist erforderlich';
+    } else if (formData.username.length < 3) {
+      newErrors.username = 'Benutzername muss mindestens 3 Zeichen lang sein';
+    } else if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) {
+      newErrors.username = 'Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten';
+    } else if (usernameAvailable === false) {
+      newErrors.username = 'Dieser Benutzername ist bereits vergeben';
     }
 
     if (!formData.email) {
@@ -212,7 +269,8 @@ export default function RegistrationPage() {
             smoking_status: formData.smoking_status,
             arbeitsort: formData.arbeitsort,
             remarks: formData.remarks,
-            availability_status: formData.availability_status
+            availability_status: formData.availability_status,
+            visible_in_listing: formData.visible_in_listing
           }
         }
       });
@@ -223,74 +281,14 @@ export default function RegistrationPage() {
       }
 
       // User account created successfully!
+      // Profile will be created automatically by database trigger
       if (authData.user) {
         setTempUserId(authData.user.id);
-
-        // Wait a moment for user to be fully created in auth system
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Try to create worker profile - log errors but don't fail registration
-        try {
-          const { error: profileError } = await supabase
-            .from('workers')
-            .insert({
-              id: authData.user.id,
-              name: `${formData.first_name} ${formData.last_name}`,
-              username: formData.username,
-              email: formData.email,
-              phone: formData.phone || '',
-              birth_date: formData.birth_date,
-              gender: formData.gender,
-              city: formData.city,
-              employment_type: formData.employment_type,
-              company_name: formData.company_name || null,
-              company_address: formData.company_address || null,
-              availability_status: formData.availability_status,
-              work_days: formData.work_days || null,
-              qualifications: formData.qualifications,
-              languages: formData.languages,
-              shifts: formData.shifts || null,
-              smoking_status: formData.smoking_status || null,
-              arbeitsort: formData.arbeitsort || null,
-              remarks: formData.remarks || null,
-              location: formData.city,
-              experience_years: 0,
-              bio: '',
-              company: '',
-              image_url: profileImageUrl || '',
-              visible_in_listing: formData.visible_in_listing
-            });
-
-          if (profileError) {
-            console.warn('Profile creation warning:', profileError);
-            // Profile will need to be completed after email verification
-          } else {
-            console.log('Profile created successfully');
-          }
-
-          // If selbständig, try to create company profile
-          if (formData.employment_type === 'selbständig') {
-            const { error: companyError } = await supabase
-              .from('companies')
-              .insert({
-                id: authData.user.id,
-                company_name: formData.company_name || '',
-                company_address: formData.company_address || null,
-                contact_person: `${formData.first_name} ${formData.last_name}`,
-                email: formData.email,
-                phone: formData.phone || null
-              });
-
-            if (companyError) {
-              console.warn('Company profile creation warning:', companyError);
-            }
-          }
-        } catch (error) {
-          console.warn('Profile creation failed but registration succeeded:', error);
-        }
+        console.log('User created:', authData.user.id);
+        console.log('Database trigger will create worker profile automatically');
       }
 
-      // Always show success message
+      // Show success message
       setIsSubmitted(true);
     } catch (error: unknown) {
       console.error('Registration error:', error);
@@ -412,18 +410,40 @@ export default function RegistrationPage() {
                 <label htmlFor="username" className="block text-sm font-medium text-gray-700">
                   Benutzername *
                 </label>
-                <div className="mt-1">
+                <div className="mt-1 relative">
                   <input
                     id="username"
                     name="username"
                     type="text"
                     value={formData.username}
-                    onChange={handleInputChange}
+                    onChange={handleUsernameChange}
                     className={`appearance-none block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm ${
-                      errors.username ? 'border-red-300' : 'border-gray-300'
+                      errors.username
+                        ? 'border-red-300'
+                        : usernameAvailable === true
+                        ? 'border-green-300'
+                        : usernameAvailable === false
+                        ? 'border-red-300'
+                        : 'border-gray-300'
                     }`}
                     placeholder="maxmustermann"
                   />
+                  {checkingUsername && (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-yellow-500"></div>
+                    </div>
+                  )}
+                  {!checkingUsername && usernameAvailable === true && formData.username && (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                    </div>
+                  )}
+                  {!checkingUsername && usernameAvailable === false && formData.username && (
+                    <p className="mt-1 text-sm text-red-600">Benutzername bereits vergeben</p>
+                  )}
+                  {!checkingUsername && usernameAvailable === true && formData.username && (
+                    <p className="mt-1 text-sm text-green-600">Benutzername verfügbar</p>
+                  )}
                   {errors.username && (
                     <p className="mt-1 text-sm text-red-600">{errors.username}</p>
                   )}
