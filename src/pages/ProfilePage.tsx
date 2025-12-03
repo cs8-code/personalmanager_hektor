@@ -64,6 +64,7 @@ export default function ProfilePage() {
     arbeitsort: '' as 'Nahbaustellen' | 'Montage (ohne km-Begrenzung)' | 'Montage (mit km-Begrenzung)' | 'Nahbau & Montage' | '',
     remarks: '',
     availability_status: '' as 'sofort verfügbar' | 'demnächst verfügbar' | 'nicht verfügbar' | 'zurzeit beschäftigt' | '',
+    visible_in_listing: false,
   });
 
   useEffect(() => {
@@ -100,6 +101,7 @@ export default function ProfilePage() {
         arbeitsort: (userProfile.arbeitsort as 'Nahbaustellen' | 'Montage (ohne km-Begrenzung)' | 'Montage (mit km-Begrenzung)' | 'Nahbau & Montage' | '') || '',
         remarks: userProfile.remarks || '',
         availability_status: (userProfile.availability_status as 'sofort verfügbar' | 'demnächst verfügbar' | 'nicht verfügbar' | 'zurzeit beschäftigt' | '') || '',
+        visible_in_listing: userProfile.visible_in_listing ?? false,
       });
       setProfileImageUrl(userProfile.image_url || '');
     }
@@ -121,7 +123,7 @@ export default function ProfilePage() {
     try {
       // Prepare update data - only include arbeitsort if column exists
       // Note: username is excluded - it cannot be changed after registration
-      const updateData: Record<string, string | string[] | null> = {
+      const updateData: Record<string, string | string[] | boolean | null> = {
         name: `${formData.first_name} ${formData.last_name}`,
         phone: formData.phone,
         birth_date: formData.birthdate,
@@ -139,6 +141,7 @@ export default function ProfilePage() {
         availability_status: formData.availability_status,
         location: formData.city,
         image_url: profileImageUrl || '',
+        visible_in_listing: formData.visible_in_listing,
         updated_at: new Date().toISOString(),
       };
 
@@ -662,6 +665,31 @@ export default function ProfilePage() {
             ) : (
               <p className="text-gray-700 whitespace-pre-wrap">{formData.remarks || '-'}</p>
             )}
+          </div>
+
+          {/* Visibility in Listing */}
+          <div className="mt-6">
+            <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4">
+              <label className="flex items-start space-x-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.visible_in_listing}
+                  onChange={(e) => setFormData({ ...formData, visible_in_listing: e.target.checked })}
+                  disabled={!isEditing}
+                  className="mt-1 rounded border-gray-300 text-yellow-400 focus:ring-yellow-500 w-5 h-5 disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+                <div className="flex-1">
+                  <span className="block text-sm font-semibold text-gray-900 mb-1">
+                    Auf der Personalsuche-Seite sichtbar sein
+                  </span>
+                  <p className="text-xs text-gray-600">
+                    {formData.visible_in_listing
+                      ? 'Ihr Profil ist öffentlich sichtbar und kann von Subunternehmern kontaktiert werden.'
+                      : 'Ihr Profil ist nicht öffentlich sichtbar. Sie erscheinen nicht in der Personalsuche.'}
+                  </p>
+                </div>
+              </label>
+            </div>
           </div>
 
           {/* User ID */}
