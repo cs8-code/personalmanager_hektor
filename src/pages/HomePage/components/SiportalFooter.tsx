@@ -1,11 +1,7 @@
 import { Link } from 'react-router-dom';
 import { HardHat } from 'lucide-react';
 
-/**
- * @deprecated This component is deprecated. Use SiportalFooter instead.
- * Kept for backward compatibility.
- */
-export default function Footer() {
+export default function SiportalFooter() {
   return (
     <footer className="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -14,7 +10,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center mb-4">
               <HardHat className="w-6 h-6 text-yellow-400" />
-              <span className="ml-2 text-xl font-bold">SIPORTAL</span>
+              <span className="ml-2 text-xl font-bold">Siportal</span>
             </div>
             <p className="text-gray-400 text-sm">
               Die führende Plattform für Sicherheitsposten und Baustellenschutz.

@@ -3,7 +3,7 @@ import { lazy, Suspense } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './contexts/AuthContext';
 import ErrorBoundary from './components/ErrorBoundary';
-import Footer from './pages/HomePage/components/Footer';
+import ConditionalFooter from './components/ConditionalFooter';
 import ScrollToTop from './components/ScrollToTop';
 
 // Lazy load route components for code splitting
@@ -88,7 +88,7 @@ function App() {
                 </Routes>
               </Suspense>
             </div>
-            <Footer />
+            <ConditionalFooter />
           </div>
         </AuthProvider>
       </Router>
