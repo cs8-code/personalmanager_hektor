@@ -15,12 +15,6 @@ interface ServiceCardProps {
 function ServiceCard({ icon: Icon, title, description, features, available, iconGradient, onNavigate }: ServiceCardProps) {
   return (
     <div className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-200/50 hover:border-emerald-500/50 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-      {!available && (
-        <div className="absolute top-4 right-4 bg-gradient-to-r from-slate-700 to-slate-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
-          Demnächst verfügbar
-        </div>
-      )}
-
       <div className={`flex items-center justify-center w-16 h-16 ${iconGradient} rounded-2xl mb-6 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110`}>
         <Icon className="w-8 h-8 text-white" />
       </div>
