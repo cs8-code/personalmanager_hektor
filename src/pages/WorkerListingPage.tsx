@@ -588,7 +588,7 @@ export default function WorkerListingPage() {
                       }}
                       className="flex-1 flex items-center justify-center px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold rounded-2xl transition-all"
                     >
-                      Message
+                      Anfragen
                     </button>
                   )}
                 </div>
