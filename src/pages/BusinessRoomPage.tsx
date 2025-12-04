@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import Navbar from '../components/Navbar';
 import { useToast } from '../hooks';
+import MultiImageUpload from '../components/MultiImageUpload';
 
 interface Post {
   id: string;
@@ -12,6 +13,7 @@ interface Post {
   type: 'news' | 'question';
   title: string;
   content: string;
+  images?: string[];
   created_at: string;
   updated_at: string;
   user_email?: string;
@@ -46,6 +48,7 @@ export default function BusinessRoomPage() {
   const [postType, setPostType] = useState<'news' | 'question'>('news');
   const [postTitle, setPostTitle] = useState('');
   const [postContent, setPostContent] = useState('');
+  const [postImages, setPostImages] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
   // Edit mode
@@ -159,7 +162,8 @@ export default function BusinessRoomPage() {
             user_id: user.id,
             type: postType,
             title: postTitle,
-            content: postContent
+            content: postContent,
+            images: postImages
           }
         ]);
 
@@ -168,6 +172,7 @@ export default function BusinessRoomPage() {
       setShowCreateModal(false);
       setPostTitle('');
       setPostContent('');
+      setPostImages([]);
       setPostType('news');
       fetchPosts();
     } catch (error) {
@@ -207,12 +212,30 @@ export default function BusinessRoomPage() {
     if (!confirm('Möchten Sie diesen Beitrag wirklich löschen?')) return;
 
     try {
+      // First get the post to access its images
+      const post = posts.find(p => p.id === postId);
+
+      // Delete the post from database
       const { error } = await supabase
         .from('business_posts')
         .delete()
         .eq('id', postId);
 
       if (error) throw error;
+
+      // Delete associated images from storage
+      if (post?.images && post.images.length > 0) {
+        for (const imageUrl of post.images) {
+          try {
+            const path = imageUrl.split('/post-images/')[1];
+            if (path) {
+              await supabase.storage.from('post-images').remove([path]);
+            }
+          } catch (imgError) {
+            console.error('Error deleting image:', imgError);
+          }
+        }
+      }
 
       if (selectedPost?.id === postId) {
         setSelectedPost(null);
@@ -463,7 +486,30 @@ export default function BusinessRoomPage() {
                           </div>
                         </div>
                       ) : (
-                        <p className="text-gray-700 line-clamp-2">{post.content}</p>
+                        <>
+                          <p className="text-gray-700 line-clamp-2">{post.content}</p>
+                          {/* Image preview grid */}
+                          {post.images && post.images.length > 0 && (
+                            <div className="mt-3 grid grid-cols-3 gap-2">
+                              {post.images.slice(0, 3).map((url, index) => (
+                                <div key={index} className="relative aspect-square">
+                                  <img
+                                    src={url}
+                                    alt={`Bild ${index + 1}`}
+                                    className="w-full h-full object-cover rounded-lg border border-gray-200"
+                                  />
+                                  {index === 2 && post.images && post.images.length > 3 && (
+                                    <div className="absolute inset-0 bg-black bg-opacity-50 rounded-lg flex items-center justify-center">
+                                      <span className="text-white font-semibold text-lg">
+                                        +{post.images.length - 3}
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </>
                       )}
                       <p className="text-sm text-gray-500 mt-3">Von: {post.user_email}</p>
                     </div>
@@ -535,6 +581,17 @@ export default function BusinessRoomPage() {
                     placeholder="Schreiben Sie Ihren Beitrag..."
                   />
                 </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Bilder (optional)
+                  </label>
+                  <MultiImageUpload
+                    userId={user!.id}
+                    images={postImages}
+                    onImagesChange={setPostImages}
+                    disabled={submitting}
+                  />
+                </div>
                 <div className="flex justify-end space-x-3">
                   <button
                     type="button"
@@ -589,6 +646,23 @@ export default function BusinessRoomPage() {
                     </div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedPost.title}</h2>
                     <p className="text-gray-700 whitespace-pre-wrap">{selectedPost.content}</p>
+
+                    {/* Full image grid in modal */}
+                    {selectedPost.images && selectedPost.images.length > 0 && (
+                      <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        {selectedPost.images.map((url, index) => (
+                          <div key={index} className="relative aspect-square">
+                            <img
+                              src={url}
+                              alt={`Bild ${index + 1}`}
+                              className="w-full h-full object-cover rounded-lg border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity"
+                              onClick={() => window.open(url, '_blank')}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
                     <p className="text-sm text-gray-500 mt-3">Von: {selectedPost.user_email}</p>
                   </div>
                   <button
