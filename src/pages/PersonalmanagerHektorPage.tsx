@@ -129,6 +129,9 @@ export default function PersonalmanagerHektorPage() {
                   className="w-64 h-64 object-contain"
                 />
               </div>
+               <span className="ml-3 text-2xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+                Personalmanager
+              </span>
               <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 pb-2">
                 HEKTOR
               </h1>

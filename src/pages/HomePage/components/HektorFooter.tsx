@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Building2, Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone, MapPin } from 'lucide-react';
 
 export default function HektorFooter() {
   return (
@@ -9,11 +9,13 @@ export default function HektorFooter() {
           {/* Company Info */}
           <div className="md:col-span-2">
             <div className="flex items-center mb-6">
-              <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg">
-                <Building2 className="w-7 h-7 text-white" />
-              </div>
+              <img
+                src="/assets/hektor-logo-removebg-preview.png"
+                alt="Hektor Logo"
+                className="w-12 h-12 object-contain"
+              />
               <span className="ml-3 text-2xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
-                Personalmanager HEKTOR
+                HEKTOR
               </span>
             </div>
             <p className="text-gray-300 text-sm leading-relaxed mb-6">
