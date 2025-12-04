@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Upload, X, User } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useToast } from '../hooks';
@@ -16,6 +16,11 @@ export default function ImageUpload({ currentImageUrl, onImageUpload, userId, si
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(currentImageUrl);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Sync previewUrl with currentImageUrl prop changes
+  useEffect(() => {
+    setPreviewUrl(currentImageUrl);
+  }, [currentImageUrl]);
 
   const sizeClasses = {
     small: 'w-24 h-24',
