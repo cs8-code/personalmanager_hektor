@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './contexts/AuthContext';
 import ErrorBoundary from './components/ErrorBoundary';
 import Footer from './pages/HomePage/components/Footer';
+import ScrollToTop from './components/ScrollToTop';
 
 // Lazy load route components for code splitting
 const PersonalmanagerHektorPage = lazy(() => import('./pages/PersonalmanagerHektorPage'));
@@ -47,6 +48,7 @@ function App() {
   return (
     <ErrorBoundary>
       <Router>
+        <ScrollToTop />
         <AuthProvider>
           <Toaster />
           <div className="flex flex-col min-h-screen">
