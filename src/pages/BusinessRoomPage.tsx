@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Briefcase, Newspaper, HelpCircle, Send, Trash2, Edit2, X, Check } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -39,6 +39,9 @@ export default function BusinessRoomPage() {
   const [newComment, setNewComment] = useState('');
   const [filter, setFilter] = useState<'all' | 'news' | 'question'>('all');
 
+  // Track if we've already shown the error toast
+  const hasShownError = useRef(false);
+
   // Create post form state
   const [postType, setPostType] = useState<'news' | 'question'>('news');
   const [postTitle, setPostTitle] = useState('');
@@ -52,15 +55,21 @@ export default function BusinessRoomPage() {
 
   // Check access
   useEffect(() => {
+    if (hasShownError.current) return; // Already shown error, don't show again
+
     if (!user) {
+      hasShownError.current = true;
+      showError('Bitte melden Sie sich an, um den Business Room zu nutzen.');
       navigate('/siportal');
       return;
     }
     if (userProfile && userProfile.employment_type !== 'selbständig') {
-      showWarning('Dieser Bereich ist nur für selbständige Nutzer zugänglich.');
+      hasShownError.current = true;
+      showError('Der Business Room ist nur für selbständige Nutzer zugänglich.');
       navigate('/siportal');
       return;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, userProfile, navigate]);
 
   useEffect(() => {
