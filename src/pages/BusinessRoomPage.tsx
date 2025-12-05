@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Briefcase, Newspaper, HelpCircle, Send, Trash2, Edit2, X, Check } from 'lucide-react';
+import { ArrowLeft, Plus, Briefcase, Newspaper, HelpCircle, Send, Trash2, Edit2, X, Check, Building2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import Navbar from '../components/Navbar';
 import { useToast } from '../hooks';
 import MultiImageUpload from '../components/MultiImageUpload';
+import GleissicherungsfirmenList from '../components/GleissicherungsfirmenList';
 
 interface Post {
   id: string;
@@ -32,7 +33,7 @@ interface Comment {
 export default function BusinessRoomPage() {
   const { user, userProfile } = useAuth();
   const navigate = useNavigate();
-  const { showError, showWarning } = useToast();
+  const { showError } = useToast();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -40,6 +41,7 @@ export default function BusinessRoomPage() {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const [filter, setFilter] = useState<'all' | 'news' | 'question'>('all');
+  const [activeView, setActiveView] = useState<'posts' | 'companies'>('posts');
 
   // Track if we've already shown the error toast
   const hasShownError = useRef(false);
@@ -325,13 +327,15 @@ export default function BusinessRoomPage() {
               <ArrowLeft className="w-4 h-4 mr-2" />
               Zurück zur Startseite
             </Link>
-            <button
-              onClick={() => setShowCreateModal(true)}
-              className="inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-colors"
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              Neuer Beitrag
-            </button>
+            {activeView === 'posts' && (
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-colors"
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                Neuer Beitrag
+              </button>
+            )}
           </div>
 
           <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
@@ -351,50 +355,85 @@ export default function BusinessRoomPage() {
               </div>
             </div>
 
+            {/* Main Navigation Tabs */}
             <div className="p-6 border-b border-gray-200">
-              <div className="flex space-x-2">
+              <div className="flex space-x-2 mb-4">
                 <button
-                  onClick={() => setFilter('all')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    filter === 'all'
-                      ? 'bg-blue-500 text-white'
+                  onClick={() => setActiveView('posts')}
+                  className={`px-6 py-3 rounded-lg font-semibold transition-colors inline-flex items-center ${
+                    activeView === 'posts'
+                      ? 'bg-blue-500 text-white shadow-lg'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
-                  Alle
+                  <Newspaper className="w-5 h-5 mr-2" />
+                  Beiträge
                 </button>
                 <button
-                  onClick={() => setFilter('news')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors inline-flex items-center ${
-                    filter === 'news'
-                      ? 'bg-blue-500 text-white'
+                  onClick={() => setActiveView('companies')}
+                  className={`px-6 py-3 rounded-lg font-semibold transition-colors inline-flex items-center ${
+                    activeView === 'companies'
+                      ? 'bg-blue-500 text-white shadow-lg'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
-                  <Newspaper className="w-4 h-4 mr-2" />
-                  Neuigkeiten
-                </button>
-                <button
-                  onClick={() => setFilter('question')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors inline-flex items-center ${
-                    filter === 'question'
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  <HelpCircle className="w-4 h-4 mr-2" />
-                  Fragen
+                  <Building2 className="w-5 h-5 mr-2" />
+                  Gleissicherungsfirmen
                 </button>
               </div>
+
+              {/* Post Filters - Only show when in posts view */}
+              {activeView === 'posts' && (
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => setFilter('all')}
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                      filter === 'all'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    Alle
+                  </button>
+                  <button
+                    onClick={() => setFilter('news')}
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors inline-flex items-center ${
+                      filter === 'news'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    <Newspaper className="w-4 h-4 mr-2" />
+                    Neuigkeiten
+                  </button>
+                  <button
+                    onClick={() => setFilter('question')}
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors inline-flex items-center ${
+                      filter === 'question'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    <HelpCircle className="w-4 h-4 mr-2" />
+                    Fragen
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="p-6">
-              {loading ? (
-                <div className="text-center py-12">
-                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-                  <p className="mt-4 text-gray-600">Laden...</p>
-                </div>
-              ) : posts.length === 0 ? (
+              {/* Companies View */}
+              {activeView === 'companies' ? (
+                <GleissicherungsfirmenList />
+              ) : (
+                /* Posts View */
+                <>
+                  {loading ? (
+                    <div className="text-center py-12">
+                      <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                      <p className="mt-4 text-gray-600">Laden...</p>
+                    </div>
+                  ) : posts.length === 0 ? (
                 <div className="text-center py-12">
                   <Briefcase className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                   <p className="text-gray-600">Noch keine Beiträge vorhanden</p>
@@ -515,6 +554,8 @@ export default function BusinessRoomPage() {
                     </div>
                   ))}
                 </div>
+              )}
+                </>
               )}
             </div>
           </div>

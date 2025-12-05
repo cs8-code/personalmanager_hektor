@@ -23,6 +23,7 @@ interface UserProfile {
   arbeitsort: string | null;
   remarks: string | null;
   availability_status: string | null;
+  visible_in_listing: boolean;
   image_url: string;
   location: string;
   experience_years: number;
@@ -100,6 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           arbeitsort: null,
           remarks: null,
           availability_status: '',
+          visible_in_listing: false,
           image_url: '',
           location: '',
           experience_years: 0,
