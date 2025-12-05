@@ -37,8 +37,6 @@ export default function JobsManagementPage() {
     company: '',
     location: '',
     employment_type: 'Vollzeit',
-    experience_required: 0,
-    salary_range: '',
     requirements: '',
     benefits: '',
     contact_email: '',
@@ -83,8 +81,6 @@ export default function JobsManagementPage() {
           ...formData,
           requirements: formData.requirements.split('\n').filter((r) => r.trim()),
           benefits: formData.benefits.split('\n').filter((b) => b.trim()),
-          experience_required: formData.experience_required || null,
-          salary_range: formData.salary_range || null,
           contact_phone: formData.contact_phone || null,
           created_by: user!.id,
         },
@@ -112,8 +108,6 @@ export default function JobsManagementPage() {
           ...formData,
           requirements: formData.requirements.split('\n').filter((r) => r.trim()),
           benefits: formData.benefits.split('\n').filter((b) => b.trim()),
-          experience_required: formData.experience_required || null,
-          salary_range: formData.salary_range || null,
           contact_phone: formData.contact_phone || null,
         })
         .eq('id', id);
@@ -153,8 +147,6 @@ export default function JobsManagementPage() {
       company: job.company,
       location: job.location,
       employment_type: job.employment_type,
-      experience_required: job.experience_required || 0,
-      salary_range: job.salary_range || '',
       requirements: job.requirements.join('\n'),
       benefits: job.benefits.join('\n'),
       contact_email: job.contact_email,
@@ -171,8 +163,6 @@ export default function JobsManagementPage() {
       company: '',
       location: '',
       employment_type: 'Vollzeit',
-      experience_required: 0,
-      salary_range: '',
       requirements: '',
       benefits: '',
       contact_email: '',
@@ -309,37 +299,9 @@ export default function JobsManagementPage() {
                 >
                   <option value="Vollzeit">Vollzeit</option>
                   <option value="Teilzeit">Teilzeit</option>
-                  <option value="Freelance">Freelance</option>
+                  <option value="Minijob">Minijob</option>
                   <option value="Befristet">Befristet</option>
                 </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Erforderliche Erfahrung (Jahre)
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  value={formData.experience_required}
-                  onChange={(e) =>
-                    setFormData({ ...formData, experience_required: parseInt(e.target.value) || 0 })
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Gehaltsbereich
-                </label>
-                <input
-                  type="text"
-                  value={formData.salary_range}
-                  onChange={(e) => setFormData({ ...formData, salary_range: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="z.B. 50.000 - 70.000 €"
-                />
               </div>
 
               <div>
@@ -504,36 +466,6 @@ export default function JobsManagementPage() {
                           <option value="Freelance">Freelance</option>
                           <option value="Befristet">Befristet</option>
                         </select>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Erfahrung (Jahre)
-                        </label>
-                        <input
-                          type="number"
-                          min="0"
-                          value={formData.experience_required}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              experience_required: parseInt(e.target.value) || 0,
-                            })
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Gehalt
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.salary_range}
-                          onChange={(e) =>
-                            setFormData({ ...formData, salary_range: e.target.value })
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                        />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
