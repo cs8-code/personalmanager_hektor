@@ -3,6 +3,7 @@ import { Search, MapPin, Briefcase, Clock, Euro, ArrowLeft, Plus, ChevronDown } 
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import Navbar from '../components/Navbar';
+import Pagination from '../components/Pagination';
 import { useAuth } from '../contexts/AuthContext';
 import { Job } from '../types/job.types';
 import JobDetailPanel from '../components/JobDetailPanel';
@@ -16,6 +17,8 @@ export default function JobsPage() {
   const [employmentTypeFilter, setEmploymentTypeFilter] = useState('');
   const [showEmploymentTypeDropdown, setShowEmploymentTypeDropdown] = useState(false);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   const isManager = userProfile?.systemRole === 'manager' || userProfile?.systemRole === 'administrator';
   const isSelbstandig = userProfile?.employment_type === 'selbständig';
@@ -86,6 +89,17 @@ export default function JobsPage() {
 
     return matchesSearch && matchesLocation && matchesEmploymentType;
   });
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, locationFilter, employmentTypeFilter]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredJobs.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedJobs = filteredJobs.slice(startIndex, endIndex);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -228,7 +242,7 @@ export default function JobsPage() {
               <div className={`grid gap-6 transition-all duration-300 ${
                 selectedJob ? 'grid-cols-1 flex-1' : 'grid-cols-1'
               }`}>
-                {filteredJobs.map((job) => (
+                {paginatedJobs.map((job) => (
                   <div
                     key={job.id}
                     onClick={() => setSelectedJob(job)}
@@ -274,6 +288,14 @@ export default function JobsPage() {
                     </div>
                   </div>
                 ))}
+
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  itemsPerPage={itemsPerPage}
+                  totalItems={filteredJobs.length}
+                />
               </div>
 
               {/* Job Detail Panel */}

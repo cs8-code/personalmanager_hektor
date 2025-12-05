@@ -3,6 +3,7 @@ import { Search, MapPin, Calendar, Users, ArrowLeft, Plus, FileText } from 'luci
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import Navbar from '../components/Navbar';
+import Pagination from '../components/Pagination';
 import { useAuth } from '../contexts/AuthContext';
 import { Contract } from '../types/contract.types';
 import ContractDetailPanel from '../components/ContractDetailPanel';
@@ -14,6 +15,8 @@ export default function ContractsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const [selectedContract, setSelectedContract] = useState<Contract | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   useEffect(() => {
     if (!authLoading) {
@@ -52,6 +55,17 @@ export default function ContractsPage() {
 
     return matchesSearch && matchesLocation;
   });
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, locationFilter]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredContracts.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedContracts = filteredContracts.slice(startIndex, endIndex);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('de-DE', {
@@ -157,7 +171,7 @@ export default function ContractsPage() {
               <div className={`grid gap-6 transition-all duration-300 ${
                 selectedContract ? 'grid-cols-1 flex-1' : 'grid-cols-1'
               }`}>
-                {filteredContracts.map((contract) => (
+                {paginatedContracts.map((contract) => (
                   <div
                     key={contract.id}
                     onClick={() => setSelectedContract(contract)}
@@ -199,6 +213,14 @@ export default function ContractsPage() {
                     </div>
                   </div>
                 ))}
+
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  itemsPerPage={itemsPerPage}
+                  totalItems={filteredContracts.length}
+                />
               </div>
 
               {/* Contract Detail Panel */}

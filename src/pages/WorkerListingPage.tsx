@@ -4,6 +4,7 @@ import { ArrowLeft, MapPin, Edit2, Trash2, Send, Search, Plus, ChevronDown } fro
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
+import Pagination from '../components/Pagination';
 import { getStatusColor, getStatusIcon } from '../utils/statusUtils';
 import { QUALIFICATIONS, AVAILABILITY_STATUSES } from '../constants';
 import { useToast } from '../hooks';
@@ -43,6 +44,8 @@ export default function WorkerListingPage() {
   const [contactRequests, setContactRequests] = useState<Map<string, ContactRequest>>(new Map());
   const [showAvailabilityDropdown, setShowAvailabilityDropdown] = useState(false);
   const [showQualificationDropdown, setShowQualificationDropdown] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   const isManager = userProfile?.systemRole === 'manager' || userProfile?.systemRole === 'administrator';
 
@@ -222,6 +225,17 @@ export default function WorkerListingPage() {
 
     return matchesAvailability && matchesQualifications && matchesSearch && matchesLocation;
   });
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, locationFilter, availabilityFilter, qualificationFilters]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredWorkers.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedWorkers = filteredWorkers.slice(startIndex, endIndex);
 
   return (
     <>
@@ -416,13 +430,14 @@ export default function WorkerListingPage() {
             <p className="text-gray-600 text-lg">Keine Fachkräfte gefunden.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredWorkers.map((worker) => (
-              <div
-                key={worker.id}
-                className="bg-white rounded-3xl shadow-md border-2 border-gray-100 hover:shadow-xl transition-all duration-300 p-8 cursor-pointer relative flex flex-col"
-                onClick={() => navigate(`/workers/${worker.id}`)}
-              >
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+              {paginatedWorkers.map((worker) => (
+                <div
+                  key={worker.id}
+                  className="bg-white rounded-3xl shadow-md border-2 border-gray-100 hover:shadow-xl transition-all duration-300 p-8 cursor-pointer relative flex flex-col"
+                  onClick={() => navigate(`/workers/${worker.id}`)}
+                >
                 {/* Edit/Delete Buttons */}
                 {(canEdit(worker) || canDelete(worker)) && (
                   <div className="absolute top-4 right-4 flex gap-2">
@@ -592,9 +607,18 @@ export default function WorkerListingPage() {
                     </button>
                   )}
                 </div>
-              </div>
-            ))}
-          </div>
+                </div>
+              ))}
+            </div>
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              itemsPerPage={itemsPerPage}
+              totalItems={filteredWorkers.length}
+            />
+          </>
         )}
       </div>
       </div>

@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase';
 import { ATWSListing, ListingType } from '../types/atws';
 import { useAuth } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
+import Pagination from '../components/Pagination';
 
 export default function ATWSListingsPage() {
   const { user } = useAuth();
@@ -12,6 +13,8 @@ export default function ATWSListingsPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<ListingType | 'all'>('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   useEffect(() => {
     fetchListings();
@@ -44,6 +47,17 @@ export default function ATWSListingsPage() {
     const matchesType = filterType === 'all' || listing.listing_type === filterType;
     return matchesSearch && matchesType;
   });
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filterType]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredListings.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedListings = filteredListings.slice(startIndex, endIndex);
 
   const getListingTypeLabel = (type: ListingType) => {
     const labels = {
@@ -177,8 +191,9 @@ export default function ATWSListingsPage() {
               )}
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredListings.map((listing) => (
+            <>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                {paginatedListings.map((listing) => (
                 <Link
                   key={listing.id}
                   to={`/atws/${listing.id}`}
@@ -243,7 +258,16 @@ export default function ATWSListingsPage() {
                   </div>
                 </Link>
               ))}
-            </div>
+              </div>
+
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                itemsPerPage={itemsPerPage}
+                totalItems={filteredListings.length}
+              />
+            </>
           )}
         </div>
       </div>
